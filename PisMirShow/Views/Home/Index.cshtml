@@ -1,8 +1,30 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+﻿<div id="inputForm">
+    <input type="text" id="message" />
+    <input type="button" id="sendBtn" value="Отправить" />
 </div>
+<div id="chatroom"></div>
+
+<script src="/signalr.min.js"></script>
+<script>
+    let hubUrl = 'https://localhost:5001/chat';
+    const hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl(hubUrl)
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
+
+    hubConnection.on("Send", function (data) {
+
+        let elem = document.createElement("p");
+        elem.appendChild(document.createTextNode(data));
+        let firstElem = document.getElementById("chatroom").firstChild;
+        document.getElementById("chatroom").insertBefore(elem, firstElem);
+
+    });
+
+    document.getElementById("sendBtn").addEventListener("click", function (e) {
+        let message = document.getElementById("message").value;
+        hubConnection.invoke("Send", message);
+    });
+
+    hubConnection.start();
+</script>

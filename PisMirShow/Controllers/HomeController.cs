@@ -19,7 +19,7 @@ namespace PisMirShow.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.Messages = DbContext.Posts.AsNoTracking();
+            ViewBag.Messages = DbContext.Posts.AsNoTracking().OrderByDescending(u => u.Id);
             return View();
         }
 

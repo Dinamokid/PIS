@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using PisMirShow;
 using PisMirShow.Models;
 
@@ -15,6 +14,12 @@ namespace SignalRApp
         }
         public async Task Send(string message, string userName)
         {
+            //TODO: авторизация 
+            //TODO: рассылка конкретным юзерам
+            //TODO: добавить задачи (открытие закрытие)
+            //TODO: загрузка файлов (модель (id,ссылка, List<Users> кто утвердил))
+            //TODO: прочитал в живую ленту
+
             DbContext.Posts.Add(new WallPost()
             {
                 Author = userName,

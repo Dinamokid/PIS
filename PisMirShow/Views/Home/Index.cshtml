@@ -10,7 +10,12 @@
     <input type="text" id="message" />
     <input type="button" id="sendBtn" value="Отправить" />
 </div>
-<div id="chatroom"></div>
+<div id="chatroom">
+    @foreach (var post in ViewBag.Messages)
+    {
+        <p>@post.Author: @post.Message</p>
+    }
+</div>
 
 <script src="/signalr.min.js"></script>
 <script>

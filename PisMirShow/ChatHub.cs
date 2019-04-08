@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using System.Threading.Tasks;
-using PisMirShow;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
 using PisMirShow.Models;
 
-namespace SignalRApp
+namespace PisMirShow
 {
     public class ChatHub : Hub
     {

@@ -62,6 +62,11 @@ namespace PisMirShow
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(
+                    name: "Home",
+                    template: "{action=Index}/{id?}",
+                    defaults: new { controller = "Home" });
             });
 
             app.UseSignalR(routes =>

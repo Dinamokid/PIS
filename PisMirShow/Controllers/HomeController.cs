@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PisMirShow.Models;
@@ -33,6 +34,17 @@ namespace PisMirShow.Controllers
 
             DbContext.SaveChanges();
 
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult DeleteMessages()
+        {
+            foreach (var temp in DbContext.Posts)
+            {
+                DbContext.Entry(temp).State = EntityState.Deleted;
+            }
+
+            DbContext.SaveChanges();
             return RedirectToAction("Index");
         }
 

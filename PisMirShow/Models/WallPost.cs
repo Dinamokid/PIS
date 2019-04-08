@@ -14,5 +14,6 @@ namespace PisMirShow.Models
 
         public string Author { get; set; }
         public string Message { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

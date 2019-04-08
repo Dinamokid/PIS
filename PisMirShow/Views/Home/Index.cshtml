@@ -10,10 +10,10 @@
     <input type="text" id="message" />
     <input type="button" id="sendBtn" value="Отправить" />
 </div>
-<div id="chatroom">
+<div id="chatroom" class="mb-2">
     @foreach (var post in ViewBag.Messages)
     {
-        <p>@post.Author: @post.Message</p>
+        <p><b>@post.Author</b>: @post.Message</p>
     }
 </div>
 

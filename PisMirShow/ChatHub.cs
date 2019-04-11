@@ -15,7 +15,7 @@ namespace PisMirShow
         }
         public async Task Send(string message, string userName)
         {
-            //TODO: авторизация 
+            //TODO: https://metanit.com/sharp/aspnet5/18.3.php
             //TODO: рассылка конкретным юзерам
             //TODO: добавить задачи (открытие закрытие)
             //TODO: загрузка файлов (модель (id,ссылка, List<Users> кто утвердил))

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.WebEncoders;
 
 namespace PisMirShow
 {
@@ -28,6 +31,11 @@ namespace PisMirShow
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<PisDbContext>(options => options.UseSqlServer(connection));
+
+            services.Configure<WebEncoderOptions>(options =>
+            {
+                options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All);
+            });
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => //CookieAuthenticationOptions

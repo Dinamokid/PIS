@@ -12,12 +12,10 @@ using PisMirShow.Models;
 namespace PisMirShow.Controllers
 {
     [Authorize]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        protected readonly PisDbContext DbContext;
-        public HomeController(PisDbContext dbContext)
+        public HomeController(PisDbContext dbContext) : base(dbContext)
         {
-            DbContext = dbContext;
         }
 
         public IActionResult Index()

@@ -1,12 +1,9 @@
-﻿@*<div id="loginBlock">
-    Введите логин:<br />
-    <input id="userName" type="text" />
-    <input id="loginBtn" type="button" value="Войти" />
-</div><br />*@
+﻿@using System.Text
+@{
+    var user = (User)ViewBag.User;
+}
 
-<div id="header"></div><br />
-
-<div id="inputForm">
+<div id="inputForm" class="mt-5">
     <input type="text" id="message" />
     <input type="button" id="sendBtn" value="Отправить" />
 </div>
@@ -17,7 +14,6 @@
     }
 </div>
 
-
 <script src="/signalr.min.js"></script>
 <script>
     let hubUrl = 'https://localhost:5001/chat';
@@ -25,15 +21,14 @@
         .withUrl(hubUrl)
         .configureLogging(signalR.LogLevel.Information)
         .build();
-    let userName = '@User.Identity.Name';
-    // получение сообщения от сервера
+
+    var userName = `@user.GetFullName()`;
+
     hubConnection.on('Send', function (message, userName) {
 
-        // создаем элемент <b> для имени пользователя
         let userNameElem = document.createElement("b");
         userNameElem.appendChild(document.createTextNode(userName + ': '));
 
-        // создает элемент <p> для сообщения пользователя
         let elem = document.createElement("p");
         elem.appendChild(userNameElem);
         elem.appendChild(document.createTextNode(message));
@@ -43,7 +38,6 @@
 
     });
 
-    // отправка сообщения на сервер
     document.getElementById("sendBtn").addEventListener("click", function (e) {
         let message = document.getElementById("message").value;
         hubConnection.invoke('Send', message, userName);

@@ -11,6 +11,7 @@ namespace PisMirShow
     public class PisDbContext : DbContext
     {
         public DbSet<WallPost> Posts { get; set; }
+        public DbSet<User> Users { get; set; }
         
         public PisDbContext(DbContextOptions<PisDbContext> options)
             : base(options)

@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using PisMirShow.Models;
 
 namespace PisMirShow
 {
+    [Authorize]
     public class ChatHub : Hub
     {
         protected readonly PisDbContext DbContext;

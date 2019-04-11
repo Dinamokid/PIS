@@ -4,12 +4,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PisMirShow.Models;
 
 namespace PisMirShow.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         protected readonly PisDbContext DbContext;

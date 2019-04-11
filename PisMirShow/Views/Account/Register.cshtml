@@ -1,0 +1,37 @@
+﻿@model PisMirShow.ViewModels.RegisterModel
+
+<form asp-action="Register" asp-controller="Account" asp-anti-forgery="true" class="text-center border border-light p-3 col-md-6 mr-auto ml-auto mt-3 mb-5">
+    <div class="validation" asp-validation-summary="ModelOnly" />
+    <p class="h4 mb-4">Регистрация</p>
+
+    <div class="form-row mb-4">
+        <div class="col">
+            <input type="text" class="form-control" placeholder="Имя" asp-for="FirstName">
+        </div>
+        <div class="col">
+            <input type="text" class="form-control" placeholder="Фамилия" asp-for="LastName">
+        </div>
+    </div>
+
+    <input type="text" class="form-control mb-4" placeholder="Логин" asp-for="Login">
+
+    <!-- E-mail -->
+    <input type="email" class="form-control mb-4" placeholder="E-mail" asp-for="Email">
+
+    <!-- Password -->
+    <input type="password" class="form-control mb-4" placeholder="Пароль" aria-describedby="defaultRegisterFormPasswordHelpBlock" asp-for="Password">
+    <input type="password" class="form-control mb-4" placeholder="Повторите пароль" aria-describedby="defaultRegisterFormPasswordHelpBlock" asp-for="ConfirmPassword">
+
+    <input type="text" class="form-control mb-4" placeholder="Должность" asp-for="OfficePost">
+    <input type="text" class="form-control mb-4" placeholder="Отдел" asp-for="Department">
+    <input type="date" class="form-control mb-4" placeholder="Дата рождения" asp-for="BirthdayDay">
+
+    <!-- Sign up button -->
+    <button class="btn btn-info my-4 btn-block" type="submit">Регистрация</button>
+
+    <hr>
+
+    <p>Регистрируясь вы соглашаетесь
+        <a href="" target="_blank">с условием обслуживания</a>
+    </p>
+</form>

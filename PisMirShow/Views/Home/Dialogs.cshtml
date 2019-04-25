@@ -5,21 +5,22 @@
 
 <div id="inputForm" class="mt-5">
     <input type="text" id="message" />
+    <input type="text" id="sendTo" />
     <input type="button" id="sendBtn" value="Отправить" />
 </div>
 
 <div class="col-md-12 mt-2 p-0">
-    <div id="chatroom" class="mb-2">
-        @foreach (var post in ViewBag.Messages)
+    <div id="messages" class="mb-2">
+        @*@foreach (var post in ViewBag.Messages)
         {
             <p><b>@post.Author</b>: @post.Message</p>
-        }
+        }*@
     </div>
 </div>
-@*@User.Identity.Name*@
+
 <script src="/signalr.min.js"></script>
 <script>
-    let hubUrl = 'https://localhost:5001/chat';
+    let hubUrl = 'https://localhost:5001/dialog';
     const hubConnection = new signalR.HubConnectionBuilder()
         .withUrl(hubUrl)
         .configureLogging(signalR.LogLevel.Information)
@@ -42,8 +43,8 @@
     });
 
     document.getElementById("sendBtn").addEventListener("click", function (e) {
-        let message = document.getElementById("message").value;
-        hubConnection.invoke('Send', message, userName);
+        let message = $("#message").val();
+        hubConnection.invoke('Send', message, userName, $("#sendTo").val());
     });
 
     hubConnection.start();

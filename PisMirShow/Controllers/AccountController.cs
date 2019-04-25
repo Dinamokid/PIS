@@ -85,9 +85,11 @@ namespace PisMirShow.Controllers
 
         private async Task Authenticate(string userName)
         {
+            User user = await DbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Login == userName);
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, userName)
+                new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString())
             };
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));

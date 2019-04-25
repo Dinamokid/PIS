@@ -10,31 +10,28 @@ using PisMirShow.Models;
 namespace PisMirShow
 {
     [Authorize]
-    public class ChatHub : Hub
+    public class DialogHub : Hub
     {
         protected readonly PisDbContext DbContext;
-        public ChatHub(PisDbContext dbContext)
+        public DialogHub(PisDbContext dbContext)
         {
             DbContext = dbContext;
         }
-        public async Task Send(string message, string userName)
+
+        public async Task Send(string message, string userName, string sendTo)
         {
-            //User user = await DbContext.Users.AsNoTracking().FirstOrDefaultAsync(u=>u.Id == );
+            User user = await DbContext.Users.AsNoTracking().FirstOrDefaultAsync(u=>u.Id.ToString() == sendTo);
 
-            //TODO: https://metanit.com/sharp/aspnet5/18.3.php
-            //TODO: рассылка конкретным юзерам
-            //TODO: добавить задачи (открытие закрытие)
-            //TODO: загрузка файлов (модель (id,ссылка, List<Users> кто утвердил))
-            //TODO: прочитал в живую ленту
+            //DbContext.Posts.Add(new WallPost()
+            //{
+            //    Author = userName,
+            //    Message = message
+            //});
 
-            DbContext.Posts.Add(new WallPost()
-            {
-                Author = userName,
-                Message = message
-            });
-
-            DbContext.SaveChanges();
-            var a = Context.User.Claims.Any(u => u.Value == "2");
+            //DbContext.SaveChanges();
+            //var a = Context.User.Claims.Any(u => u.Value == "2");
+            //var b = Context.ConnectionId;
+            //await Clients.User(sendTo).SendAsync("Send", message, userName);
             await Clients.All.SendAsync("Send", message, userName);
         }
 

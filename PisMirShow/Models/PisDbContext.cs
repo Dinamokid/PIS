@@ -12,6 +12,8 @@ namespace PisMirShow
     {
         public DbSet<WallPost> Posts { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<FileInSystem> Files { get; set; }
+        public DbSet<TaskInSystem> Tasks { get; set; }
         
         public PisDbContext(DbContextOptions<PisDbContext> options)
             : base(options)

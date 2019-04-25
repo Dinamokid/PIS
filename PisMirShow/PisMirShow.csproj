@@ -25,4 +25,10 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="SignalRClasses\" />
+    <Folder Include="wwwroot\uploadedfiles\" />
+  </ItemGroup>
+
 </Project>

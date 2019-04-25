@@ -34,31 +34,40 @@ namespace PisMirShow.Controllers
         public IActionResult Tasks()
         {
             ViewBag.Tasks = DbContext.Tasks.AsNoTracking();
-            ViewBag.Users = DbContext.Users.AsNoTracking();
             return View();
         }
 
-        [HttpPost]
-        public IActionResult Tasks(TaskModel task)
+        public IActionResult AddTask()
         {
+            DbContext.Tasks.Add(new TaskInSystem());
+            DbContext.SaveChanges();
+            var model = DbContext.Tasks.Last();
 
-            DbContext.Tasks.Add(new TaskInSystem()
-            {
-                DeadLine = task.DeadLine,
-                FromUser = task.FromUser,
-                Status = TaskInSystem.TaskStatus.NotStarted,
-                Text = task.Text,
-                StartDate = DateTime.UtcNow,
-                ToUser = task.ToUser,
-            });
-            //DbContext.SaveChanges();
+            ViewBag.Users = DbContext.Users.AsNoTracking();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult AddTask(TaskInSystem temp)
+        {
+            var task = DbContext.Tasks.First(t=>t.Id == temp.Id);
+            task.DeadLine = temp.DeadLine;
+            task.Files = temp.Files;
+            task.FromUser = temp.FromUser;
+            task.StartDate = temp.StartDate;
+            task.Text = temp.Text;
+            task.ToUser = temp.ToUser;
+            task.EndDate = temp.EndDate;
+            task.Status = temp.Status;
+            DbContext.SaveChanges();
             return RedirectToAction("Tasks");
         }
 
         [HttpPost]
         public IActionResult UploadFiles()
         {
-            List<string> urlsList = new List<string>();
+            List<string> nameList = new List<string>();
             if (Request.Form.Files != null)
             {
                 var files = Request.Form.Files;
@@ -70,12 +79,43 @@ namespace PisMirShow.Controllers
                     {
                         file.CopyTo(fs);
                         var a = file.ContentType;
-                        urlsList.Add($@"\uploadedfiles\{file.FileName}");
+                        nameList.Add(file.FileName);
                         fs.Flush();
                     }
                 }
             }
-            return Json(urlsList);
+            return Json(nameList);
+        }
+
+        [HttpPost]
+        public JsonResult UploadFilesInBD(int taskId)
+        {
+            List<string> nameList = new List<string>();
+            foreach (var temp in Request.Form.Files)
+            {
+                byte[] fileData;
+
+                using (var binaryReader = new BinaryReader(temp.OpenReadStream()))
+                {
+                    fileData = binaryReader.ReadBytes((int)temp.Length);
+                }
+
+                FileInSystem file = new FileInSystem()
+                {
+                    File = fileData,
+                    Type = temp.ContentType,
+                    Сonfirmed = false,
+                    TaskId = taskId,
+                    Name = temp.FileName
+                };
+
+                nameList.Add(temp.FileName);
+
+                DbContext.Files.Add(file);
+                DbContext.SaveChanges();
+            }
+
+            return Json(nameList);
         }
 
         public IActionResult AddTestData()
@@ -91,6 +131,15 @@ namespace PisMirShow.Controllers
             return RedirectToAction("Index");
         }
 
+        public FileResult GetBytes()
+        {
+            var temp = DbContext.Files.Last();
+            byte[] mas = temp.File;
+            string file_type = temp.Type;
+            string file_name = temp.Name;
+            return File(mas, file_type, file_name);
+        }
+
         public IActionResult DeleteMessages()
         {
             foreach (var temp in DbContext.Posts)
@@ -102,9 +151,5 @@ namespace PisMirShow.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
     }
 }

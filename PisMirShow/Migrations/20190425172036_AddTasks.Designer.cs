@@ -10,7 +10,7 @@ using PisMirShow;
 namespace PisMirShow.Migrations
 {
     [DbContext(typeof(PisDbContext))]
-    [Migration("20190425102659_AddTasks")]
+    [Migration("20190425172036_AddTasks")]
     partial class AddTasks
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,10 +27,16 @@ namespace PisMirShow.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<byte[]>("File")
+                        .IsRequired();
+
+                    b.Property<string>("Name");
+
                     b.Property<int?>("TaskId")
                         .IsRequired();
 
-                    b.Property<string>("Url");
+                    b.Property<string>("Type")
+                        .IsRequired();
 
                     b.Property<bool>("Сonfirmed");
 
@@ -51,15 +57,17 @@ namespace PisMirShow.Migrations
 
                     b.Property<DateTime?>("EndDate");
 
-                    b.Property<int>("FromUser");
+                    b.Property<int?>("FromUser");
 
-                    b.Property<DateTime>("StartDate");
+                    b.Property<DateTime?>("StartDate");
 
                     b.Property<int>("Status");
 
                     b.Property<string>("Text");
 
-                    b.Property<int>("ToUser");
+                    b.Property<string>("Title");
+
+                    b.Property<int?>("ToUser");
 
                     b.HasKey("Id");
 

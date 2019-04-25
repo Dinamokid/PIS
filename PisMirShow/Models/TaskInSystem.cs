@@ -11,12 +11,13 @@ namespace PisMirShow.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int FromUser { get; set; }
-        public int ToUser { get; set; }
-        public DateTime StartDate { get; set; }
+        public int? FromUser { get; set; }
+        public int? ToUser { get; set; }
+        public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public DateTime? DeadLine { get; set; }
         public string Text { get; set; }
+        public string Title { get; set; }
         public ICollection<FileInSystem> Files { get; set; }
         public TaskStatus Status { get; set; }
 
@@ -32,6 +33,8 @@ namespace PisMirShow.Models
 
         public TaskInSystem()
         {
+            Status = TaskStatus.NotStarted;
+            StartDate = DateTime.UtcNow;
             Files = new List<FileInSystem>();
         }
     }

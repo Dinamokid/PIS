@@ -35,3 +35,8 @@ html {
     position: relative;
     min-height: 100%;
 }
+
+.File p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -14,12 +14,13 @@ namespace PisMirShow.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    FromUser = table.Column<int>(nullable: false),
-                    ToUser = table.Column<int>(nullable: false),
-                    StartDate = table.Column<DateTime>(nullable: false),
+                    FromUser = table.Column<int>(nullable: true),
+                    ToUser = table.Column<int>(nullable: true),
+                    StartDate = table.Column<DateTime>(nullable: true),
                     EndDate = table.Column<DateTime>(nullable: true),
                     DeadLine = table.Column<DateTime>(nullable: true),
                     Text = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: true),
                     Status = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -33,8 +34,10 @@ namespace PisMirShow.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Url = table.Column<string>(nullable: true),
+                    File = table.Column<byte[]>(nullable: false),
                     Сonfirmed = table.Column<bool>(nullable: false),
+                    Type = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
                     TaskId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

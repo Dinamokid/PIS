@@ -36,6 +36,26 @@ html {
     min-height: 100%;
 }
 
+.filebasket {
+    background-color: rgba(203, 203, 203, 0.70);
+    border: 4px dashed rgba(104, 104, 104, 0.70);
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+
+    i {
+        font-size: 40px;
+    }
+}
+
+.filebasket.active, .filebasket>i.active {
+    height: 150px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
 .File p {
     overflow: hidden;
     text-overflow: ellipsis;

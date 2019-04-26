@@ -31,10 +31,18 @@ namespace PisMirShow.Controllers
             return View();
         }
 
-        public IActionResult Tasks()
+        public IActionResult AllTasks()
         {
+            DellEmptyTasks();
             ViewBag.Tasks = DbContext.Tasks.AsNoTracking();
             return View();
+        }
+
+        public void DellEmptyTasks()
+        {
+           var emptyTasks = DbContext.Tasks.Where(t => t.Title == null);
+           DbContext.Tasks.RemoveRange(emptyTasks);
+           DbContext.SaveChanges();
         }
 
         public IActionResult AddTask()
@@ -60,8 +68,9 @@ namespace PisMirShow.Controllers
             task.ToUser = temp.ToUser;
             task.EndDate = temp.EndDate;
             task.Status = temp.Status;
+            task.Title = temp.Title;
             DbContext.SaveChanges();
-            return RedirectToAction("Tasks");
+            return RedirectToAction("AllTasks");
         }
 
         [HttpPost]

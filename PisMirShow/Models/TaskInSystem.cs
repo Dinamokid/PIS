@@ -26,6 +26,7 @@ namespace PisMirShow.Models
         public ICollection<FileInSystem> Files { get; set; }
         public string FilesId { get; set; }
         public TaskStatus Status { get; set; }
+        public ICollection<TaskComments> Comments { get; set; }
 
         public enum TaskStatus
         {
@@ -42,12 +43,5 @@ namespace PisMirShow.Models
             Status = TaskStatus.NotStarted;
             StartDate = DateTime.UtcNow;
         }
-
-        //public GetFiles()
-        //{
-        //    var task = DbContext.Tasks.First(t => t.Id == temp.Id);
-        //    var filesIds = temp.FilesId.Trim().Split(',');
-        //    task.Files = DbContext.Files.Where(f => filesIds.Any(t => t == f.Id.ToString())).ToList();
-        //}
     }
 }

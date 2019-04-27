@@ -109,14 +109,8 @@
         evt.stopPropagation();
         var files = evt.originalEvent.dataTransfer.files;
         var fileNames = "";
-        if (files.length > 0) {
-            fileNames += "Uploading <br />"
-            for (var i = 0; i < files.length; i++) {
-                fileNames += files[i].name + "<br />";
-            }
-        }
+
         toastr["info"]("Файлы загружаются");
-        //$("#fileBasket").html(fileNames);
 
         var data = new FormData();
         for (var i = 0; i < files.length; i++) {
@@ -124,7 +118,6 @@
         }
         $.ajax({
             type: "POST",
-            //url: "/home/UploadFiles",
             url: "/home/UploadFilesInBD?taskId="+@Model.Id,
             contentType: false,
             processData: false,

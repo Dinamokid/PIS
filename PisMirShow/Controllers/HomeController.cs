@@ -40,16 +40,9 @@ namespace PisMirShow.Controllers
 
         public IActionResult Task(int id)
         {
-            var task = DbContext.Tasks.Include(t => t.Files).AsNoTracking().FirstOrDefault(t => t.Id == id);
+            var task = DbContext.Tasks.Include(t => t.Files).Include(t => t.Comments).ThenInclude(t => t.User).AsNoTracking().FirstOrDefault(t => t.Id == id);
             ViewBag.Task = task;
             return View();
-        }
-
-        public void DellEmptyTasks()
-        {
-           var emptyTasks = DbContext.Tasks.Where(t => t.Title == null);
-           DbContext.Tasks.RemoveRange(emptyTasks);
-           DbContext.SaveChanges();
         }
 
         public IActionResult AddTask()
@@ -77,20 +70,42 @@ namespace PisMirShow.Controllers
             task.Status = temp.Status;
             task.Title = temp.Title;
             task.FilesId = temp.FilesId;
-            //var filesIds = temp.FilesId.Trim().Split(',');
-            //task.Files = DbContext.Files.Where(f => filesIds.Any(t => t == f.Id.ToString())).ToList();
             DbContext.SaveChanges();
             return RedirectToAction("AllTasks");
         }
 
+        public void DellEmptyTasks()
+        {
+            var emptyTasks = DbContext.Tasks.Where(t => t.Title == null);
+            DbContext.Tasks.RemoveRange(emptyTasks);
+            DbContext.SaveChanges();
+        }
+
+        public IActionResult AddCommentInTask(string text, int taskId, int userId)
+        {
+            var task = DbContext.Tasks.AsNoTracking().FirstOrDefault(t => t.Id == taskId);
+            if (task == null) return BadRequest();
+
+            DbContext.TaskComments.Add(new TaskComments
+            {
+                TaskId = taskId,
+                Text = text,
+                CreateDate = DateTime.UtcNow,
+                UserId = userId
+            });
+
+            DbContext.SaveChanges();
+            return Ok();
+        }
+
         [HttpPost]
-        public IActionResult UploadFiles()
+        public JsonResult UploadFiles()
         {
             List<string> nameList = new List<string>();
             if (Request.Form.Files != null)
             {
                 var files = Request.Form.Files;
-                
+
                 foreach (var file in files)
                 {
                     string filename = hostingEnv.WebRootPath + $@"\uploadedfiles\{file.FileName}";
@@ -144,19 +159,6 @@ namespace PisMirShow.Controllers
             var file = DbContext.Files.FirstOrDefault(f => f.Id == id);
             DbContext.Files.Remove(file);
             DbContext.SaveChanges();
-        }
-
-        public IActionResult AddTestData()
-        {
-            DbContext.Posts.Add(new WallPost()
-            {
-                Author = "text",
-                Message = "message"
-            });
-
-            DbContext.SaveChanges();
-
-            return RedirectToAction("Index");
         }
 
         public FileResult GetFileById(int id)

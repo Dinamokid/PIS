@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Task";
     var task = (TaskInSystem)ViewBag.Task;
+    var user = (User)ViewBag.User;
 }
 
 @* таски комментарии* *@
@@ -19,3 +20,59 @@
         <div class="col-2">@temp.Name</div>
     }
 </div>
+<section>
+
+    <div class="comments mt-5">
+        <div class="commentsList">
+            @foreach (var temp in task.Comments)
+            {
+                <div class="col-2">@temp.Text</div>
+                <div class="col-2">@temp.CreateDate</div>
+                <div class="col-2">@temp.User.GetFullName()</div>
+            }
+        </div>
+        <div class="addComments">
+            <div>
+                <label for="commentInput">Добавить комментарий:</label>
+                <input type="text" class="form-control" id="commentInput" />
+            </div>
+            <div>
+                <button class="btn-dark btn mt-2" onclick="addComment()">Отправить</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script>
+    function addComment() {
+        var data = new FormData();
+        data.append("taskId", @task.Id);
+        data.append("text", $("#commentInput").val());
+        data.append("userId", @user.Id);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("AddCommentInTask","Home")",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (names) {
+                $(".commentsList").append(`<div class="col-2">`+$("#commentInput").val()+`</div>
+                <div class="col-2">@DateTime.UtcNow</div>
+                <div class="col-2">@user.GetFullName()</div>`);
+                $("#commentInput").val("");
+            },
+            error: function () {
+                toastr["error"]("Произошла ошибка при загрузке файлов")
+            },
+            beforeSend: function () {
+                $("#progress").show();
+            },
+            complete: function () {
+                $("#progress").hide();
+            }
+        });
+    }
+    
+</script>

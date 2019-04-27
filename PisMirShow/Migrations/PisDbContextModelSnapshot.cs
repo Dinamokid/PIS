@@ -55,6 +55,8 @@ namespace PisMirShow.Migrations
 
                     b.Property<DateTime?>("EndDate");
 
+                    b.Property<string>("FilesId");
+
                     b.Property<int?>("FromUser");
 
                     b.Property<DateTime?>("StartDate");

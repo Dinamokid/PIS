@@ -38,6 +38,13 @@ namespace PisMirShow.Controllers
             return View();
         }
 
+        public IActionResult Task(int id)
+        {
+            var task = DbContext.Tasks.Include(t => t.Files).AsNoTracking().FirstOrDefault(t => t.Id == id);
+            ViewBag.Task = task;
+            return View();
+        }
+
         public void DellEmptyTasks()
         {
            var emptyTasks = DbContext.Tasks.Where(t => t.Title == null);
@@ -69,6 +76,9 @@ namespace PisMirShow.Controllers
             task.EndDate = temp.EndDate;
             task.Status = temp.Status;
             task.Title = temp.Title;
+            task.FilesId = temp.FilesId;
+            //var filesIds = temp.FilesId.Trim().Split(',');
+            //task.Files = DbContext.Files.Where(f => filesIds.Any(t => t == f.Id.ToString())).ToList();
             DbContext.SaveChanges();
             return RedirectToAction("AllTasks");
         }
@@ -99,7 +109,8 @@ namespace PisMirShow.Controllers
         [HttpPost]
         public JsonResult UploadFilesInBD(int taskId)
         {
-            List<string> nameList = new List<string>();
+            var nameList = new List<Tuple<int, string>>()
+                .Select(t => new { Id = t.Item1, Name = t.Item2 }).ToList();
             foreach (var temp in Request.Form.Files)
             {
                 byte[] fileData;
@@ -118,13 +129,21 @@ namespace PisMirShow.Controllers
                     Name = temp.FileName
                 };
 
-                nameList.Add(temp.FileName);
-
                 DbContext.Files.Add(file);
                 DbContext.SaveChanges();
+
+                var last = DbContext.Files.AsNoTracking().Last();
+                nameList.Add(new { Id = last.Id, Name = last.Name });
             }
 
             return Json(nameList);
+        }
+
+        public void DeleteFile(int id)
+        {
+            var file = DbContext.Files.FirstOrDefault(f => f.Id == id);
+            DbContext.Files.Remove(file);
+            DbContext.SaveChanges();
         }
 
         public IActionResult AddTestData()
@@ -140,13 +159,30 @@ namespace PisMirShow.Controllers
             return RedirectToAction("Index");
         }
 
-        public FileResult GetBytes()
+        public FileResult GetFileById(int id)
         {
-            var temp = DbContext.Files.Last();
-            byte[] mas = temp.File;
-            string file_type = temp.Type;
-            string file_name = temp.Name;
-            return File(mas, file_type, file_name);
+            var temp = DbContext.Files.FirstOrDefault(f=>f.Id == id);
+            if (temp != null)
+            {
+                byte[] mas = temp.File;
+                string file_type = temp.Type;
+                string file_name = temp.Name;
+                return File(mas, file_type, file_name);
+            }
+            return null;
+        }
+
+        public FileResult GetFilesByTask(int taskId)
+        {
+            var temp = DbContext.Files.FirstOrDefault(f => f.TaskId == taskId);
+            if (temp != null)
+            {
+                byte[] mas = temp.File;
+                string file_type = temp.Type;
+                string file_name = temp.Name;
+                return File(mas, file_type, file_name);
+            }
+            return null;
         }
 
         public IActionResult DeleteMessages()

@@ -21,6 +21,7 @@ namespace PisMirShow.Migrations
                     DeadLine = table.Column<DateTime>(nullable: true),
                     Text = table.Column<string>(nullable: true),
                     Title = table.Column<string>(nullable: true),
+                    FilesId = table.Column<string>(nullable: true),
                     Status = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

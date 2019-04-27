@@ -10,6 +10,7 @@
                 <div class="form-group">
                     <input type="hidden" asp-for="FromUser" value="@user.Id"/>
                     <input type="hidden" asp-for="Id" value="@Model.Id"/>
+                    <input type="hidden" asp-for="FilesId" id="FilesId"/>
                     
                     <div class="mt-4">
                         <label for="text">Название задачи:</label>
@@ -55,7 +56,6 @@
 
 <script>
     $(document).ready(function () {
-
         $("#progress").hide();
 
         $("#fileBasket, #fileBasket>i").on("dragenter", function (evt) {
@@ -77,7 +77,30 @@
 
         $("#fileBasket").on("drop", function (evt) {
             evt.preventDefault();
+            $(this).removeClass("active");
             evt.stopPropagation();
+        });
+    });
+
+    $(".File").click(function () {
+        id = $(this).attr("objId");
+        console.log(id);
+        $.ajax({
+            type: "GET",
+            url: "/home/DeleteFile?id=" + id,
+            success: function (names) {
+                toastr["success"]("Файлы удален");
+                $(this).hide();
+            },
+            error: function () {
+                toastr["error"]("Произошла ошибка при удалении файлов")
+            },
+            beforeSend: function () {
+                $("#progress").show();
+            },
+            complete: function () {
+                $("#progress").hide();
+            }
         });
     });
 
@@ -107,12 +130,19 @@
             processData: false,
             data: data,
             success: function (names) {
-                toastr["success"]("Файлы загружены")
+                toastr["success"]("Файлы загружены");
                 names.forEach(function (item, i, urls) {
-                    $("#FilesList").append(`<div class="File col-2 text-center mt-3">
+
+                    if ($("#FilesId").val() === '') {
+                        $("#FilesId").val($("#FilesId").val() + item.id);
+                    } else {
+                        $("#FilesId").val($("#FilesId").val() + "," + item.id);
+                    }
+
+                    $("#FilesList").append(`<div class="File col-2 text-center mt-3" objId=`+item.id+`>
             <i class="fas fa-file" style="font-size: 30px"></i>
             <p>
-                `+item+`
+                `+item.name+`
             </p>
         </div>`);
                 });

@@ -10,7 +10,7 @@ using PisMirShow;
 namespace PisMirShow.Migrations
 {
     [DbContext(typeof(PisDbContext))]
-    [Migration("20190425172036_AddTasks")]
+    [Migration("20190427160619_AddTasks")]
     partial class AddTasks
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,6 +56,8 @@ namespace PisMirShow.Migrations
                     b.Property<DateTime?>("DeadLine");
 
                     b.Property<DateTime?>("EndDate");
+
+                    b.Property<string>("FilesId");
 
                     b.Property<int?>("FromUser");
 

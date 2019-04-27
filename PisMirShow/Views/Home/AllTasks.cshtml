@@ -8,7 +8,10 @@
         <div class="row">
             @foreach (var temp in ViewBag.Tasks)
             {
-                <p>@temp.Title;</p>
+                <a href="@Url.Action("Task")/@temp.Id" class="col-3 mt-4">
+                    <h5>@temp.Title</h5>
+                    <p>@temp.Text</p>
+                </a>
             }
         </div>
     </div>

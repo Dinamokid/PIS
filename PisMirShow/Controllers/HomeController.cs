@@ -74,6 +74,36 @@ namespace PisMirShow.Controllers
             return RedirectToAction("AllTasks");
         }
 
+        public IActionResult AllFiles()
+        {
+            var files = DbContext.Files.AsNoTracking().ToList();
+            return View(files);
+        }
+
+        [HttpPost]
+        public IActionResult GetFileInfo(int id)
+        {
+            var file = DbContext.Files.AsNoTracking().FirstOrDefault(f => f.Id == id);
+            if (file != null)
+            {
+                return Json(file);
+            }
+            return BadRequest();
+        }
+
+        public IActionResult SetFileInfo(FileInSystem model)
+        {
+            var file = DbContext.Files.AsNoTracking().FirstOrDefault(f => f.Id == model.Id);
+            if (file != null)
+            {
+                file.Name = model.Name;
+                file.Сonfirmed = model.Сonfirmed;
+                DbContext.SaveChanges();
+                return RedirectToAction("AllFiles");
+            }
+            return BadRequest();
+        }
+
         public void DellEmptyTasks()
         {
             var emptyTasks = DbContext.Tasks.Where(t => t.Title == null);
@@ -154,11 +184,17 @@ namespace PisMirShow.Controllers
             return Json(nameList);
         }
 
-        public void DeleteFile(int id)
+        [HttpPost]
+        public IActionResult DeleteFile(int id)
         {
             var file = DbContext.Files.FirstOrDefault(f => f.Id == id);
-            DbContext.Files.Remove(file);
-            DbContext.SaveChanges();
+            if (file != null)
+            {
+                DbContext.Files.Remove(file);
+                DbContext.SaveChanges();
+                return Ok();
+            }
+            return BadRequest();
         }
 
         public FileResult GetFileById(int id)

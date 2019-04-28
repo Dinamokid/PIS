@@ -12,7 +12,7 @@
     <div id="chatroom" class="mb-2">
         @foreach (var post in ViewBag.Messages)
         {
-            <p><b>@post.Author</b>: @post.Message</p>
+            <p><b>@post.Author</b>: @post.Message <span id="date">@post.CreatedDate.ToString("g")</span></p>
         }
     </div>
 </div>
@@ -27,14 +27,19 @@
 
     var userName = `@user.GetFullName()`;
 
-    hubConnection.on('Send', function (message, userName) {
+    hubConnection.on('Send', function (message, userName, createdDate) {
 
         let userNameElem = document.createElement("b");
         userNameElem.appendChild(document.createTextNode(userName + ': '));
 
         let elem = document.createElement("p");
+        //elem.appendChild(userNameElem);
+        //elem.appendChild(document.createTextNode(message));
+
+        let dateElem = document.createElement("span");
         elem.appendChild(userNameElem);
         elem.appendChild(document.createTextNode(message));
+        elem.appendChild(document.createTextNode(" "+createdDate));
 
         var firstElem = document.getElementById("chatroom").firstChild;
         document.getElementById("chatroom").insertBefore(elem, firstElem);

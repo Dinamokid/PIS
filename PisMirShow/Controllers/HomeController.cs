@@ -93,15 +93,12 @@ namespace PisMirShow.Controllers
 
         public IActionResult SetFileInfo(FileInSystem model)
         {
-            var file = DbContext.Files.AsNoTracking().FirstOrDefault(f => f.Id == model.Id);
-            if (file != null)
-            {
-                file.Name = model.Name;
-                file.Сonfirmed = model.Сonfirmed;
-                DbContext.SaveChanges();
-                return RedirectToAction("AllFiles");
-            }
-            return BadRequest();
+            var file = DbContext.Files.FirstOrDefault(f => f.Id == model.Id);
+            if (file == null) return BadRequest();
+            file.Name = model.Name;
+            file.Сonfirmed = model.Сonfirmed;
+            DbContext.SaveChanges();
+            return Ok();
         }
 
         public void DellEmptyTasks()

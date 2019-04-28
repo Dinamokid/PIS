@@ -7,7 +7,11 @@
     <div class="row mt-2" id="FilesList">
         @foreach (var temp in Model)
         {
-            <div class="File col-2 text-center mt-3" objId="@temp.Id">
+            <div class="File col-6 col-sm-3 col-lg-2 text-center mt-3" objId="@temp.Id">
+                @if (temp.Сonfirmed)
+                {
+                    <i class="fas fa-check-circle position-absolute" style="right: 36%; top: -12px; color: greenyellow"></i>
+                }
                 <i class="fas fa-file" style="font-size: 30px"></i>
                 <p>
                     @temp.Name
@@ -38,7 +42,7 @@
                     </div>
                     <div class="form-group">
                         <label for="fileType">Тип файла:</label>
-                        <input type="text" name="fileType" disabled class="form-control">
+                        <input type="text" id="fileType" disabled class="form-control">
                     </div>
                     <div class="custom-control custom-switch">
                         <input type="checkbox" class="custom-control-input" id="confirmed">
@@ -51,7 +55,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    <button type="button" class="btn btn-primary">Сохранить изменения</button>
+                    <button type="button" class="btn btn-primary" onclick="SaveUpdates()">Сохранить изменения</button>
                 </div>
             </div>
         </div>
@@ -60,9 +64,39 @@
 
 <script>
 
+    function SaveUpdates() {
+        var data = new FormData();
+
+        data.append("Name", $("#fileName").val());
+        data.append("Сonfirmed", $('#confirmed').is(":checked"));
+        data.append("Id", $("#fileId").val());
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("SetFileInfo", "Home")",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function () {
+                toastr["success"]("Файл успешно удален");
+            },
+            error: function () {
+                toastr["error"]("Произошла ошибка при удалении файла");
+            },
+            beforeSend: function () {
+                $("#progress").show();
+            },
+            complete: function () {
+                $("#progress").hide();
+            }
+        });
+
+        $("#Modal").modal('hide');
+        setTimeout("location.reload();", 300);
+    }
+
     function DownloadFile() {
-        var win = window.open('/GetFileById?id=' + window.modalData.id);
-        setTimeout("win.close()", 3000);
+        window.open('/GetFileById?id=' + window.modalData.id);
     }
 
     function DeleteFile() {

@@ -46,7 +46,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="row mt-2 p-4" id="FilesList">
-                        
+
                     </div>
                 </div>
             </div>
@@ -54,80 +54,5 @@
     </div>
 </section>
 
-
-<script>
-    $(document).ready(function () {
-        $("#progress").hide();
-
-        $("#fileBasket, #fileBasket>i").on("dragenter", function (evt) {
-            evt.preventDefault();
-            $(this).addClass("active");
-            evt.stopPropagation();
-        });
-
-        $("#fileBasket").on("dragover", function (evt) {
-            evt.preventDefault();
-            evt.stopPropagation();
-        });
-
-        $("#fileBasket, #fileBasket>i").on("dragleave", function (evt) {
-            evt.preventDefault();
-            $(this).removeClass("active");
-            evt.stopPropagation();
-        });
-
-        $("#fileBasket").on("drop", function (evt) {
-            evt.preventDefault();
-            $(this).removeClass("active");
-            evt.stopPropagation();
-        });
-    });
-
-    $("#fileBasket").on("drop", function (evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-        var files = evt.originalEvent.dataTransfer.files;
-        var fileNames = "";
-        var data = new FormData();
-        for (var i = 0; i < files.length; i++) {
-            data.append(files[i].name, files[i]);
-        }
-        $.ajax({
-            type: "POST",
-            url: "/home/UploadFilesInBD?taskId="+@Model.Id,
-            contentType: false,
-            processData: false,
-            data: data,
-            success: function (names) {
-                toastr["success"]("Файлы загружены");
-                names.forEach(function (item, i, urls) {
-
-                    if ($("#FilesId").val() === '') {
-                        $("#FilesId").val($("#FilesId").val() + item.id);
-                    } else {
-                        $("#FilesId").val($("#FilesId").val() + "," + item.id);
-                    }
-
-                    $("#FilesList").append(`<div class="File col-6 col-sm-3 col-lg-3 text-center mt-3" onclick="EditFile(` + item.id + `)">
-                <i class="fas fa-check-circle position-absolute" style="right: 36%; top: -12px; color: greenyellow;"></i>
-                <i class="fas fa-file" style="font-size: 30px"></i>
-                <p class="name">
-                    `+ item.name + `
-                </p>
-            </div>`)
-                });
-            },
-            error: function () {
-                toastr["error"]("Произошла ошибка при загрузке файлов")
-            },
-            beforeSend: function () {
-                $("#progress").show();
-            },
-            complete: function () {
-                $("#progress").hide();
-            }
-        });
-    });
-</script>
-
+<partial name="../particle/_FileDroper" />
 <partial name="../particle/_FileInteraction" />

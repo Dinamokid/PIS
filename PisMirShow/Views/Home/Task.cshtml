@@ -1,37 +1,54 @@
-﻿@{
+﻿@model TaskInSystem;
+@{
     ViewData["Title"] = "Task";
-    var task = (TaskInSystem)ViewBag.Task;
     var user = (User)ViewBag.User;
 }
 
 @* таски кнопки следующего действия *@
 @* чат системадиалогов* *@
-@* файлы файлообменник *@
 
-<h1 class="mt-3">@task.Title</h1>
-<p>Дата создания: @task.StartDate</p>
-<p>Статус: @task.Status</p>
-<p>Кому: @task.ToUser</p>
-<p>DeadLine: @task.DeadLine</p>
-<p>Текст задачи: @task.Text</p>
-<div class="row">
-    @foreach (var temp in task.Files)
-    {
-        <div class="col-2">@temp.Name</div>
-    }
-</div>
+
+<partial name="../particle/_FileInteraction" />
+<partial name="../particle/_FileDroper" />
+
 <section>
-
-    <div class="comments mt-5">
+    <h1 class="mt-3">@Model.Title</h1>
+    <p>Дата создания: @Model.StartDate</p>
+    <p>Статус: @Model.Status</p>
+    <p>Кому: @Model.ToUser</p>
+    <p>DeadLine: @Model.DeadLine</p>
+    <p>Текст задачи: @Model.Text</p>
+    <div>
+        <div id="fileBasket" class="filebasket">
+            <i class="fas fa-cloud-upload-alt"></i>
+        </div>
+    </div>
+    <div class="row mt-2" id="FilesList">
+        @foreach (var temp in Model.Files)
+        {
+            <div class="File @(temp.Сonfirmed == true? "Confirmed":"") col-6 col-sm-3 col-lg-2 text-center mt-3" onclick="EditFile(@temp.Id)">
+                <i class="fas fa-check-circle position-absolute" style="right: 36%; top: -12px; color: greenyellow;"></i>
+                <i class="fas fa-file" style="font-size: 30px"></i>
+                <p class="name">
+                    @temp.Name
+                </p>
+            </div>
+        }
+    </div>
+</section>
+<section>
+    <div class="comments mt-2">
         <div class="commentsList">
-            @foreach (var temp in task.Comments)
+            @foreach (var temp in Model.Comments)
             {
-                <div class="col-2">@temp.Text</div>
-                <div class="col-2">@temp.CreateDate</div>
-                <div class="col-2">@temp.User.GetFullName()</div>
+                <div class="comment mt-2">
+                    <div>@temp.Text</div>
+                    <div>@temp.CreateDate</div>
+                    <div>@temp.User.GetFullName()</div>
+                </div>
             }
         </div>
-        <div class="addComments">
+        <div class="addComments mt-4">
             <div>
                 <label for="commentInput">Добавить комментарий:</label>
                 <input type="text" class="form-control" id="commentInput" />
@@ -47,7 +64,7 @@
 <script>
     function addComment() {
         var data = new FormData();
-        data.append("taskId", @task.Id);
+        data.append("taskId", @Model.Id);
         data.append("text", $("#commentInput").val());
         data.append("userId", @user.Id);
 
@@ -58,9 +75,12 @@
             processData: false,
             data: data,
             success: function (names) {
-                $(".commentsList").append(`<div class="col-2">`+$("#commentInput").val()+`</div>
-                <div class="col-2">@DateTime.UtcNow</div>
-                <div class="col-2">@user.GetFullName()</div>`);
+                $(".commentsList").append(`
+                <div class="comment mt-2">
+                    <div class="mt-2">`+ $("#commentInput").val() +`</div>
+                    <div>@DateTime.UtcNow</div>
+                    <div>@user.GetFullName()</div>
+                </div>`);
                 $("#commentInput").val("");
             },
             error: function () {
@@ -74,5 +94,4 @@
             }
         });
     }
-    
 </script>

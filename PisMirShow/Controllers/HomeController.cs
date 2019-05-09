@@ -41,8 +41,7 @@ namespace PisMirShow.Controllers
         public IActionResult Task(int id)
         {
             var task = DbContext.Tasks.Include(t => t.Files).Include(t => t.Comments).ThenInclude(t => t.User).AsNoTracking().FirstOrDefault(t => t.Id == id);
-            ViewBag.Task = task;
-            return View();
+            return View(task);
         }
 
         public IActionResult AddTask()

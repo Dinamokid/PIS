@@ -7,11 +7,11 @@
     <div class="container">
         <form asp-controller="Home" asp-action="AddTask" method="post" enctype="multipart/form-data">
             <div class="row">
-                <div class="form-group">
-                    <input type="hidden" asp-for="FromUser" value="@user.Id"/>
-                    <input type="hidden" asp-for="Id" value="@Model.Id"/>
-                    <input type="hidden" asp-for="FilesId" id="FilesId"/>
-                    
+                <div class="form-group col-md-6">
+                    <input type="hidden" asp-for="FromUser" value="@user.Id" />
+                    <input type="hidden" asp-for="Id" value="@Model.Id" />
+                    <input type="hidden" asp-for="FilesId" id="FilesId" />
+
                     <div class="mt-4">
                         <label for="text">Название задачи:</label>
                         <input type="text" id="text" required class="form-control" asp-for="Title">
@@ -21,12 +21,12 @@
                         <label for="date">DeadLine:</label>
                         <input type="date" id="date" class="form-control" asp-for="DeadLine">
                     </div>
-                  
+
                     <div class="form-group mt-4">
                         <label for="text">Текст задачи:</label>
-                        <textarea class="form-control" type="text" id="text" class="form-control" asp-for="Text"rows="3"></textarea>
+                        <textarea class="form-control" type="text" id="text" class="form-control" asp-for="Text" rows="3"></textarea>
                     </div>
-                    
+
                     <div class="form-group mt-4">
                         <label for="toUser">Кому:</label>
                         <select class="custom-select" required asp-for="ToUser" id="ToUser">
@@ -42,15 +42,16 @@
                             <i class="fas fa-cloud-upload-alt"></i>
                         </div>
                     </div>
-
-                    <input type="submit" class="btn btn-dark mt-4"/>
+                    <input type="submit" class="btn btn-dark mt-4" />
+                </div>
+                <div class="col-md-6">
+                    <div class="row mt-2 p-4" id="FilesList">
+                        
+                    </div>
                 </div>
             </div>
         </form>
     </div>
-
-    <div class="row mt-2" id="FilesList"></div>
-
 </section>
 
 
@@ -82,36 +83,11 @@
         });
     });
 
-    $(".File").click(function () {
-        id = $(this).attr("objId");
-        console.log(id);
-        $.ajax({
-            type: "GET",
-            url: "/home/DeleteFile?id=" + id,
-            success: function (names) {
-                toastr["success"]("Файлы удален");
-                $(this).hide();
-            },
-            error: function () {
-                toastr["error"]("Произошла ошибка при удалении файлов")
-            },
-            beforeSend: function () {
-                $("#progress").show();
-            },
-            complete: function () {
-                $("#progress").hide();
-            }
-        });
-    });
-
     $("#fileBasket").on("drop", function (evt) {
         evt.preventDefault();
         evt.stopPropagation();
         var files = evt.originalEvent.dataTransfer.files;
         var fileNames = "";
-
-        toastr["info"]("Файлы загружаются");
-
         var data = new FormData();
         for (var i = 0; i < files.length; i++) {
             data.append(files[i].name, files[i]);
@@ -132,12 +108,13 @@
                         $("#FilesId").val($("#FilesId").val() + "," + item.id);
                     }
 
-                    $("#FilesList").append(`<div class="File col-2 text-center mt-3" objId=`+item.id+`>
-            <i class="fas fa-file" style="font-size: 30px"></i>
-            <p>
-                `+item.name+`
-            </p>
-        </div>`);
+                    $("#FilesList").append(`<div class="File col-6 col-sm-3 col-lg-3 text-center mt-3" onclick="EditFile(` + item.id + `)">
+                <i class="fas fa-check-circle position-absolute" style="right: 36%; top: -12px; color: greenyellow;"></i>
+                <i class="fas fa-file" style="font-size: 30px"></i>
+                <p class="name">
+                    `+ item.name + `
+                </p>
+            </div>`)
                 });
             },
             error: function () {
@@ -152,3 +129,5 @@
         });
     });
 </script>
+
+<partial name="../particle/_FileInteraction" />

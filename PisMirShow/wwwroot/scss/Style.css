@@ -43,9 +43,15 @@ html {
   display: flex;
   justify-content: center; }
 
-.File p {
-  overflow: hidden;
-  text-overflow: ellipsis; }
-
-.File .fa-file {
+.File {
   cursor: pointer; }
+  .File p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none; }
+  .File .fa-check-circle {
+    display: none; }
+  .File.Confirmed .fa-check-circle {
+    display: block; }

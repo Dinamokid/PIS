@@ -56,11 +56,24 @@ html {
     justify-content: center;
 }
 
-.File p {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.File .fa-file {
+.File {
     cursor: pointer;
+
+    p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        user-select: none;
+    }
+
+    .fa-check-circle {
+        display: none;
+    }
+
+    &.Confirmed {
+        .fa-check-circle {
+            display: block;
+        }
+    }
 }

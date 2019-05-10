@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,11 +31,17 @@ namespace PisMirShow.Models
 
         public enum TaskStatus
         {
+            [Display(Name = "Не активно")]
             NotStarted,
+            [Display(Name = "Активно")]
             Active,
+            [Display(Name = "Остановлено")]
             Paused,
+            [Display(Name = "Подтверждено")]
             Сonfirmed, //подтверждена
+            [Display(Name = "Завершено")]
             Finished,
+            [Display(Name = "Просрочено")]
             Expited //просрочена
         }
 

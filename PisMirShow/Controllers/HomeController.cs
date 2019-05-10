@@ -230,5 +230,14 @@ namespace PisMirShow.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public IActionResult SetTaskStatus(int status, int taskId)
+        {
+            var temp = DbContext.Tasks.FirstOrDefault(f => f.Id == taskId);
+            if (temp == null) return BadRequest();
+            temp.Status = (TaskInSystem.TaskStatus)status;
+            DbContext.SaveChanges();
+            return Ok();
+        }
     }
 }

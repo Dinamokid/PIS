@@ -14,15 +14,11 @@
 <section>
     <h1 class="mt-3">@Model.Title</h1>
     <p>Дата создания: @Model.StartDate</p>
-    <p>Статус: @Model.Status</p>
+    <p>Статус: <span id="status">@Model.Status.GetDisplayName()</span></p>
     <p>Кому: @Model.ToUser</p>
     <p>DeadLine: @Model.DeadLine</p>
     <p>Текст задачи: @Model.Text</p>
-    <div>
-        <div id="fileBasket" class="filebasket">
-            <i class="fas fa-cloud-upload-alt"></i>
-        </div>
-    </div>
+
     <div class="row mt-2" id="FilesList">
         @foreach (var temp in Model.Files)
         {
@@ -35,6 +31,34 @@
             </div>
         }
     </div>
+
+    <div>
+        <div id="fileBasket" class="filebasket">
+            <i class="fas fa-cloud-upload-alt"></i>
+        </div>
+    </div>
+
+    <div class="setStatus row mt-3 mb-4">
+        <div class="container">
+            @if (Model.Status != TaskInSystem.TaskStatus.Active)
+            {
+                <button class="btn btn-dark col-md-2" onclick="SetTaskStatus(1)">Активировать</button>
+            }
+            @if (Model.Status >= TaskInSystem.TaskStatus.Active)
+            {
+                <button class="btn btn-dark col-md-2" onclick="SetTaskStatus(2)">Остановить</button>
+            }
+            @if (Model.Status >= TaskInSystem.TaskStatus.Active)
+            {
+                <button class="btn btn-dark col-md-2" onclick="SetTaskStatus(3)">Подтвердить</button>
+            }
+            @if (Model.Status >= TaskInSystem.TaskStatus.Active)
+            {
+                <button class="btn btn-dark col-md-2" onclick="SetTaskStatus(4)">Завершить</button>
+            }
+        </div>
+    </div>
+
 </section>
 <section>
     <div class="comments mt-2">
@@ -62,6 +86,32 @@
 
 
 <script>
+    function SetTaskStatus(status) {
+        var data = new FormData();
+        data.append("status", status);
+        data.append("taskId", @Model.Id);
+
+         $.ajax({
+            type: "POST",
+            url: "@Url.Action("SetTaskStatus", "Home")",
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function () {
+                setTimeout("location.reload();", 300);
+            },
+            error: function () {
+                toastr["error"]("Произошла ошибка при смене статуса")
+            },
+            beforeSend: function () {
+                $("#progress").show();
+            },
+            complete: function () {
+                $("#progress").hide();
+            }
+        });
+    }
+
     function addComment() {
         var data = new FormData();
         data.append("taskId", @Model.Id);

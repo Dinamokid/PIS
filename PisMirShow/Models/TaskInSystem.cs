@@ -13,13 +13,11 @@ namespace PisMirShow.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int? FromUser { get; set; }
-        public int? ToUser { get; set; }
         public DateTime? StartDate { get; set; }
-        //public int? FromUserId { get; set; }
-        //public virtual User FromUser { get; set; }
-        //public int? ToUserId { get; set; }
-        //public virtual User ToUser { get; set; }
+        public int? FromUserId { get; set; }
+        public virtual User FromUser { get; set; }
+        public int? ToUserId { get; set; }
+        public virtual User ToUser { get; set; }
         public DateTime? EndDate { get; set; }
         public DateTime? DeadLine { get; set; }
         public string Text { get; set; }
@@ -38,11 +36,9 @@ namespace PisMirShow.Models
             [Display(Name = "Остановлено")]
             Paused,
             [Display(Name = "Подтверждено")]
-            Сonfirmed, //подтверждена
+            Сonfirmed, 
             [Display(Name = "Завершено")]
             Finished,
-            [Display(Name = "Просрочено")]
-            Expited //просрочена
         }
 
         public TaskInSystem()

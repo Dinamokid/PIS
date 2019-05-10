@@ -40,7 +40,7 @@ namespace PisMirShow.Controllers
 
         public IActionResult Task(int id)
         {
-            var task = DbContext.Tasks.Include(t => t.Files).Include(t => t.Comments).ThenInclude(t => t.User).AsNoTracking().FirstOrDefault(t => t.Id == id);
+            var task = DbContext.Tasks.Include(t => t.Files).Include(u=>u.FromUser).Include(u => u.ToUser).Include(t => t.Comments).ThenInclude(t => t.User).AsNoTracking().FirstOrDefault(t => t.Id == id);
             return View(task);
         }
 

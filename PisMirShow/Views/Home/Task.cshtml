@@ -4,7 +4,6 @@
     var user = (User)ViewBag.User;
 }
 
-@* таски кнопки следующего действия *@
 @* чат системадиалогов* *@
 
 
@@ -15,7 +14,7 @@
     <h1 class="mt-3">@Model.Title</h1>
     <p>Дата создания: @Model.StartDate</p>
     <p>Статус: <span id="status">@Model.Status.GetDisplayName()</span></p>
-    <p>Кому: @Model.ToUser</p>
+    <p>Кому: @Model.ToUser.GetFullName()</p>
     <p>DeadLine: @Model.DeadLine</p>
     <p>Текст задачи: @Model.Text</p>
 

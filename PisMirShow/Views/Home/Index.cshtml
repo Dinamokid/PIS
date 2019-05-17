@@ -3,20 +3,34 @@
     var user = (User)ViewBag.User;
 }
 
-<div id="inputForm" class="mt-5">
-    <input type="text" id="message" />
-    <input type="button" id="sendBtn" value="Отправить" />
-</div>
-
-<div class="col-md-12 mt-2 p-0">
-    <div id="chatroom" class="mb-2">
-        @foreach (var post in ViewBag.Messages)
-        {
-            <p><b>@post.Author</b>: @post.Message <span id="date">@post.CreatedDate.ToString("g")</span></p>
-        }
+<div class="container">
+    <div class="col-md-12 mt-4 p-0">
+        <div id="chatroom" class="mb-2">
+            @foreach (var post in ViewBag.Messages)
+            {
+                <div class="mt-3">
+                    <div class="d-flex">
+                        <b class="border-bottom w-100">@post.Author</b>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>
+                            @post.Message
+                        </span>
+                        <span id="date">@post.CreatedDate.ToString("g")</span>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 </div>
-@*@User.Identity.Name*@
+<div id="inputForm">
+    <div class="row justify-content-center mt-4">
+        <input type="text" class="form-control col-md-6 mb-2 mr-sm-2" id="message" placeholder="Введите сообщение">
+        <button type="button" id="sendBtn" class="btn btn-dark col-md-2 mb-2">Отправить</button>
+    </div>
+</div>
+
+
 <script src="/signalr.min.js"></script>
 <script>
     let hubUrl = 'https://localhost:5001/chat';
@@ -28,22 +42,18 @@
     var userName = `@user.GetFullName()`;
 
     hubConnection.on('Send', function (message, userName, createdDate) {
-
-        let userNameElem = document.createElement("b");
-        userNameElem.appendChild(document.createTextNode(userName + ': '));
-
-        let elem = document.createElement("p");
-        //elem.appendChild(userNameElem);
-        //elem.appendChild(document.createTextNode(message));
-
-        let dateElem = document.createElement("span");
-        elem.appendChild(userNameElem);
-        elem.appendChild(document.createTextNode(message));
-        elem.appendChild(document.createTextNode(" "+createdDate));
-
-        var firstElem = document.getElementById("chatroom").firstChild;
-        document.getElementById("chatroom").insertBefore(elem, firstElem);
-
+       $("#chatroom").append(`<div class="mt-2">
+                    <div class="d-flex">
+                        <b class="border-bottom w-100">`+ userName +`</b>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>
+                           `+ message +`
+                        </span>
+                        <span id="date">`+ createdDate +`</span>
+                    </div>
+                </div>`);
+       $("#message").val("");
     });
 
     document.getElementById("sendBtn").addEventListener("click", function (e) {

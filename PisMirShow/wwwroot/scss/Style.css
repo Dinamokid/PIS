@@ -10,6 +10,9 @@ html {
   html {
     font-size: 16px; } }
 
+body {
+  font-family: "Geometria" !important; }
+
 .border-top {
   border-top: 1px solid #e5e5e5; }
 
@@ -55,3 +58,11 @@ html {
     display: none; }
   .File.Confirmed .fa-check-circle {
     display: block; }
+
+#inputForm {
+  bottom: 60px;
+  width: 100%; }
+
+#chatroom {
+  height: 68vh;
+  overflow: auto; }

@@ -22,7 +22,7 @@ namespace PisMirShow.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.Messages = DbContext.Posts.AsNoTracking().OrderByDescending(u => u.Id);
+            ViewBag.Messages = DbContext.Posts.AsNoTracking().OrderBy(u => u.Id);
             return View();
         }
 
@@ -34,7 +34,17 @@ namespace PisMirShow.Controllers
         public IActionResult AllTasks()
         {
             DellEmptyTasks();
-            ViewBag.Tasks = DbContext.Tasks.AsNoTracking();
+            var task = DbContext.Tasks.Include(t => t.ToUser).Include(t => t.FromUser).AsNoTracking().ToList();
+            return View(task);
+        }
+
+        public IActionResult About()
+        {
+            return View();
+        }
+
+        public IActionResult Documents()
+        {
             return View();
         }
 
@@ -61,10 +71,10 @@ namespace PisMirShow.Controllers
             var task = DbContext.Tasks.First(t=>t.Id == temp.Id);
             task.DeadLine = temp.DeadLine;
             task.Files = temp.Files;
-            task.FromUser = temp.FromUser;
+            task.FromUserId = temp.FromUserId;
             task.StartDate = temp.StartDate;
             task.Text = temp.Text;
-            task.ToUser = temp.ToUser;
+            task.ToUserId = temp.ToUserId;
             task.EndDate = temp.EndDate;
             task.Status = temp.Status;
             task.Title = temp.Title;
@@ -104,6 +114,12 @@ namespace PisMirShow.Controllers
         {
             var emptyTasks = DbContext.Tasks.Where(t => t.Title == null);
             DbContext.Tasks.RemoveRange(emptyTasks);
+            DbContext.SaveChanges();
+        }
+
+        public void ClearComments()
+        {
+            DbContext.Posts.RemoveRange(DbContext.Posts);
             DbContext.SaveChanges();
         }
 

@@ -2,13 +2,17 @@
 @{
     var user = (User)ViewBag.User;
 }
-
+<script>
+    $("#date").datepicker({
+        minDate: 0
+    });
+</script>
 <section>
     <div class="container">
         <form asp-controller="Home" asp-action="AddTask" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="form-group col-md-6">
-                    <input type="hidden" asp-for="FromUser" value="@user.Id" />
+                    <input type="hidden" asp-for="FromUserId" value="@user.Id" />
                     <input type="hidden" asp-for="Id" value="@Model.Id" />
                     <input type="hidden" asp-for="FilesId" id="FilesId" />
 
@@ -19,7 +23,7 @@
 
                     <div class="mt-4">
                         <label for="date">DeadLine:</label>
-                        <input type="date" id="date" class="form-control" asp-for="DeadLine">
+                        <input type="datetime-local" id="date" class="form-control" asp-for="DeadLine">
                     </div>
 
                     <div class="form-group mt-4">
@@ -29,7 +33,7 @@
 
                     <div class="form-group mt-4">
                         <label for="toUser">Кому:</label>
-                        <select class="custom-select" required asp-for="ToUser" id="ToUser">
+                        <select class="custom-select" required asp-for="ToUserId" id="ToUser">
                             @foreach (var temp in ViewBag.Users)
                             {
                                 <option value="@temp.Id">@(temp.GetFullName())</option>

@@ -32,14 +32,20 @@ namespace PisMirShow.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await DbContext.Users.FirstOrDefaultAsync(u => u.Login == model.Login && u.Password == model.Password);
-                if (user != null)
+                try
                 {
-                    await Authenticate(model.Login); // аутентификация
+                    User user = await DbContext.Users.FirstOrDefaultAsync(u => u.Login == model.Login && u.Password == model.Password);
 
-                    return RedirectToAction("Index", "Home");
+                    if (user != null)
+                    {
+                        await Authenticate(model.Login); // аутентификация
+
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
-                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                catch {
+                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                }
             }
             return View(model);
         }

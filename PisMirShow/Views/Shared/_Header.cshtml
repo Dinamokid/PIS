@@ -32,7 +32,7 @@
                         <i class="far fa-user mr-1"> </i>  @ViewBag.User.GetFullName()
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <button class="dropdown-item" type="button" asp-controller="Account" asp-action="#">Мой кабинет</button>
+                        <a class="dropdown-item" asp-controller="Home" asp-action="Profile">Мой кабинет</a>
                         <a class="dropdown-item" asp-controller="Account" asp-action="Logout">Выход</a>
                     </div>
                 </div>

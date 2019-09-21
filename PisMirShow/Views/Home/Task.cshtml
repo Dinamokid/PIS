@@ -37,27 +37,33 @@
             <i class="fas fa-cloud-upload-alt"></i>
         </div>
     </div>
-
-    <div class="setStatus row mt-3 mb-4">
-        <div class="container">
-            @if (Model.Status != TaskInSystem.TaskStatus.Active)
-            {
-                <button class="btn btn-dark col-md-2" onclick="SetTaskStatus(1)">Активировать</button>
-            }
-            @if (Model.Status >= TaskInSystem.TaskStatus.Active && Model.Status != TaskInSystem.TaskStatus.Paused)
-            {
-                <button class="btn btn-dark col-md-2" onclick="SetTaskStatus(2)">Остановить</button>
-            }
-            @if (Model.Status >= TaskInSystem.TaskStatus.Active && Model.Status != TaskInSystem.TaskStatus.Сonfirmed)
-            {
-                <button class="btn btn-dark col-md-2" onclick="SetTaskStatus(3)">Подтвердить</button>
-            }
-            @if (Model.Status >= TaskInSystem.TaskStatus.Сonfirmed && Model.Status != TaskInSystem.TaskStatus.Finished)
-            {
-                <button class="btn btn-dark col-md-2" onclick="SetTaskStatus(4)">Завершить</button>
-            }
+    
+    <div class="d-flex">
+        <div class="mt-3 mb-4 mr-2">
+            <a class="btn btn-dark" href="@Url.Action("EditTask", "Home", new { id = Model.Id })">Редактировать задание</a>
+        </div>
+        <div class="setStatus row mt-3 mb-4">
+            <div class="container">
+                @if (Model.Status != TaskInSystem.TaskStatus.Active)
+                {
+                    <button class="btn btn-dark" onclick="SetTaskStatus(1)">Активировать</button>
+                }
+                @if (Model.Status >= TaskInSystem.TaskStatus.Active && Model.Status != TaskInSystem.TaskStatus.Paused)
+                {
+                    <button class="btn btn-dark" onclick="SetTaskStatus(2)">Остановить</button>
+                }
+                @if (Model.Status >= TaskInSystem.TaskStatus.Active && Model.Status != TaskInSystem.TaskStatus.Сonfirmed)
+                {
+                    <button class="btn btn-dark" onclick="SetTaskStatus(3)">Подтвердить</button>
+                }
+                @if (Model.Status >= TaskInSystem.TaskStatus.Сonfirmed && Model.Status != TaskInSystem.TaskStatus.Finished)
+                {
+                    <button class="btn btn-dark" onclick="SetTaskStatus(4)">Завершить</button>
+                }
+            </div>
         </div>
     </div>
+
 </section>
 <section>
     <div class="comments mt-2">

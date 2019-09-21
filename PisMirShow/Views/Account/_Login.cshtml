@@ -1,0 +1,29 @@
+﻿@model PisMirShow.ViewModels.LoginModel
+
+<div class="validation" asp-validation-summary="ModelOnly"></div>
+<p class="h4 mb-4">Вход</p>
+<div class="form-group">
+    <input type="text" id="defaultLoginFormEmail" class="form-control mb-4" placeholder="Логин" required asp-for="Login">
+    <span asp-validation-for="Login" />
+</div>
+<div class="form-group">
+    <input type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Пароль" required asp-for="Password">
+    <span asp-validation-for="Password" />
+</div>
+<div class="d-flex justify-content-around">
+    @*
+        <div>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="defaultLoginFormRemember">
+                <label class="custom-control-label" for="defaultLoginFormRemember">Remember me</label>
+            </div>
+        </div>
+        <div>
+            <a href="">Forgot password?</a>
+        </div>*@
+</div>
+<button class="btn btn-info btn-block my-4" type="submit">Войти</button>
+<p>
+    Нет аккаунта?
+    <a asp-action="Register" asp-controller="Account">Регистрация</a>
+</p>

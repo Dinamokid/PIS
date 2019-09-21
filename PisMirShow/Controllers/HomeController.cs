@@ -83,6 +83,35 @@ namespace PisMirShow.Controllers
             return RedirectToAction("AllTasks");
         }
 
+        public IActionResult EditTask(int id)
+        {
+            var model = DbContext.Tasks.FirstOrDefault(t => t.Id == id);
+
+            if (model == null) RedirectToAction("AllTasks");
+
+            ViewBag.Users = DbContext.Users.AsNoTracking();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult EditTask(TaskInSystem temp)
+        {
+            var task = DbContext.Tasks.First(t=>t.Id == temp.Id);
+            task.DeadLine = temp.DeadLine;
+            task.Files = temp.Files;
+            task.FromUserId = temp.FromUserId;
+            task.StartDate = temp.StartDate;
+            task.Text = temp.Text;
+            task.ToUserId = temp.ToUserId;
+            task.EndDate = temp.EndDate;
+            task.Status = temp.Status;
+            task.Title = temp.Title;
+            task.FilesId = temp.FilesId;
+            DbContext.SaveChanges();
+            return RedirectToAction("AllTasks");
+        }
+
         public IActionResult AllFiles()
         {
             var files = DbContext.Files.AsNoTracking().ToList();

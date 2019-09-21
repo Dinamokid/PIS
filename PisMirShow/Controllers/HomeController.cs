@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -139,14 +136,15 @@ namespace PisMirShow.Controllers
             return Ok();
         }
 
-        public void DellEmptyTasks()
+        private void DellEmptyTasks()
         {
             var emptyTasks = DbContext.Tasks.Where(t => t.Title == null);
             DbContext.Tasks.RemoveRange(emptyTasks);
             DbContext.SaveChanges();
         }
 
-        public void ClearComments()
+        [Authorize(Roles = "admin")]
+		public void ClearComments()
         {
             DbContext.Posts.RemoveRange(DbContext.Posts);
             DbContext.SaveChanges();
@@ -183,7 +181,6 @@ namespace PisMirShow.Controllers
                     using (FileStream fs = System.IO.File.Create(filename))
                     {
                         file.CopyTo(fs);
-                        var a = file.ContentType;
                         nameList.Add(file.FileName);
                         fs.Flush();
                     }
@@ -193,9 +190,9 @@ namespace PisMirShow.Controllers
         }
 
         [HttpPost]
-        public JsonResult UploadFilesInBD(int taskId)
+        public JsonResult UploadFilesInBd(int taskId)
         {
-            var nameList = new List<Tuple<int, string>>()
+			var nameList = new List<Tuple<int, string>>()
                 .Select(t => new { Id = t.Item1, Name = t.Item2 }).ToList();
             foreach (var temp in Request.Form.Files)
             {
@@ -219,7 +216,7 @@ namespace PisMirShow.Controllers
                 DbContext.SaveChanges();
 
                 var last = DbContext.Files.AsNoTracking().Last();
-                nameList.Add(new { Id = last.Id, Name = last.Name });
+                nameList.Add(new {last.Id, last.Name });
             }
 
             return Json(nameList);
@@ -244,9 +241,9 @@ namespace PisMirShow.Controllers
             if (temp != null)
             {
                 byte[] mas = temp.File;
-                string file_type = temp.Type;
-                string file_name = temp.Name;
-                return File(mas, file_type, file_name);
+                string fileType = temp.Type;
+                string fileName = temp.Name;
+                return File(mas, fileType, fileName);
             }
             return null;
         }
@@ -257,9 +254,9 @@ namespace PisMirShow.Controllers
             if (temp != null)
             {
                 byte[] mas = temp.File;
-                string file_type = temp.Type;
-                string file_name = temp.Name;
-                return File(mas, file_type, file_name);
+                string fileType = temp.Type;
+                string fileName = temp.Name;
+                return File(mas, fileType, fileName);
             }
             return null;
         }

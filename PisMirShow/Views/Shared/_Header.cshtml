@@ -22,9 +22,18 @@
                     <a class="nav-link" asp-controller="Home" asp-action="About">О системе</a>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="far fa-user mr-1"> </i>  @ViewBag.User.GetFullName()
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <button class="dropdown-item" type="button" asp-controller="Account" asp-action="#">Мой кабинет</button>
+                    <button class="dropdown-item" type="button" asp-controller="Account" asp-action="Logout">Выход</button>
+                </div>
+            </div>
+            @*<form class="form-inline my-2 my-lg-0">
                 <button class="btn btn-outline-danger my-2 my-sm-0" asp-controller="Account" asp-action="Logout">Выход</button>
-            </form>
+            </form>*@
         </div>
     </nav>
 </header>

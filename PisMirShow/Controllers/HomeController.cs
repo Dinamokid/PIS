@@ -22,6 +22,10 @@ namespace PisMirShow.Controllers
             ViewBag.Messages = DbContext.Posts.AsNoTracking().OrderBy(u => u.Id);
             return View();
         }
+        public IActionResult Profile()
+        {
+            return View();
+        }
 
         public IActionResult Dialogs()
         {

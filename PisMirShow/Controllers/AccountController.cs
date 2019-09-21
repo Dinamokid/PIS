@@ -30,22 +30,20 @@ namespace PisMirShow.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            if (ModelState.IsValid)
+	        if (!ModelState.IsValid) return View(model);
+	        try
             {
-                try
-                {
-                    User user = await DbContext.Users.FirstOrDefaultAsync(u => u.Login == model.Login && u.Password == model.Password);
+	            User user = await DbContext.Users.FirstOrDefaultAsync(u => u.Login == model.Login && u.Password == model.Password);
 
-                    if (user != null)
-                    {
-                        await Authenticate(model.Login); // аутентификация
+	            if (user != null)
+	            {
+		            await Authenticate(model.Login); // аутентификация
 
-                        return RedirectToAction("Index", "Home");
-                    }
-                }
-                catch {
-                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
-                }
+		            return RedirectToAction("Index", "Home");
+	            }
+            }
+            catch {
+	            ModelState.AddModelError("", "Некорректные логин и(или) пароль");
             }
             return View(model);
         }
@@ -76,7 +74,9 @@ namespace PisMirShow.Controllers
                         LastName = model.LastName,
                         Department = model.Department,
                         Login = model.Login,
-                        OfficePost = model.OfficePost
+                        OfficePost = model.OfficePost,
+						RoleId = 1,
+						Phone = model.Phone
                     });
                     await DbContext.SaveChangesAsync();
 
@@ -91,12 +91,13 @@ namespace PisMirShow.Controllers
 
         private async Task Authenticate(string userName)
         {
-            User user = await DbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Login == userName);
+            User user = await DbContext.Users.Include(u => u.Role).AsNoTracking().FirstOrDefaultAsync(u => u.Login == userName);
             var claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString())
-            };
+				//new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString()),
+				new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.Name)
+			};
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }

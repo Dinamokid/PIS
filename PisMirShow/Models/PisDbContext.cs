@@ -15,11 +15,11 @@ namespace PisMirShow
         public DbSet<FileInSystem> Files { get; set; }
         public DbSet<TaskInSystem> Tasks { get; set; }
         public DbSet<TaskComments> TaskComments { get; set; }
+        public DbSet<Role> Roles { get; set; }
         
         public PisDbContext(DbContextOptions<PisDbContext> options)
             : base(options)
         {
-        }
-
-    }
+		}
+	}
 }

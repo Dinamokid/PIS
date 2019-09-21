@@ -39,7 +39,8 @@ namespace PisMirShow.Controllers
             return View(task);
         }
 
-        public IActionResult About()
+        [Authorize(Roles = "Admin")]
+		public IActionResult About()
         {
             return View();
         }

@@ -45,6 +45,19 @@ namespace PisMirShow.Migrations
                     b.ToTable("Files");
                 });
 
+            modelBuilder.Entity("PisMirShow.Models.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
             modelBuilder.Entity("PisMirShow.Models.TaskComments", b =>
                 {
                     b.Property<int>("Id")
@@ -133,7 +146,11 @@ namespace PisMirShow.Migrations
 
                     b.Property<DateTime>("RegisterTime");
 
+                    b.Property<int?>("RoleId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
@@ -185,6 +202,13 @@ namespace PisMirShow.Migrations
                     b.HasOne("PisMirShow.Models.User", "ToUser")
                         .WithMany()
                         .HasForeignKey("ToUserId");
+                });
+
+            modelBuilder.Entity("PisMirShow.Models.User", b =>
+                {
+                    b.HasOne("PisMirShow.Models.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId");
                 });
 #pragma warning restore 612, 618
         }

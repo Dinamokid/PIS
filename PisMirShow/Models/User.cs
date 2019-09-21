@@ -23,7 +23,10 @@ namespace PisMirShow.Models
         public string Department { get; set; }
         public string BirthdayDay { get; set; }
 
-        [MaxLength(12)]
+        public int? RoleId { get; set; }
+        public Role Role { get; set; }
+
+		[MaxLength(12)]
 		public string Phone { get; set; }
 
         public string GetFullName()

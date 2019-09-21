@@ -18,6 +18,9 @@ namespace PisMirShow.ViewModels
 
         public string Department { get; set; }
 
+		[MaxLength(12)]
+        public string Phone { get; set; }
+
         [Required(ErrorMessage = "Неверный дата")]
         public string BirthdayDay { get; set; }
 

@@ -40,8 +40,9 @@ namespace PisMirShow
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => //CookieAuthenticationOptions
                 {
-                    options.LoginPath = new PathString("/Account/Login");
-                });
+					options.LoginPath = new PathString("/Account/Login");
+					options.AccessDeniedPath = new PathString("/Account/Login");
+				});
 
             services.Configure<CookiePolicyOptions>(options =>
             {

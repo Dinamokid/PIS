@@ -1,6 +1,6 @@
 ﻿@model TaskInSystem;
 @{
-    ViewData["Title"] = "Task";
+    ViewData["Title"] = "Задание " + '"' + @Model.Title + '"';
     var user = (User)ViewBag.User;
 }
 

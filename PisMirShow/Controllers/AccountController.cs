@@ -107,5 +107,43 @@ namespace PisMirShow.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Account");
         }
+
+        [HttpPost]
+        public IActionResult EditUser(User temp)
+        {
+            var user = DbContext.Users.First(t => t.Id == temp.Id);
+            user.LastName = temp.LastName;
+            user.FirstName = temp.FirstName;
+            user.OfficePost = temp.OfficePost;
+            user.Phone = temp.Phone;
+            user.Department = temp.Department;
+            DbContext.SaveChanges();
+            return RedirectToAction("AllTasks");
+        }
+
+        [HttpPost]
+        public IActionResult UpdateUser(User model)
+        {
+            var temp = DbContext.Users.FirstOrDefault(e => e.Id == model.Id);
+            if (temp == null)
+                return BadRequest();
+            temp.LastName = model.LastName;
+            temp.FirstName = model.FirstName;
+            temp.OfficePost = model.OfficePost;
+            temp.Phone = model.Phone;
+            temp.Department = model.Department;
+            temp.Email = model.Email;
+            DbContext.SaveChanges();
+            return Ok();
+        }
+
+        [HttpPost]
+        public JsonResult GetUserById(int id)
+        {
+            var temp = DbContext.Users.FirstOrDefault(e => e.Id == id);
+            if (temp == null)
+                return Json(new { message = "error" });
+            return Json(temp);
+        }
     }
 }

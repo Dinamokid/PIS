@@ -13,6 +13,7 @@ namespace PisMirShow.Controllers
     [Authorize]
     public class HomeController : BaseController
     {
+
         public HomeController(PisDbContext dbContext, IHostingEnvironment env) : base(dbContext, env)
         {
         }
@@ -148,7 +149,7 @@ namespace PisMirShow.Controllers
             DbContext.SaveChanges();
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
 		public void ClearComments()
         {
             DbContext.Posts.RemoveRange(DbContext.Posts);

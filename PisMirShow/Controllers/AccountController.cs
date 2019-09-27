@@ -5,19 +5,22 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using PisMirShow.Models;
 using PisMirShow.ViewModels;
 
 namespace PisMirShow.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
-        private PisDbContext DbContext;
-        public AccountController(PisDbContext context)
+        private readonly PisDbContext _dbContext;
+
+        public AccountController(PisDbContext dbContext, IHostingEnvironment env, IToastNotification toastNotification) : base(dbContext, env, toastNotification)
         {
-            DbContext = context;
+	        _dbContext = dbContext;
         }
 
         [HttpGet]
@@ -33,7 +36,7 @@ namespace PisMirShow.Controllers
 	        if (!ModelState.IsValid) return View(model);
 	        try
             {
-	            User user = await DbContext.Users.FirstOrDefaultAsync(u => u.Login == model.Login && u.Password == model.Password);
+	            User user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Login == model.Login && u.Password == model.Password);
 
 	            if (user != null)
 	            {
@@ -60,11 +63,11 @@ namespace PisMirShow.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await DbContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+                User user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
                 if (user == null)
                 {
                     // добавляем пользователя в бд
-                    DbContext.Users.Add(new User
+                    _dbContext.Users.Add(new User
                     {
                         Email = model.Email,
                         Password = model.Password,
@@ -78,7 +81,7 @@ namespace PisMirShow.Controllers
 						RoleId = 1,
 						Phone = model.Phone
                     });
-                    await DbContext.SaveChangesAsync();
+                    await _dbContext.SaveChangesAsync();
 
                     await Authenticate(model.Login); // аутентификация
 
@@ -91,7 +94,7 @@ namespace PisMirShow.Controllers
 
         private async Task Authenticate(string userName)
         {
-            User user = await DbContext.Users.Include(u => u.Role).AsNoTracking().FirstOrDefaultAsync(u => u.Login == userName);
+            User user = await _dbContext.Users.Include(u => u.Role).AsNoTracking().FirstOrDefaultAsync(u => u.Login == userName);
             var claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, userName),

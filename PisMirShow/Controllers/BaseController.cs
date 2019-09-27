@@ -6,19 +6,22 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using NToastNotify;
 
 namespace PisMirShow.Controllers
 {
     public class BaseController : Controller
     {
         protected readonly PisDbContext DbContext;
-        protected IHostingEnvironment hostingEnv;
+        protected readonly IHostingEnvironment HostingEnv;
+        protected readonly IToastNotification ToastNotification;
 
-        public BaseController(PisDbContext dbContext, IHostingEnvironment env)
+		public BaseController(PisDbContext dbContext, IHostingEnvironment env, IToastNotification toastNotification)
         {
             DbContext = dbContext;
-            hostingEnv = env;
-        }
+            HostingEnv = env;
+            ToastNotification = toastNotification;
+		}
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {

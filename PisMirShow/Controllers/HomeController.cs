@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using PisMirShow.Models;
 
 namespace PisMirShow.Controllers
@@ -13,7 +14,7 @@ namespace PisMirShow.Controllers
     [Authorize]
     public class HomeController : BaseController
     {
-        public HomeController(PisDbContext dbContext, IHostingEnvironment env) : base(dbContext, env)
+        public HomeController(PisDbContext dbContext, IHostingEnvironment env, IToastNotification toastNotification) : base(dbContext, env, toastNotification)
         {
         }
 
@@ -39,7 +40,7 @@ namespace PisMirShow.Controllers
             return View(task);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
 		public IActionResult About()
         {
             return View();
@@ -182,7 +183,7 @@ namespace PisMirShow.Controllers
 
                 foreach (var file in files)
                 {
-                    string filename = hostingEnv.WebRootPath + $@"\uploadedfiles\{file.FileName}";
+                    string filename = HostingEnv.WebRootPath + $@"\uploadedfiles\{file.FileName}";
                     using (FileStream fs = System.IO.File.Create(filename))
                     {
                         file.CopyTo(fs);

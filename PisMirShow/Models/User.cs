@@ -24,9 +24,9 @@ namespace PisMirShow.Models
         public string BirthdayDay { get; set; }
 
         public int? RoleId { get; set; }
-        public Role Role { get; set; }
+        public virtual Role Role { get; set; }
 
-        public List<FileInSystem> Files { get; set; }
+        public virtual List<FileInSystem> Files { get; set; }
 
 		[MaxLength(12)]
 		public string Phone { get; set; }

@@ -22,10 +22,10 @@ namespace PisMirShow.Models
         public DateTime? DeadLine { get; set; }
         public string Text { get; set; }
         public string Title { get; set; }
-        public ICollection<FileInSystem> Files { get; set; }
+        public virtual ICollection<FileInSystem> Files { get; set; }
         public string FilesId { get; set; }
         public TaskStatus Status { get; set; }
-        public ICollection<TaskComments> Comments { get; set; }
+        public virtual ICollection<TaskComments> Comments { get; set; }
 
         public enum TaskStatus
         {

@@ -163,7 +163,7 @@ namespace PisMirShow.Controllers
             DbContext.SaveChanges();
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
 		public void ClearComments()
         {
             DbContext.Posts.RemoveRange(DbContext.Posts);

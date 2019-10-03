@@ -98,7 +98,6 @@ namespace PisMirShow.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
-				//new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString()),
 				new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.Name)
 			};
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);

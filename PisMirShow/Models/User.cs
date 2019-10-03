@@ -26,6 +26,8 @@ namespace PisMirShow.Models
         public int? RoleId { get; set; }
         public Role Role { get; set; }
 
+        public List<FileInSystem> Files { get; set; }
+
 		[MaxLength(12)]
 		public string Phone { get; set; }
 

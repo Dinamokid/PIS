@@ -25,22 +25,29 @@ namespace PisMirShow.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Confirmed");
+
+                    b.Property<DateTime>("ConfirmedDateTime");
+
+                    b.Property<int>("ConfirmedUserId");
+
                     b.Property<byte[]>("File")
                         .IsRequired();
 
                     b.Property<string>("Name");
 
-                    b.Property<int?>("TaskId")
-                        .IsRequired();
+                    b.Property<int?>("TaskId");
 
                     b.Property<string>("Type")
                         .IsRequired();
 
-                    b.Property<bool>("Сonfirmed");
+                    b.Property<int?>("UserId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TaskId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Files");
                 });
@@ -176,8 +183,11 @@ namespace PisMirShow.Migrations
                 {
                     b.HasOne("PisMirShow.Models.TaskInSystem", "Task")
                         .WithMany("Files")
-                        .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TaskId");
+
+                    b.HasOne("PisMirShow.Models.User", "User")
+                        .WithMany("Files")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("PisMirShow.Models.TaskComments", b =>

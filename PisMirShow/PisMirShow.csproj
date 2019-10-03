@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="SignalRClasses\**" />
+    <Content Remove="SignalRClasses\**" />
+    <EmbeddedResource Remove="SignalRClasses\**" />
+    <None Remove="SignalRClasses\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="compilerconfig.json" />
   </ItemGroup>
 
@@ -28,7 +35,6 @@
 
 
   <ItemGroup>
-    <Folder Include="SignalRClasses\" />
     <Folder Include="wwwroot\uploadedfiles\" />
   </ItemGroup>
 

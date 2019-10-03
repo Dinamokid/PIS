@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -127,7 +128,16 @@ namespace PisMirShow.Controllers
             var file = DbContext.Files.AsNoTracking().FirstOrDefault(f => f.Id == id);
             if (file != null)
             {
-                return Json(file);
+                return Json(new
+                {
+					title = file.Name,
+					id = file.Id,
+					type = file.Type,
+					confirmed = file.Confirmed,
+					confirmedDateTime = file.ConfirmedDateTime,
+					confirmedByUser = GetUserById(file.ConfirmedUserId),
+					createdUser = file.User
+			});
             }
             return BadRequest();
         }
@@ -137,8 +147,12 @@ namespace PisMirShow.Controllers
             var file = DbContext.Files.FirstOrDefault(f => f.Id == model.Id);
             if (file == null) return BadRequest();
             file.Name = model.Name;
-            file.Сonfirmed = model.Сonfirmed;
-            DbContext.SaveChanges();
+            if (model.Confirmed)
+            {
+	            file.Confirmed = model.Confirmed;
+	            //file.ConfirmedUserId = GetUserById().GetFullName();
+			}
+			DbContext.SaveChanges();
             return Ok();
         }
 
@@ -213,7 +227,7 @@ namespace PisMirShow.Controllers
                 {
                     File = fileData,
                     Type = temp.ContentType,
-                    Сonfirmed = false,
+                    Confirmed = false,
                     TaskId = taskId,
                     Name = temp.FileName
                 };
@@ -286,6 +300,11 @@ namespace PisMirShow.Controllers
             temp.Status = (TaskInSystem.TaskStatus)status;
             DbContext.SaveChanges();
             return Ok();
+        }
+
+        private User GetUserById(int id)
+        {
+			return DbContext.Users.FirstOrDefault(u => u.Id == id);
         }
     }
 }

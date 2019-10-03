@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Internal;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using NToastNotify;
+using PisMirShow.Models;
 
 namespace PisMirShow.Controllers
 {
@@ -16,9 +17,9 @@ namespace PisMirShow.Controllers
         protected readonly IHostingEnvironment HostingEnv;
         protected readonly IToastNotification ToastNotification;
 
-		public BaseController(PisDbContext dbContext, IHostingEnvironment env, IToastNotification toastNotification)
+        public BaseController(PisDbContext dbContext, IHostingEnvironment env, IToastNotification toastNotification)
         {
-            DbContext = dbContext;
+			DbContext = dbContext;
             HostingEnv = env;
             ToastNotification = toastNotification;
 		}

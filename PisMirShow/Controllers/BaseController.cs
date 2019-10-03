@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -29,5 +27,7 @@ namespace PisMirShow.Controllers
             ViewBag.User = DbContext.Users.FirstOrDefault(u => u.Login == User.Identity.Name);
             await next();
         }
+
+        protected User GetCurrentUser() => DbContext.Users.FirstOrDefault(u => u.Login == User.Identity.Name);
     }
 }

@@ -16,11 +16,8 @@ namespace PisMirShow.Controllers
 {
     public class AccountController : BaseController
     {
-        private readonly PisDbContext _dbContext;
-
         public AccountController(PisDbContext dbContext, IHostingEnvironment env, IToastNotification toastNotification) : base(dbContext, env, toastNotification)
         {
-	        _dbContext = dbContext;
         }
 
         [HttpGet]
@@ -36,7 +33,7 @@ namespace PisMirShow.Controllers
 	        if (!ModelState.IsValid) return View(model);
 	        try
             {
-	            User user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Login == model.Login && u.Password == model.Password);
+	            User user = await DbContext.Users.FirstOrDefaultAsync(u => u.Login == model.Login && u.Password == model.Password);
 
 	            if (user != null)
 	            {
@@ -63,11 +60,11 @@ namespace PisMirShow.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+                User user = await DbContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
                 if (user == null)
                 {
                     // добавляем пользователя в бд
-                    _dbContext.Users.Add(new User
+                    DbContext.Users.Add(new User
                     {
                         Email = model.Email,
                         Password = model.Password,
@@ -81,7 +78,7 @@ namespace PisMirShow.Controllers
 						RoleId = 1,
 						Phone = model.Phone
                     });
-                    await _dbContext.SaveChangesAsync();
+                    await DbContext.SaveChangesAsync();
 
                     await Authenticate(model.Login); // аутентификация
 
@@ -94,7 +91,7 @@ namespace PisMirShow.Controllers
 
         private async Task Authenticate(string userName)
         {
-            User user = await _dbContext.Users.Include(u => u.Role).AsNoTracking().FirstOrDefaultAsync(u => u.Login == userName);
+            User user = await DbContext.Users.Include(u => u.Role).AsNoTracking().FirstOrDefaultAsync(u => u.Login == userName);
             var claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, userName),

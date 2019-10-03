@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +19,7 @@ namespace PisMirShow.Controllers
         {
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             ViewBag.Messages = DbContext.Posts.AsNoTracking().OrderBy(u => u.Id);
             return View();
@@ -150,7 +150,7 @@ namespace PisMirShow.Controllers
             if (model.Confirmed)
             {
 	            file.Confirmed = model.Confirmed;
-	            //file.ConfirmedUserId = GetUserById().GetFullName();
+	            file.ConfirmedUserId = GetCurrentUser().Id;
 			}
 			DbContext.SaveChanges();
             return Ok();

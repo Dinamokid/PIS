@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace PisMirShow.Models
 {
-    public class TaskInSystem
+    public class TaskItem
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -22,7 +18,7 @@ namespace PisMirShow.Models
         public DateTime? DeadLine { get; set; }
         public string Text { get; set; }
         public string Title { get; set; }
-        public virtual ICollection<FileInSystem> Files { get; set; }
+        public virtual ICollection<FileItem> Files { get; set; }
         public string FilesId { get; set; }
         public TaskStatus Status { get; set; }
         public virtual ICollection<TaskComments> Comments { get; set; }
@@ -41,7 +37,7 @@ namespace PisMirShow.Models
             Finished,
         }
 
-        public TaskInSystem()
+        public TaskItem()
         {
             Status = TaskStatus.NotStarted;
             StartDate = DateTime.UtcNow;

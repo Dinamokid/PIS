@@ -41,7 +41,7 @@ namespace PisMirShow.Controllers
             return View(task);
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
 		public IActionResult About()
         {
             return View();
@@ -60,7 +60,7 @@ namespace PisMirShow.Controllers
 
         public IActionResult AddTask()
         {
-            DbContext.Tasks.Add(new TaskInSystem());
+            DbContext.Tasks.Add(new TaskItem());
             DbContext.SaveChanges();
             var model = DbContext.Tasks.Last();
 
@@ -70,7 +70,7 @@ namespace PisMirShow.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddTask(TaskInSystem temp)
+        public IActionResult AddTask(TaskItem temp)
         {
             var task = DbContext.Tasks.First(t=>t.Id == temp.Id);
             task.DeadLine = temp.DeadLine;
@@ -99,7 +99,7 @@ namespace PisMirShow.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditTask(TaskInSystem temp)
+        public IActionResult EditTask(TaskItem temp)
         {
             var task = DbContext.Tasks.First(t=>t.Id == temp.Id);
             task.DeadLine = temp.DeadLine;
@@ -142,7 +142,7 @@ namespace PisMirShow.Controllers
             return BadRequest();
         }
 
-        public IActionResult SetFileInfo(FileInSystem model)
+        public IActionResult SetFileInfo(FileItem model)
         {
             var file = DbContext.Files.FirstOrDefault(f => f.Id == model.Id);
             if (file == null) return BadRequest();
@@ -223,7 +223,7 @@ namespace PisMirShow.Controllers
                     fileData = binaryReader.ReadBytes((int)temp.Length);
                 }
 
-                FileInSystem file = new FileInSystem()
+                FileItem file = new FileItem()
                 {
                     File = fileData,
                     Type = temp.ContentType,
@@ -297,7 +297,7 @@ namespace PisMirShow.Controllers
         {
             var temp = DbContext.Tasks.FirstOrDefault(f => f.Id == taskId);
             if (temp == null) return BadRequest();
-            temp.Status = (TaskInSystem.TaskStatus)status;
+            temp.Status = (TaskItem.TaskStatus)status;
             DbContext.SaveChanges();
             return Ok();
         }

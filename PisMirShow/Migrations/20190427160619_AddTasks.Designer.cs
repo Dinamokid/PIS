@@ -21,7 +21,7 @@ namespace PisMirShow.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("PisMirShow.Models.FileInSystem", b =>
+            modelBuilder.Entity("PisMirShow.Models.FileItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -47,7 +47,7 @@ namespace PisMirShow.Migrations
                     b.ToTable("Files");
                 });
 
-            modelBuilder.Entity("PisMirShow.Models.TaskInSystem", b =>
+            modelBuilder.Entity("PisMirShow.Models.TaskItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -124,9 +124,9 @@ namespace PisMirShow.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("PisMirShow.Models.FileInSystem", b =>
+            modelBuilder.Entity("PisMirShow.Models.FileItem", b =>
                 {
-                    b.HasOne("PisMirShow.Models.TaskInSystem", "Task")
+                    b.HasOne("PisMirShow.Models.TaskItem", "Task")
                         .WithMany("Files")
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade);

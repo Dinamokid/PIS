@@ -1,4 +1,4 @@
-﻿@model TaskInSystem;
+﻿@model TaskItem;
 @{
     ViewData["Title"] = "Задание " + '"' + @Model.Title + '"';
     var user = (User)ViewBag.User;
@@ -44,19 +44,19 @@
         </div>
         <div class="setStatus row mt-3 mb-4">
             <div class="container">
-                @if (Model.Status != TaskInSystem.TaskStatus.Active)
+                @if (Model.Status != TaskItem.TaskStatus.Active)
                 {
                     <button class="btn btn-dark" onclick="SetTaskStatus(1)">Активировать</button>
                 }
-                @if (Model.Status >= TaskInSystem.TaskStatus.Active && Model.Status != TaskInSystem.TaskStatus.Paused)
+                @if (Model.Status >= TaskItem.TaskStatus.Active && Model.Status != TaskItem.TaskStatus.Paused)
                 {
                     <button class="btn btn-dark" onclick="SetTaskStatus(2)">Остановить</button>
                 }
-                @if (Model.Status >= TaskInSystem.TaskStatus.Active && Model.Status != TaskInSystem.TaskStatus.Сonfirmed)
+                @if (Model.Status >= TaskItem.TaskStatus.Active && Model.Status != TaskItem.TaskStatus.Сonfirmed)
                 {
                     <button class="btn btn-dark" onclick="SetTaskStatus(3)">Подтвердить</button>
                 }
-                @if (Model.Status >= TaskInSystem.TaskStatus.Сonfirmed && Model.Status != TaskInSystem.TaskStatus.Finished)
+                @if (Model.Status >= TaskItem.TaskStatus.Сonfirmed && Model.Status != TaskItem.TaskStatus.Finished)
                 {
                     <button class="btn btn-dark" onclick="SetTaskStatus(4)">Завершить</button>
                 }

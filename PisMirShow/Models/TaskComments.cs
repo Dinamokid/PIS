@@ -13,7 +13,7 @@ namespace PisMirShow.Models
         public string Text { get; set; }
         [Required]
         public int? TaskId { get; set; }
-        public virtual TaskInSystem Task { get; set; }
+        public virtual TaskItem Task { get; set; }
         [Required]
         public int? UserId { get; set; }
         public virtual User User { get; set; }

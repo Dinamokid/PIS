@@ -7,8 +7,8 @@ namespace PisMirShow
     {
         public DbSet<WallPost> Posts { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<FileInSystem> Files { get; set; }
-        public DbSet<TaskInSystem> Tasks { get; set; }
+        public DbSet<FileItem> Files { get; set; }
+        public DbSet<TaskItem> Tasks { get; set; }
         public DbSet<TaskComments> TaskComments { get; set; }
         public DbSet<Role> Roles { get; set; }
         

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PisMirShow.Models
 {
-    public class FileInSystem
+    public class FileItem
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -16,7 +16,7 @@ namespace PisMirShow.Models
         public string Name { get; set; }
 
         public int? TaskId { get; set; }
-        public virtual TaskInSystem Task { get; set; }
+        public virtual TaskItem Task { get; set; }
 
 		public int? UserId { get; set; }
 		public virtual User User { get; set; }
@@ -25,7 +25,7 @@ namespace PisMirShow.Models
 
 		public DateTime ConfirmedDateTime { get; set; }
 
-        public FileInSystem()
+        public FileItem()
         {
             this.Confirmed = false;
         }

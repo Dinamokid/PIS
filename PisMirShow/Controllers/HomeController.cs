@@ -19,7 +19,7 @@ namespace PisMirShow.Controllers
         {
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             ViewBag.Messages = DbContext.Posts.AsNoTracking().OrderBy(u => u.Id);
             return View();
@@ -130,13 +130,13 @@ namespace PisMirShow.Controllers
             {
                 return Json(new
                 {
-					title = file.Name,
+					name = file.Name,
 					id = file.Id,
 					type = file.Type,
 					confirmed = file.Confirmed,
 					confirmedDateTime = file.ConfirmedDateTime,
 					confirmedByUser = GetUserById(file.ConfirmedUserId),
-					createdUser = file.User
+					createdUser = file.CreatedUser
 			});
             }
             return BadRequest();
@@ -300,11 +300,6 @@ namespace PisMirShow.Controllers
             temp.Status = (TaskItem.TaskStatus)status;
             DbContext.SaveChanges();
             return Ok();
-        }
-
-        private User GetUserById(int id)
-        {
-			return DbContext.Users.FirstOrDefault(u => u.Id == id);
         }
     }
 }

@@ -18,8 +18,8 @@ namespace PisMirShow.Models
         public int? TaskId { get; set; }
         public virtual TaskItem Task { get; set; }
 
-		public int? UserId { get; set; }
-		public virtual User User { get; set; }
+		public int? CreatedUserId { get; set; }
+		public virtual User CreatedUser { get; set; }
 
 		public int ConfirmedUserId { get; set; }
 

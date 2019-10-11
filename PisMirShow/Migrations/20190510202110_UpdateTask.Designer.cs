@@ -106,7 +106,7 @@ namespace PisMirShow.Migrations
                     b.ToTable("Tasks");
                 });
 
-            modelBuilder.Entity("PisMirShow.Models.User", b =>
+            modelBuilder.Entity("PisMirShow.Models.CreatedUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -169,7 +169,7 @@ namespace PisMirShow.Migrations
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("PisMirShow.Models.User", "User")
+                    b.HasOne("PisMirShow.Models.CreatedUser", "CreatedUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -177,11 +177,11 @@ namespace PisMirShow.Migrations
 
             modelBuilder.Entity("PisMirShow.Models.TaskItem", b =>
                 {
-                    b.HasOne("PisMirShow.Models.User", "FromUser")
+                    b.HasOne("PisMirShow.Models.CreatedUser", "FromUser")
                         .WithMany()
                         .HasForeignKey("FromUserId");
 
-                    b.HasOne("PisMirShow.Models.User", "ToUser")
+                    b.HasOne("PisMirShow.Models.CreatedUser", "ToUser")
                         .WithMany()
                         .HasForeignKey("ToUserId");
                 });

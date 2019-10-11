@@ -76,7 +76,7 @@ namespace PisMirShow.Migrations
                     b.ToTable("Tasks");
                 });
 
-            modelBuilder.Entity("PisMirShow.Models.User", b =>
+            modelBuilder.Entity("PisMirShow.Models.CreatedUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

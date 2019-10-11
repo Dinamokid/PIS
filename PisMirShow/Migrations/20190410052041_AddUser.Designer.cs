@@ -21,7 +21,7 @@ namespace PisMirShow.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("PisMirShow.Models.User", b =>
+            modelBuilder.Entity("PisMirShow.Models.CreatedUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

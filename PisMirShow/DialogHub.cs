@@ -29,9 +29,9 @@ namespace PisMirShow
             //});
 
             //DbContext.SaveChanges();
-            //var a = Context.User.Claims.Any(u => u.Value == "2");
+            //var a = Context.CreatedUser.Claims.Any(u => u.Value == "2");
             //var b = Context.ConnectionId;
-            //await Clients.User(sendTo).SendAsync("Send", message, userName);
+            //await Clients.CreatedUser(sendTo).SendAsync("Send", message, userName);
             await Clients.All.SendAsync("Send", message, userName);
         }
 

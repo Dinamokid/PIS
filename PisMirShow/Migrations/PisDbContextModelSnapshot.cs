@@ -31,6 +31,8 @@ namespace PisMirShow.Migrations
 
                     b.Property<int>("ConfirmedUserId");
 
+                    b.Property<int?>("CreatedUserId");
+
                     b.Property<byte[]>("File")
                         .IsRequired();
 
@@ -41,13 +43,11 @@ namespace PisMirShow.Migrations
                     b.Property<string>("Type")
                         .IsRequired();
 
-                    b.Property<int?>("UserId");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("TaskId");
+                    b.HasIndex("CreatedUserId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("TaskId");
 
                     b.ToTable("Files");
                 });
@@ -181,13 +181,13 @@ namespace PisMirShow.Migrations
 
             modelBuilder.Entity("PisMirShow.Models.FileItem", b =>
                 {
+                    b.HasOne("PisMirShow.Models.User", "CreatedUser")
+                        .WithMany("Files")
+                        .HasForeignKey("CreatedUserId");
+
                     b.HasOne("PisMirShow.Models.TaskItem", "Task")
                         .WithMany("Files")
                         .HasForeignKey("TaskId");
-
-                    b.HasOne("PisMirShow.Models.User", "User")
-                        .WithMany("Files")
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("PisMirShow.Models.TaskComments", b =>

@@ -37,12 +37,12 @@ namespace PisMirShow
 
         //public override async Task OnConnectedAsync()
         //{
-        //    await Clients.All.SendAsync("Notify", $"{Context.User} вошел в чат");
+        //    await Clients.All.SendAsync("Notify", $"{Context.CreatedUser} вошел в чат");
         //    await base.OnConnectedAsync();
         //}
         //public override async Task OnDisconnectedAsync(Exception exception)
         //{
-        //    await Clients.All.SendAsync("Notify", $"{Context.User} покинул в чат");
+        //    await Clients.All.SendAsync("Notify", $"{Context.CreatedUser} покинул в чат");
         //    await base.OnDisconnectedAsync(exception);
         //}
     }

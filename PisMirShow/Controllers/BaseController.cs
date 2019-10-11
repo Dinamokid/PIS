@@ -29,5 +29,7 @@ namespace PisMirShow.Controllers
         }
 
         protected User GetCurrentUser() => DbContext.Users.FirstOrDefault(u => u.Login == User.Identity.Name);
+        
+        protected User GetUserById(int? id) => DbContext.Users.FirstOrDefault(u => u.Id == id);
     }
 }

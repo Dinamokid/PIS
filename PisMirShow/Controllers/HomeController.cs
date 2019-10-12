@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +23,7 @@ namespace PisMirShow.Controllers
             ViewBag.Messages = DbContext.Posts.AsNoTracking().OrderBy(u => u.Id);
             return View();
         }
+
         public IActionResult Profile()
         {
             return View();
@@ -41,7 +41,7 @@ namespace PisMirShow.Controllers
             return View(task);
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
 		public IActionResult About()
         {
             return View();
@@ -300,6 +300,28 @@ namespace PisMirShow.Controllers
             temp.Status = (TaskItem.TaskStatus)status;
             DbContext.SaveChanges();
             return Ok();
+        }
+
+        [HttpPost]
+        public IActionResult UpdateUser(User model)
+        {
+            var temp = DbContext.Users.FirstOrDefault(e => e.Id == model.Id);
+            if (temp == null)
+                return BadRequest();
+            temp.LastName = model.LastName;
+            temp.FirstName = model.FirstName;
+            temp.OfficePost = model.OfficePost;
+            temp.Phone = model.Phone;
+            temp.Department = model.Department;
+            temp.Email = model.Email;
+            DbContext.SaveChanges();
+            return Ok();
+        }
+
+        [HttpPost]
+        public JsonResult GetUserByIdJson(int id)
+        {
+            return base.GetUserByIdJson(id);
         }
     }
 }

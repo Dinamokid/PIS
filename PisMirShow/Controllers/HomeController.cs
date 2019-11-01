@@ -125,18 +125,18 @@ namespace PisMirShow.Controllers
         [HttpPost]
         public IActionResult GetFileInfo(int id)
         {
-            var file = DbContext.Files.AsNoTracking().FirstOrDefault(f => f.Id == id);
+            var file = DbContext.Files.FirstOrDefault(f => f.Id == id);
             if (file != null)
             {
-                return Json(new
+				return Json(new
                 {
 					name = file.Name,
 					id = file.Id,
 					type = file.Type,
 					confirmed = file.Confirmed,
-					confirmedDateTime = file.ConfirmedDateTime,
-					confirmedByUser = GetUserById(file.ConfirmedUserId),
-					createdUser = file.CreatedUser
+					confirmedDateTime = file.ConfirmedUserId != null ? " " + file.ConfirmedDateTime?.ToString("d") : "",
+					confirmedByUser = file.ConfirmedUserId != null ? GetUserById(file.ConfirmedUserId)?.GetFullName() : "Не подтвержден",
+					createdUser = file.CreatedUser.GetFullName()
 			});
             }
             return BadRequest();
@@ -146,12 +146,19 @@ namespace PisMirShow.Controllers
         {
             var file = DbContext.Files.FirstOrDefault(f => f.Id == model.Id);
             if (file == null) return BadRequest();
-            file.Name = model.Name;
-            if (model.Confirmed)
+
+			file.Name = model.Name;
+			file.Confirmed = model.Confirmed;
+			file.ConfirmedDateTime = model.ConfirmedDateTime;
+			file.ConfirmedUserId = model.ConfirmedUserId;
+			
+			if (model.Confirmed)
             {
 	            file.Confirmed = model.Confirmed;
 	            file.ConfirmedUserId = GetCurrentUser().Id;
+				file.ConfirmedDateTime = DateTime.UtcNow;
 			}
+
 			DbContext.SaveChanges();
             return Ok();
         }
@@ -214,6 +221,7 @@ namespace PisMirShow.Controllers
         {
 			var nameList = new List<Tuple<int, string>>()
                 .Select(t => new { Id = t.Item1, Name = t.Item2 }).ToList();
+
             foreach (var temp in Request.Form.Files)
             {
                 byte[] fileData;
@@ -229,7 +237,8 @@ namespace PisMirShow.Controllers
                     Type = temp.ContentType,
                     Confirmed = false,
                     TaskId = taskId,
-                    Name = temp.FileName
+                    Name = temp.FileName,
+					CreatedUserId = GetCurrentUser().Id,
                 };
 
                 DbContext.Files.Add(file);

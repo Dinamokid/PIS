@@ -27,9 +27,9 @@ namespace PisMirShow.Migrations
 
                     b.Property<bool>("Confirmed");
 
-                    b.Property<DateTime>("ConfirmedDateTime");
+                    b.Property<DateTime?>("ConfirmedDateTime");
 
-                    b.Property<int>("ConfirmedUserId");
+                    b.Property<int?>("ConfirmedUserId");
 
                     b.Property<int?>("CreatedUserId");
 

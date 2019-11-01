@@ -50,14 +50,14 @@ namespace PisMirShow.Controllers
                 return Json(new { message = "error" });
             return Json(new
             {
-                Id = temp.Id,
-                FirstName = temp.FirstName,
-                LastName = temp.LastName,
-                OfficePost = temp.OfficePost,
-                Department = temp.Department,
-                Phone = temp.Phone,
-                Email = temp.Email
+				temp.Id,
+				temp.FirstName,
+				temp.LastName,
+				temp.OfficePost,
+				temp.Department,
+				temp.Phone,
+				temp.Email
             });
-        }
+        } 
     }
 }

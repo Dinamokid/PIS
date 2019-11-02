@@ -156,17 +156,17 @@ namespace PisMirShow.Controllers
             if (file == null) return BadRequest();
 
 			file.Name = model.Name;
+			file.DocType = model.DocType;
 			file.Confirmed = model.Confirmed;
-			file.ConfirmedDateTime = model.ConfirmedDateTime;
 			file.ConfirmedUserId = model.ConfirmedUserId;
-			
+			file.ConfirmedDateTime = model.ConfirmedDateTime;
+
 			if (model.Confirmed)
-            {
-	            file.Confirmed = model.Confirmed;
-	            file.ConfirmedUserId = GetCurrentUser().Id;
+			{
+				file.ConfirmedUserId = GetCurrentUser().Id;
 				file.ConfirmedDateTime = DateTime.UtcNow;
 			}
-            file.DocType = model.DocType;
+
 			DbContext.SaveChanges();
             return Ok();
         }

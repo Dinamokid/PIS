@@ -1,61 +1,33 @@
 ﻿<section>
-    <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="Modal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="ModalTitle"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="fileId">Id файла:</label>
-                        <input type="text" id="fileId" disabled class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="typeDoc">Тип документа:</label>
-                        <select class="form-control" id="typeDoc">
-                            @foreach (var temp in Html.GetEnumSelectList(typeof(DocumentType)))
-                            {
-                                <option value="@temp.Value">@temp.Text</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="fileName">Имя файла:</label>
-                        <input type="text" id="fileName" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="fileType">Тип файла:</label>
-                        <input type="text" id="fileType" disabled class="form-control">
-                    </div>
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="confirmed">
-                        <label class="custom-control-label" for="confirmed">Утвержден</label>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <button class="btn btn-dark mt-4 w-50 mr-2" onclick="DownloadFile()">Скачать</button>
-                        <button class="btn btn-danger mt-4 w-50" onclick="DeleteFile()">Удалить</button>
-                    </div>
-                </div>
+	<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="Modal" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="ModalTitle"></h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
 				<div class="modal-body">
-					<div class="form-group">
-						<label for="fileId">Id файла:</label>
-						<input type="text" id="fileId" disabled class="form-control">
-					</div>
+					<input type="hidden" id="fileId" disabled class="form-control">
 					<div class="form-group">
 						<label for="createdBy">Добавил:</label>
 						<input type="text" id="createdBy" disabled class="form-control">
 					</div>
 					<div class="form-group">
+						<label for="typeDoc">Тип документа:</label>
+						<select class="form-control" id="typeDoc">
+							@foreach (var temp in Html.GetEnumSelectList(typeof(DocumentType)))
+							{
+								<option value="@temp.Value">@temp.Text</option>
+							}
+						</select>
+					</div>
+					<div class="form-group">
 						<label for="fileName">Имя файла:</label>
 						<input type="text" id="fileName" class="form-control">
 					</div>
-					<div class="form-group">
-						<label for="fileType">Тип файла:</label>
-						<input type="text" id="fileType" disabled class="form-control">
-					</div>
+					<input type="hidden" id="fileType" disabled class="form-control">
 					<div class="custom-control custom-switch">
 						<input type="checkbox" class="custom-control-input" id="confirmed">
 						<label class="custom-control-label" for="confirmed">Утвержден <span id="confirmedBy"></span></label>
@@ -65,19 +37,18 @@
 						<button class="btn btn-danger mt-4 w-50" onclick="DeleteFile()">Удалить</button>
 					</div>
 				</div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    <button type="button" class="btn btn-primary" onclick="SaveUpdates()">Сохранить изменения</button>
-                </div>
-            </div>
-        </div>
-    </div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+					<button type="button" class="btn btn-primary" onclick="SaveUpdates()">Сохранить изменения</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
 
 <script>
     function SaveUpdates() {
         var data = new FormData();
-
         data.append("Name", $("#fileName").val());
         data.append("Confirmed", $('#confirmed').is(":checked"));
         data.append("Id", $("#fileId").val());
@@ -106,11 +77,11 @@
         $("#Modal").modal('hide');
         $("[onclick='EditFile(" + window.modalData.id + ")'] .name").text($("#fileName").val());
         if ($('#confirmed').is(":checked")) {
-            $("[onclick='EditFile(" + window.modalData.id + ")']").addClass("Confirmed")
+	        $("[onclick='EditFile(" + window.modalData.id + ")']").addClass("Confirmed");
         } else {
-            $("[onclick='EditFile(" + window.modalData.id + ")']").removeClass("Confirmed")
+	        $("[onclick='EditFile(" + window.modalData.id + ")']").removeClass("Confirmed");
         }
-        
+
     }
 
     function DownloadFile() {
@@ -161,8 +132,8 @@
                 $("#typeDoc").val(request.docType);
                 $("#fileName").val(request.name);
 				$("#fileType").val(request.type);
-				$("#confirmedBy").text(`(${request.confirmedByUser}${request.confirmedDateTime})`)
-				$("#createdBy").val(request.createdUser)
+                $("#confirmedBy").text(`(${request.confirmedByUser}${request.confirmedDateTime})`);
+                $("#createdBy").val(request.createdUser);
 
 				if (request.confirmed === true) {
                     $("#confirmed").attr("checked", "checked");

@@ -143,7 +143,7 @@ namespace PisMirShow.Controllers
 					confirmed = file.Confirmed,
 					confirmedDateTime = file.ConfirmedUserId != null ? " " + file.ConfirmedDateTime?.ToString("d") : "",
 					confirmedByUser = file.ConfirmedUserId != null ? GetUserById(file.ConfirmedUserId)?.GetFullName() : "Не подтвержден",
-					createdUser = file.CreatedUser.GetFullName()
+					createdUser = file.CreatedUser.GetFullName(),
 			        docType = (int)file.DocType
                 });
             }

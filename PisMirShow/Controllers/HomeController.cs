@@ -118,26 +118,33 @@ namespace PisMirShow.Controllers
 
         public IActionResult AllFiles()
         {
-            var files = DbContext.Files.AsNoTracking().ToList();
-            return View(files);
-        }
+			var user = GetCurrentUser();
+			var filesQuery = DbContext.Tasks.Include(t => t.Files).Where(t => t.ToUserId == user.Id || t.FromUserId == user.Id).Select(t => t.Files)
+				.Where(f => f.Count > 0).ToList();
+			var files = new List<FileItem>();
+			foreach (var temp in filesQuery)
+			{
+				files.AddRange(temp);
+			}
+			return View(files);
+		}
 
         [HttpPost]
         public IActionResult GetFileInfo(int id)
         {
-            var file = DbContext.Files.AsNoTracking().FirstOrDefault(f => f.Id == id);
+            var file = DbContext.Files.FirstOrDefault(f => f.Id == id);
             if (file != null)
             {
-                return Json(new
+				return Json(new
                 {
 					name = file.Name,
 					id = file.Id,
 					type = file.Type,
 					confirmed = file.Confirmed,
-					confirmedDateTime = file.ConfirmedDateTime,
-					confirmedByUser = GetUserById(file.ConfirmedUserId),
-					createdUser = file.CreatedUser,
-                    docType = (int)file.DocType
+					confirmedDateTime = file.ConfirmedUserId != null ? " " + file.ConfirmedDateTime?.ToString("d") : "",
+					confirmedByUser = file.ConfirmedUserId != null ? GetUserById(file.ConfirmedUserId)?.GetFullName() : "Не подтвержден",
+					createdUser = file.CreatedUser.GetFullName()
+			        docType = (int)file.DocType
                 });
             }
             return BadRequest();
@@ -147,11 +154,17 @@ namespace PisMirShow.Controllers
         {
             var file = DbContext.Files.FirstOrDefault(f => f.Id == model.Id);
             if (file == null) return BadRequest();
-            file.Name = model.Name;
-            if (model.Confirmed)
+
+			file.Name = model.Name;
+			file.Confirmed = model.Confirmed;
+			file.ConfirmedDateTime = model.ConfirmedDateTime;
+			file.ConfirmedUserId = model.ConfirmedUserId;
+			
+			if (model.Confirmed)
             {
 	            file.Confirmed = model.Confirmed;
 	            file.ConfirmedUserId = GetCurrentUser().Id;
+				file.ConfirmedDateTime = DateTime.UtcNow;
 			}
             file.DocType = model.DocType;
 			DbContext.SaveChanges();
@@ -216,6 +229,7 @@ namespace PisMirShow.Controllers
         {
 			var nameList = new List<Tuple<int, string>>()
                 .Select(t => new { Id = t.Item1, Name = t.Item2 }).ToList();
+
             foreach (var temp in Request.Form.Files)
             {
                 byte[] fileData;
@@ -232,7 +246,8 @@ namespace PisMirShow.Controllers
                     Confirmed = false,
                     TaskId = taskId,
                     Name = temp.FileName,
-                    DocType = DocumentType.NotDetermined
+                    DocType = DocumentType.NotDetermined,
+					CreatedUserId = GetCurrentUser().Id
                 };
 
                 DbContext.Files.Add(file);

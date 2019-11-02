@@ -21,9 +21,9 @@ namespace PisMirShow.Models
 		public int? CreatedUserId { get; set; }
 		public virtual User CreatedUser { get; set; }
 
-		public int ConfirmedUserId { get; set; }
+		public int? ConfirmedUserId { get; set; }
 
-		public DateTime ConfirmedDateTime { get; set; }
+		public DateTime? ConfirmedDateTime { get; set; }
 
         public DocumentType DocType { get; set; }
 

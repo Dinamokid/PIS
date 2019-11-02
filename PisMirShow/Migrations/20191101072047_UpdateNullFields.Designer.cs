@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PisMirShow;
 
 namespace PisMirShow.Migrations
 {
     [DbContext(typeof(PisDbContext))]
-    partial class PisDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191101072047_UpdateNullFields")]
+    partial class UpdateNullFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,8 +34,6 @@ namespace PisMirShow.Migrations
                     b.Property<int?>("ConfirmedUserId");
 
                     b.Property<int?>("CreatedUserId");
-
-                    b.Property<int>("DocType");
 
                     b.Property<byte[]>("File")
                         .IsRequired();

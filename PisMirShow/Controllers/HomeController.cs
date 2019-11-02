@@ -136,8 +136,9 @@ namespace PisMirShow.Controllers
 					confirmed = file.Confirmed,
 					confirmedDateTime = file.ConfirmedDateTime,
 					confirmedByUser = GetUserById(file.ConfirmedUserId),
-					createdUser = file.CreatedUser
-			});
+					createdUser = file.CreatedUser,
+                    docType = (int)file.DocType
+                });
             }
             return BadRequest();
         }
@@ -152,6 +153,7 @@ namespace PisMirShow.Controllers
 	            file.Confirmed = model.Confirmed;
 	            file.ConfirmedUserId = GetCurrentUser().Id;
 			}
+            file.DocType = model.DocType;
 			DbContext.SaveChanges();
             return Ok();
         }
@@ -229,7 +231,8 @@ namespace PisMirShow.Controllers
                     Type = temp.ContentType,
                     Confirmed = false,
                     TaskId = taskId,
-                    Name = temp.FileName
+                    Name = temp.FileName,
+                    DocType = DocumentType.NotDetermined
                 };
 
                 DbContext.Files.Add(file);
@@ -263,6 +266,7 @@ namespace PisMirShow.Controllers
                 byte[] mas = temp.File;
                 string fileType = temp.Type;
                 string fileName = temp.Name;
+                DocumentType TypeDoc = temp.DocType;
                 return File(mas, fileType, fileName);
             }
             return null;

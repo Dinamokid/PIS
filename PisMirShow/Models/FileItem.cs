@@ -25,9 +25,39 @@ namespace PisMirShow.Models
 
 		public DateTime ConfirmedDateTime { get; set; }
 
+        public DocumentType DocType { get; set; }
+
         public FileItem()
         {
-            this.Confirmed = false;
+            Confirmed = false;
         }
+
+    }
+    public enum DocumentType
+    {
+        [Display(Name = "Не определён")]
+        NotDetermined,
+        [Display(Name = "Положение")]
+        Position,
+        [Display(Name = "Устав")]
+        Charter,
+        [Display(Name = "Инструкция")]
+        Instruction,
+        [Display(Name = "Указ")]
+        Decree,
+        [Display(Name = "Приказ")]
+        Order,
+        [Display(Name = "Распоряжение")]
+        Direction,
+        [Display(Name = "Акт")]
+        Act,
+        [Display(Name = "Письмо")]
+        Letter,
+        [Display(Name = "Объяснительная")]
+        Explanatory,
+        [Display(Name = "Заявление")]
+        Statement,
+        [Display(Name = "Жалоба")]
+        Complaint,
     }
 }

@@ -33,6 +33,8 @@ namespace PisMirShow.Migrations
 
                     b.Property<int?>("CreatedUserId");
 
+                    b.Property<int>("DocType");
+
                     b.Property<byte[]>("File")
                         .IsRequired();
 

@@ -14,6 +14,15 @@
                         <input type="text" id="fileId" disabled class="form-control">
                     </div>
                     <div class="form-group">
+                        <label for="typeDoc">Тип документа:</label>
+                        <select class="form-control" id="typeDoc">
+                            @foreach (var temp in Html.GetEnumSelectList(typeof(DocumentType)))
+                            {
+                                <option value="@temp.Value">@temp.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="fileName">Имя файла:</label>
                         <input type="text" id="fileName" class="form-control">
                     </div>
@@ -46,6 +55,7 @@
         data.append("Name", $("#fileName").val());
         data.append("Confirmed", $('#confirmed').is(":checked"));
         data.append("Id", $("#fileId").val());
+        data.append("DocType", $("#typeDoc").val());
 
         $.ajax({
             type: "POST",
@@ -123,6 +133,7 @@
                 $("#ModalTitle").text(request.name);
 
                 $("#fileId").val(request.id);
+                $("#typeDoc").val(request.docType);
                 $("#fileName").val(request.name);
                 $("#fileType").val(request.type);
                 if (request.сonfirmed === true) {

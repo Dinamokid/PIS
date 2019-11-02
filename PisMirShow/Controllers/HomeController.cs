@@ -118,9 +118,16 @@ namespace PisMirShow.Controllers
 
         public IActionResult AllFiles()
         {
-            var files = DbContext.Files.AsNoTracking().ToList();
-            return View(files);
-        }
+			var user = GetCurrentUser();
+			var filesQuery = DbContext.Tasks.Include(t => t.Files).Where(t => t.ToUserId == user.Id || t.FromUserId == user.Id).Select(t => t.Files)
+				.Where(f => f.Count > 0).ToList();
+			var files = new List<FileItem>();
+			foreach (var temp in filesQuery)
+			{
+				files.AddRange(temp);
+			}
+			return View(files);
+		}
 
         [HttpPost]
         public IActionResult GetFileInfo(int id)

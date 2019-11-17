@@ -1,0 +1,63 @@
+﻿@model List<TaskItem>
+@{
+    ViewData["Title"] = "Задачи";
+    var user = (User)ViewBag.User;
+}
+
+<section>
+	<div class="container">
+		@if (Model.Count == 0)
+		{
+			<div class="text-center">
+				<h1 style="margin-top: 25%">Здесь пока ничего нет... 😭</h1>
+				<a asp-controller="Task" asp-action="AddTask" class="btn btn-dark col-md-4 mt-4">Добавить задание</a>
+			</div>
+		}
+		else
+		{
+			@*<ul class="nav nav-tabs" id="myTab" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Все</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="todo-tab" data-toggle="tab" href="#todo" role="tab" aria-controls="todo" aria-selected="false">ToDo</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">В Работе</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Завершенные</a>
+				</li>
+			</ul>
+			<div class="tab-content" id="myTabContent">
+				<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
+				<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+				<div class="tab-pane fade" id="todo" role="tabpanel" aria-labelledby="todo-tab">...</div>
+				<div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+			</div>*@
+
+			<div class="row">
+				@foreach (var temp in Model)
+				{
+					<div class="col-md-4 mt-2">
+						<div class="card">
+							<a href="@Url.Action("Task")/@temp.Id" class="p-3">
+								<h5>@temp.Title</h5>
+								<p class="m-0">@temp.Text</p>
+								<p class="m-0">От кого: @temp.ToUser.GetFullName()</p>
+								<p class="m-0">Кому: @temp.FromUser.GetFullName()</p>
+								<p class="m-0">DeadLine: @temp.DeadLine</p>
+							</a>
+						</div>
+					</div>
+				}
+			</div>
+		}
+
+		
+	</div>
+</section>
+<a asp-controller="Task" asp-action="AddTask" class="text-dark">
+    <i class="fas fa-plus-circle position-fixed" style="bottom: 65px; right: 15px; font-size: 50px;"></i>
+</a>
+   

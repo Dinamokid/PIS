@@ -1,0 +1,31 @@
+﻿@model List<FileItem>;
+@{
+    ViewData["Title"] = "Список файлов";
+}
+
+<section>
+    <div class="container">
+        @if (Model.Count == 0)
+        {
+            <div class="text-center">
+                <h1 style="margin-top: 25%">Здесь пока ничего нет... 😭</h1>
+                <h5>Прикрепите файлы к задачам</h5>
+            </div>
+        }
+
+        <div class="row mt-2" id="FilesList">
+            @foreach (var temp in Model)
+            {
+                <div class="File @(temp.Confirmed == true ? "Confirmed" : "") col-6 col-sm-3 col-lg-2 text-center mt-3" onclick="EditFile(@temp.Id)">
+                    <i class="fas fa-check-circle position-absolute" style="right: 36%; top: -12px; color: greenyellow;"></i>
+                    <i class="fas fa-file" style="font-size: 30px"></i>
+                    <p class="name">
+                        @temp.Name
+                    </p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<partial name="../Particles/_FileInteraction" />

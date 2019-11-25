@@ -1,31 +1,145 @@
-﻿@model List<FileItem>;
+﻿@using PisMirShow.ViewModels.Files
+@model List<PisMirShow.ViewModels.Files.FilesViewModel>;
 @{
-    ViewData["Title"] = "Список файлов";
+	ViewData["Title"] = "Список файлов";
+	List<TaskItemViewModel> taskList = ViewBag.Tasks;
 }
-
 <section>
-    <div class="container">
-        @if (Model.Count == 0)
-        {
-            <div class="text-center">
-                <h1 style="margin-top: 25%">Здесь пока ничего нет... 😭</h1>
-                <h5>Прикрепите файлы к задачам</h5>
-            </div>
-        }
+	<div class="container">
+		@if (Model.Count == 0)
+		{
+			<div class="text-center">
+				<h1 style="margin-top: 25%">Здесь пока ничего нет... 😭</h1>
+				<h5>Прикрепите файлы к задачам</h5>
+			</div>
+		}
 
-        <div class="row mt-2" id="FilesList">
-            @foreach (var temp in Model)
-            {
-                <div class="File @(temp.Confirmed == true ? "Confirmed" : "") col-6 col-sm-3 col-lg-2 text-center mt-3" onclick="EditFile(@temp.Id)">
-                    <i class="fas fa-check-circle position-absolute" style="right: 36%; top: -12px; color: greenyellow;"></i>
-                    <i class="fas fa-file" style="font-size: 30px"></i>
-                    <p class="name">
-                        @temp.Name
-                    </p>
-                </div>
-            }
-        </div>
-    </div>
+
+		<div id="app">
+			<filelist :Model="data.data" :Extensions="extensions.data" :Tasks="tasks.data"></filelist>
+		</div>
+
+		@*@foreach (var temp in Model)
+		{
+			<div class="mt-3">
+				<a asp-controller="Task" asp-action="Task" asp-route-id="@temp.TaskId">Задача: @temp.TaskName</a>
+				<hr />
+			</div>
+			<div class="row mt-2" id="FilesList">
+
+				@foreach (var file in temp.FileList)
+				{
+					<div class="File @(file.Confirmed ? "Confirmed" : "") col-6 col-sm-3 col-lg-2 text-center mt-3" onclick="EditFile(@file.Id)">
+						<i class="fas fa-check-circle position-absolute" style="right: 36%; top: -12px; color: greenyellow;"></i>
+						<i class="fas fa-file" style="font-size: 30px"></i>
+						<p class="name">
+							@file.Name
+						</p>
+					</div>
+				}
+			</div>
+		}*@
+	</div>
 </section>
 
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+	Vue.component('filelist', {
+		inheritAttrs: true,
+		props: ["Model", "Extensions", "Tasks"],
+		template: `<section>
+					<section id="FilterSection" class="mt-4 mb-5">
+						<div class="container m-0 p-0">
+							<div class="row">
+								<div class="col-lg-6 mt-2 mt-lg-0">
+									<div class="row">
+										<div class="col-md-9">
+											<input type="text" class="form-control" id="FileName" name="name" placeholder="Введите имя файла" />
+										</div>
+										<div class="col-md-3 mt-2 mt-lg-0">
+											<button type="button" class="btn btn-primary w-100" @@click="findNameClicked" id="FindbyFile">Поиск</button>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-3 mt-2 mt-lg-0">
+									<select class="browser-default custom-select" ref="TaskSelect" id="TaskSelect" @@change="taskSelectChanged">
+										<option selected="selected" disabled="disabled">Выберите задачу</option>
+										<option v-for="item in Tasks" :value="item.taskId">{{item.taskName}}</option>
+									</select>
+								</div>
+								<div class="col-lg-3 mt-2 mt-lg-0">
+									<select class="browser-default custom-select" ref="ExtensionSelect" id="ExtensionSelect" @@change="extensionSelectChanged">
+										<option selected="selected" disabled="disabled">Выберите расширение</option>										
+										<option v-for="item in Extensions" :value="item">{{item}}</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</section>
+					<div>
+						<div v-for="temp in Model">
+							<div class="mt-3" v-if="temp.fileList.length > 0">
+								<a :href="'../task/task/'+ temp.taskId">Задача: {{temp.taskName}}</a>
+								<hr />
+							</div>
+							<div class="row mt-2" id="FilesList">
+								<div v-for="file in temp.fileList" :class="{ 'Confirmed': file.confirmed }" class="File col-6 col-sm-3 col-lg-2 text-center mt-3" :onclick="'EditFile(' + file.id+ ')'">
+									<i class="fas fa-check-circle position-absolute" style="right: 36%; top: -12px; color: greenyellow;"></i>
+									<i class="fas fa-file" style="font-size: 30px"></i>
+									<p class="name">
+										{{file.name}}
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>`,
+		methods: {
+			extensionSelectChanged: function() {
+				document.getElementById('TaskSelect').value = "Выберите задачу";
+				axios.get('/File/GetFilesByExtensionJson', { params: { extension: document.getElementById('ExtensionSelect').value} })
+					.then(response => (this.$parent.data = response));
+
+			},
+			taskSelectChanged: function() {
+				document.getElementById('ExtensionSelect').value = "Выберите расширение";
+				axios.get('/File/GetFilesByTaskJson', { params: { task: document.getElementById('TaskSelect').value} })
+					.then(response => (this.$parent.data = response));
+			},
+			findNameClicked: function() {
+				document.getElementById('TaskSelect').value = "Выберите задачу";
+				document.getElementById('ExtensionSelect').value = "Выберите расширение";
+				axios.get('/File/GetFilesByNameJson', { params: { name: ""+document.getElementById('FileName').value} })
+					.then(response => (this.$parent.data = response));
+			}
+		}
+	});
+
+	var app = new Vue({
+		el: '#app',
+		data() {
+			return {
+				data: null,
+				extensions: null,
+				tasks: null
+			};
+		},
+		mounted() {
+			axios.get('/File/GetAvailableExtensionsJson')
+				.then(response => (this.extensions = response));
+			axios.get('/File/GetAvailableTasksJson')
+				.then(response => (this.tasks = response));
+
+			axios.get('/File/AllAvailableTaskFilesJson')
+				.then(response => (this.data = response));
+		}
+	});
+</script>
+
+
+
 <partial name="../Particles/_FileInteraction" />
+
+

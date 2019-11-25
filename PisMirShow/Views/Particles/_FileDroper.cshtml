@@ -37,7 +37,7 @@
         }
         $.ajax({
             type: "POST",
-            url: "/home/UploadFilesInBD?taskId="+@Model.Id,
+            url: "@Url.Action("UploadFilesInBD","File",new {taskId = Model.Id})",
             contentType: false,
             processData: false,
             data: data,

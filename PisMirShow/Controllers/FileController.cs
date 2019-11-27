@@ -5,7 +5,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 using PisMirShow.Models;
@@ -210,13 +209,16 @@ namespace PisMirShow.Controllers
 		[HttpGet]
 		public JsonResult GetFilesByExtensionJson(string extension)
 		{
+			if (extension == null)
+			{
+				return Json(null);
+			} 
+
 			return Json(GetFilesByExtension(extension));
 		}
 
 		public List<FilesViewModel> GetFilesByExtension(string extension)
 		{
-			if (extension == null) BadRequest("Аргумент пустой");
-
 			var taskFiles = AllAvailableTaskFiles();
 
 			var result = taskFiles.Select(t => new FilesViewModel
@@ -232,13 +234,16 @@ namespace PisMirShow.Controllers
 		[HttpGet]
 		public JsonResult GetFilesByTaskJson(string task)
 		{
+			if (task == null)
+			{
+				return Json(null);
+			} 
+
 			return Json(GetFilesByTask(task));
 		}
 
 		public List<FilesViewModel> GetFilesByTask(string task)
 		{
-			if (task == null) BadRequest("Аргумент пустой");
-
 			var taskFiles = AllAvailableTaskFiles();
 
 			var result = taskFiles.Where(t => t.TaskId == int.Parse(task)).Select(t => new FilesViewModel
@@ -254,12 +259,16 @@ namespace PisMirShow.Controllers
 		[HttpGet]
 		public JsonResult GetFilesByNameJson(string name)
 		{
+			if (name == null)
+			{
+				return Json(null);
+			} 
+
 			return Json(GetFilesByName(name));
 		}
 
 		private List<FilesViewModel> GetFilesByName(string name)
 		{
-			if (name == null) throw new Exception("Аргумент пустой");
 			var taskFiles = AllAvailableTaskFiles();
 
 			var result = taskFiles.Select(t => new FilesViewModel

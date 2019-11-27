@@ -50,12 +50,15 @@ namespace PisMirShow
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
             services.AddSignalR();
-			services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
+
+            services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
             {
 	            ProgressBar = false,
-	            PositionClass = ToastPositions.TopRight
+	            PositionClass = ToastPositions.BottomCenter
             });
-		}
+
+            services.AddMvc();
+        }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {

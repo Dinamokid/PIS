@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NETCore.Encrypt;
 using NToastNotify;
 using PisMirShow.Models;
 using PisMirShow.ViewModels.Files;
@@ -18,7 +19,8 @@ namespace PisMirShow.Controllers
 		public FileController(
 			PisDbContext dbContext,
 			IHostingEnvironment env,
-			IToastNotification toastNotification) : base(dbContext, env, toastNotification)
+			IToastNotification toastNotification
+			) : base(dbContext, env, toastNotification)
 		{
 		}
 
@@ -145,6 +147,8 @@ namespace PisMirShow.Controllers
 					fileData = binaryReader.ReadBytes((int)temp.Length);
 				}
 
+				fileData = EncryptProvider.AESEncrypt(fileData, "$eJbKuK1j43su0sFNGE*LxvmfBmPVtaF", "uhy7I!OECjWaV5nS");
+
 				FileItem file = new FileItem()
 				{
 					File = fileData,
@@ -184,7 +188,8 @@ namespace PisMirShow.Controllers
 			var temp = DbContext.Files.FirstOrDefault(f => f.Id == id);
 			if (temp != null)
 			{
-				byte[] mas = temp.File;
+				//byte[] mas = temp.File;
+				byte[] mas = EncryptProvider.AESDecrypt(temp.File, "$eJbKuK1j43su0sFNGE*LxvmfBmPVtaF", "uhy7I!OECjWaV5nS");
 				string fileType = temp.Type;
 				string fileName = temp.Name;
 				DocumentType TypeDoc = temp.DocType;
@@ -293,6 +298,5 @@ namespace PisMirShow.Controllers
 
 			return result;
 		}
-
 	}
 }

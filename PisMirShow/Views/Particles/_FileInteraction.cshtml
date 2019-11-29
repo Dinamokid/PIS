@@ -85,7 +85,7 @@
     }
 
     function DownloadFile() {
-        window.open('/GetFileById?id=' + window.modalData.id);
+        window.open('@Url.Action("GetFileById", "File")/?id=' + window.modalData.id);
     }
 
     function DeleteFile() {

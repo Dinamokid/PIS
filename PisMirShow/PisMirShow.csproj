@@ -31,11 +31,13 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.2.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
+    <PackageReference Include="NETCore.Encrypt" Version="2.0.8" />
     <PackageReference Include="NToastNotify" Version="5.0.12" />
   </ItemGroup>
 
 
   <ItemGroup>
+    <Folder Include="Extensions\" />
     <Folder Include="wwwroot\uploadedfiles\" />
   </ItemGroup>
 

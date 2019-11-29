@@ -22,7 +22,7 @@ namespace PisMirShow.Controllers
         public IActionResult AllTasks()
         {
             DellEmptyTasks();
-            var task = DbContext.Tasks.Include(t => t.ToUser).Include(t => t.FromUser).AsNoTracking().ToList();
+            var task = DbContext.Tasks.Include(t => t.ToUser).Include(t => t.FromUser).AsNoTracking().OrderBy(t=>t.DeadLine).ToList();
             return View(task);
         }
 

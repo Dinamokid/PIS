@@ -1,8 +1,4 @@
-﻿@using System.Text
-@{
-    var user = (User)ViewBag.User;
-}
-
+﻿@model User
 <div id="inputForm" class="mt-5">
     <input type="text" id="message" />
     <input type="text" id="sendTo" />
@@ -26,7 +22,7 @@
         .configureLogging(signalR.LogLevel.Information)
         .build();
 
-    var userName = `@user.GetFullName()`;
+    var userName = `@Model.GetFullName()`;
 
     hubConnection.on('Send', function (message, userName) {
 

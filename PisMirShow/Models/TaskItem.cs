@@ -25,16 +25,16 @@ namespace PisMirShow.Models
 
         public enum TaskStatus
         {
-            [Display(Name = "Не активно")]
+            [Display(Name = "ToDo")]
             NotStarted,
-            [Display(Name = "Активно")]
+            [Display(Name = "В работе")]
             Active,
-            [Display(Name = "Остановлено")]
-            Paused,
+            [Display(Name = "Ожидание проверки")]
+            Verification,
             [Display(Name = "Подтверждено")]
-            Сonfirmed, 
+            Confirmed, 
             [Display(Name = "Завершено")]
-            Finished,
+            Finished
         }
 
         public TaskItem()

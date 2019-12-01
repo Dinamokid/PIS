@@ -104,7 +104,7 @@ namespace PisMirShow.Controllers
             DbContext.SaveChanges();
         }
 
-        public IActionResult AddCommentInTask(string text, int taskId, int userId)
+        public IActionResult AddCommentInTask(string text, int taskId)
         {
             var task = DbContext.Tasks.AsNoTracking().FirstOrDefault(t => t.Id == taskId);
             if (task == null) return BadRequest();
@@ -114,7 +114,7 @@ namespace PisMirShow.Controllers
                 TaskId = taskId,
                 Text = text,
                 CreateDate = DateTime.UtcNow,
-                UserId = userId
+                UserId = GetCurrentUser().Id
             });
 
             DbContext.SaveChanges();

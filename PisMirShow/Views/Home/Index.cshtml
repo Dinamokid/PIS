@@ -1,7 +1,6 @@
-﻿@using System.Text
+﻿@model User
 @{
     ViewData["Title"] = "Моя лента";
-    var user = (User)ViewBag.User;
 }
 
 <div class="container">
@@ -40,7 +39,7 @@
         .configureLogging(signalR.LogLevel.Information)
         .build();
 
-    var userName = `@user.GetFullName()`;
+    var userName = `@Model.GetFullName()`;
 
     hubConnection.on('Send', function (message, userName, createdDate) {
        $("#chatroom").append(`<div class="mt-2">

@@ -24,39 +24,26 @@ namespace PisMirShow.Controllers
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            ViewBag.User = DbContext.Users.FirstOrDefault(u => u.Login == User.Identity.Name);
-            await next();
+	        var user = GetCurrentUser();
+	        if (user != null)
+	        {
+		        ViewBag.CurrentUserName = User.Identity.Name;
+		        ViewBag.CurrentUserId = user.Id;
+		        ViewBag.UserFullName = user.GetFullName();
+	        }
+	        await next();
         }
 
-        protected User GetCurrentUser() => DbContext.Users.FirstOrDefault(u => u.Login == User.Identity.Name);
+        protected User GetCurrentUser() =>  DbContext.Users.Include(u => u.Role).FirstOrDefault(u => u.Login == User.Identity.Name);
 
         protected User GetUserById(int? id)
         {
-            var user = DbContext.Users.FirstOrDefault(u => u.Id == id);
-            if (user != null)
-            {
-                user.Password = null;
-                return user;
-            }
-
-            return null;
+	        return DbContext.Users.FirstOrDefault(u => u.Id == id);
         }
 
-        protected JsonResult GetUserByIdJson(int id)
+        protected User GetUserByLogin(string login)
         {
-            var temp = DbContext.Users.AsNoTracking().FirstOrDefault(e => e.Id == id);
-            if (temp == null)
-                return Json(new { message = "error" });
-            return Json(new
-            {
-				temp.Id,
-				temp.FirstName,
-				temp.LastName,
-				temp.OfficePost,
-				temp.Department,
-				temp.Phone,
-				temp.Email
-            });
-        } 
+	        return DbContext.Users.FirstOrDefault(u => u.Login == login);
+        }
     }
 }

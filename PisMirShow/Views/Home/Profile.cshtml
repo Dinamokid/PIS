@@ -1,4 +1,4 @@
-﻿
+﻿@model User;
 @{
     ViewData["Title"] = "Личный кабинет";
 }
@@ -10,23 +10,23 @@
 
 <h1 class="mt-5">
     Профиль пользователя
-    <a><i class="fas fa-user-edit" style="font-size:0.7em" onclick="GetUserById(@ViewBag.User.Id)"></i></a>
+    <a><i class="fas fa-user-edit" style="font-size:0.7em" onclick="GetUserById(@Model.Id)"></i></a>
 </h1>
     <section>
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
-                    <p class="mt-5">Имя: @ViewBag.User.GetFullName()</p>
+                    <p class="mt-5">Имя: @Model.GetFullName()</p>
                     <p class="mt-3">
                         Роль в системе:
-                        @(@ViewBag.User.RoleId == 1 ? "Пользователь" : "Администратор")
+                        @(Model.RoleId == 1 ? "Пользователь" : "Администратор")
                     </p>
-                    <p class="mt-3">Email: @ViewBag.User.Email</p>
-                    <p class="mt-3">Дата рождения: @ViewBag.User.BirthdayDay</p>
-                    <p class="mt-3">Должность: @ViewBag.User.OfficePost</p>
-                    <p class="mt-3">Отдел: @ViewBag.User.Department</p>
-                    <p class="mt-3">Номер телефона: @ViewBag.User.Phone</p>
-                    <p class="mt-3">Дата регистрации: @ViewBag.User.RegisterTime</p>
+                    <p class="mt-3">Email: @Model.Email</p>
+                    <p class="mt-3">Дата рождения: @Model.BirthdayDay</p>
+                    <p class="mt-3">Должность: @Model.OfficePost</p>
+                    <p class="mt-3">Отдел: @Model.Department</p>
+                    <p class="mt-3">Номер телефона: @Model.Phone</p>
+                    <p class="mt-3">Дата регистрации: @Model.RegisterTime</p>
                 </div>
                 <div class="col-md-4 mt-5 text-center">
                     <div style="background-image: url('https://sun9-50.userapi.com/c604828/v604828581/226f9/PL6DvrFtzJk.jpg'); background-size: cover; background-position:top center; width: 250px; height: 250px" class="rounded-circle"></div>
@@ -91,7 +91,7 @@
         data.append("Id", id);
         $.ajax({
             type: "POST",
-            url: "@Url.Action("GetUserByIdJson","Home")",
+            url: "@Url.Action("GetCurrentUserByIdJson","Home")",
             contentType: false,
             processData: false,
             data: data,

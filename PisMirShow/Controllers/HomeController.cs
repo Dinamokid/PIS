@@ -18,20 +18,22 @@ namespace PisMirShow.Controllers
         public IActionResult Index()
         {
             ViewBag.Messages = DbContext.Posts.AsNoTracking().OrderBy(u => u.Id);
-            return View();
+            var user = GetCurrentUser();
+            return View(user);
         }
 
         public IActionResult Profile()
         {
-            return View();
+	        var user = GetCurrentUser();
+            return View(user);
         }
 
         public IActionResult Dialogs()
         {
-            return View();
+	        var user = GetCurrentUser();
+	        return View(user);
         }
 
-        //[Authorize(Roles = "Admin")]
 		public IActionResult About()
         {
             return View();
@@ -70,9 +72,20 @@ namespace PisMirShow.Controllers
         }
 
         [HttpPost]
-        public new JsonResult GetUserByIdJson(int id)
+        public JsonResult GetCurrentUserByIdJson(int id)
         {
-            return base.GetUserByIdJson(id);
-        }
+			var user = GetCurrentUser();
+			if (user == null) return Json(new { message = "error" });
+			return Json(new
+			{
+				user.Id,
+				user.FirstName,
+				user.LastName,
+				user.OfficePost,
+				user.Department,
+				user.Phone,
+				user.Email
+			});
+		}
     }
 }

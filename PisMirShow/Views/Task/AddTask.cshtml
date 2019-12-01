@@ -1,6 +1,6 @@
 ﻿@model TaskItem;
 @{
-    var user = (User)ViewBag.User;
+
 }
 <script>
     $("#date").datepicker({
@@ -12,7 +12,7 @@
         <form asp-controller="Task" asp-action="AddTask" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="form-group col-md-6">
-                    <input type="hidden" asp-for="FromUserId" value="@user.Id" />
+                    <input type="hidden" asp-for="FromUserId" value="@ViewBag.CurrentUserId" />
                     <input type="hidden" asp-for="Id" value="@Model.Id" />
                     <input type="hidden" asp-for="FilesId" id="FilesId" />
 

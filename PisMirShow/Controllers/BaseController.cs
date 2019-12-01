@@ -29,7 +29,7 @@ namespace PisMirShow.Controllers
 	        {
 		        ViewBag.CurrentUserName = User.Identity.Name;
 		        ViewBag.CurrentUserId = user.Id;
-		        ViewBag.UserFullName = user.GetFullName();
+		        ViewBag.CurrentUserFullName = user.GetFullName();
 	        }
 	        await next();
         }

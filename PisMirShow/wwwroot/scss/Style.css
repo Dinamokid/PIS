@@ -66,3 +66,6 @@ html {
 #chatroom {
   height: 68vh;
   overflow: auto; }
+
+.cursor-pointer {
+  cursor: pointer; }

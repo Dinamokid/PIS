@@ -17,22 +17,23 @@
 			<div class="row">
 				@foreach (var temp in Model)
 				{
-					<div class="col-md-4 mt-2">
-						<div class="card">
-							<a href="@Url.Action("Task")/@temp.Id" class="p-3">
-								<h5>@temp.Title</h5>
-								<p class="m-0">@temp.Text</p>
-								<p class="m-0">От кого: @temp.ToUser.GetFullName()</p>
+					<div class="col-lg-4 col-md-6 col-12 mt-4">
+						<div class="card" onclick="window.location.href = '@Url.Action("Task")/@temp.Id';">
+							<div class="p-3 cursor-pointer">
+								<div style="overflow: hidden; height: 125px;">
+									<h5>@temp.Title</h5>
+									<p class="m-0">@temp.Text</p>
+								</div>
+								<p class="m-0 mt-2">От кого: @temp.ToUser.GetFullName()</p>
 								<p class="m-0">Кому: @temp.FromUser.GetFullName()</p>
-								<p class="m-0">DeadLine: @temp.DeadLine</p>
-							</a>
+								<p class="m-0 mt-2">DeadLine: @temp.DeadLine</p>
+								<p class="m-0 mt-2">Статус: @temp.Status.GetDisplayName()</p>
+							</div>
 						</div>
 					</div>
 				}
 			</div>
 		}
-
-		
 	</div>
 </section>
 <a asp-controller="Task" asp-action="AddTask" class="text-dark">

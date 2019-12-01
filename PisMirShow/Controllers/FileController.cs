@@ -188,9 +188,9 @@ namespace PisMirShow.Controllers
 			var temp = DbContext.Files.FirstOrDefault(f => f.Id == id);
 			if (temp != null)
 			{
-				//byte[] mas = temp.File;
-				byte[] mas = EncryptProvider.AESDecrypt(temp.File, "$eJbKuK1j43su0sFNGE*LxvmfBmPVtaF", "uhy7I!OECjWaV5nS");
-				string fileType = temp.Type;
+                //byte[] mas = temp.File;
+                byte[] mas = EncryptProvider.AESDecrypt(temp.File, "$eJbKuK1j43su0sFNGE*LxvmfBmPVtaF", "uhy7I!OECjWaV5nS");
+                string fileType = temp.Type;
 				string fileName = temp.Name;
 				DocumentType TypeDoc = temp.DocType;
 				return File(mas, fileType, fileName);

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
@@ -15,8 +17,12 @@ namespace PisMirShow.Controllers
 {
     public class AccountController : BaseController
     {
-        public AccountController(PisDbContext dbContext, IHostingEnvironment env, IToastNotification toastNotification) : base(dbContext, env, toastNotification)
+        private readonly IHostingEnvironment _hostingEnvironment;
+
+        public AccountController(PisDbContext dbContext, IHostingEnvironment env, IToastNotification toastNotification, IHostingEnvironment hostingEnvironment) : base(dbContext, env, toastNotification)
         {
+            _hostingEnvironment = hostingEnvironment;
+
         }
 
         [HttpGet]
@@ -104,6 +110,56 @@ namespace PisMirShow.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Account");
+        }
+
+        private async void DeleteFile(string deleteFilePath)
+        {
+            if (deleteFilePath != string.Empty)
+            {
+                if (System.IO.File.Exists(_hostingEnvironment.WebRootPath + deleteFilePath))
+                {
+                    FileInfo file = new FileInfo(_hostingEnvironment.WebRootPath + deleteFilePath);
+                }
+            }
+        }
+
+        private async Task<string> AddFile(IFormFile uploadedFile, string directory)
+        {
+            if (uploadedFile != null)
+            {
+                var fileName = $"\\files\\{directory}\\{DateTime.UtcNow.Ticks}{uploadedFile.FileName}";
+                string path = _hostingEnvironment.WebRootPath + $@"{fileName}";
+
+                if (!Directory.Exists(_hostingEnvironment.WebRootPath + $@"\files\{directory}\"))
+                {
+                    Directory.CreateDirectory(_hostingEnvironment.WebRootPath + $@"\files\{directory}\");
+                }
+
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    await uploadedFile.CopyToAsync(fileStream);
+                }
+
+                return fileName.Replace('\\', '/');
+            }
+            return null;
+        }
+
+        [HttpPost]
+        public async Task<string> ChangeAvatar(IFormFile file)
+        {
+            var user = GetCurrentUser();
+
+            if (!string.IsNullOrEmpty(user.Avatar))
+            {
+                DeleteFile(user.Avatar);
+            }
+
+            user.Avatar = await AddFile(file, "avatars");
+
+            DbContext.SaveChanges();
+
+            return user.Avatar.Replace('\\', '/');
         }
     }
 }

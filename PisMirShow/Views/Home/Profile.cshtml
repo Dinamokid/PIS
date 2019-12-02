@@ -1,12 +1,9 @@
-﻿@model User;
+﻿@using PisMirShow.ViewModels;
+@model User;
 @{
     ViewData["Title"] = "Личный кабинет";
+	List<StatisticsViewModel> statistics = ViewBag.Statistic;
 }
-
-@*TODO:
-    Подгрузка пикчей из базы
-    Валидация полей
-*@
 
 <h1 class="mt-5">
     Профиль пользователя
@@ -84,57 +81,170 @@
         </div>
     </div>
 
-<script>
-    function GetUserById(id) {
-        $("#UserModal").modal("show");
-        var data = new FormData();
-        data.append("Id", id);
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("GetCurrentUserByIdJson","Home")",
-            contentType: false,
-            processData: false,
-            data: data,
-            success: function(data) {
-                $("#EditFirstName").val(data.firstName);
-                $("#EditLastName").val(data.lastName);
-                $("#UserId").val(data.id);
-                $("#EditOfficePost").val(data.officePost);
-                $("#EditUserDepartment").val(data.department);
-                $("#EditPhone").val(data.phone);
-                $("#EditEmail").val(data.email);
-            },
-            error: function(request) {
-                console.log(request);
-                toastr["error"](request.message);
-            }
-        });
-    };
+	<section>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
-    function UpdateUserModal() {
-        var data = new FormData();
-        data.append("Id",  $("#UserId").val());
-        data.append("FirstName", $("#EditFirstName").val());
-        data.append("LastName", $("#EditLastName").val());
-        data.append("OfficePost", $("#EditOfficePost").val());
-        data.append("Department", $("#EditUserDepartment").val());
-        data.append("Phone", $("#EditPhone").val());
-        data.append("Email", $("#EditEmail").val());
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("UpdateUser","Home")",
-            contentType: false,
-            processData: false,
-            data: data,
-            success: function(data) {
-                toastr["success"]("Запись изменена");
-                $("#UserModal").modal("hide");
-                setTimeout(location.reload(), 3000);
-            },
-            error: function(request) {
-                toastr["error"](request.message);
-            }
-        });
-    };
+		<div class="row mt-5">
+			<div class="col-lg-6">
+				<canvas class="m-auto" id="managerChart"></canvas>
+			</div>
+			<div class="col-lg-6 mt-5 mt-lg-0">
+				<canvas class="m-auto" id="workerChart"></canvas>
+			</div>
+		</div>
+		
+		<script>
+			var config = {
+				type: 'doughnut',
+				data: {
+					datasets: [{
+						data: [
+							@(statistics[0].NotStarted),
+							@(statistics[0].Active),
+							@(statistics[0].Verification),
+							@(statistics[0].Confirmed),
+							@(statistics[0].Finished)
+						],
+						backgroundColor: [
+							"#ff0000",
+							"#ffa500",
+							"#ffff00",
+							"#008000",
+							"#0000ff"
+						],
+						label: 'Manager Stat'
+					}],
+					labels: [
+						'% NotStarted',
+						'% Active',
+						'% Verification',
+						'% Confirmed',
+						'% Finished'
+					]
+				},
+				options: {
+					responsive: true,
+					legend: {
+						position: 'top',
+					},
+					title: {
+						display: true,
+						text: 'Manager Statistics'
+					},
+					animation: {
+						animateScale: true,
+						animateRotate: true
+					}
+				}
+			};
+
+			var config1 = {
+				type: 'doughnut',
+				data: {
+					datasets: [{
+						data: [
+							@(statistics[1].NotStarted),
+							@(statistics[1].Active),
+							@(statistics[1].Verification),
+							@(statistics[1].Confirmed),
+							@(statistics[1].Finished)
+						],
+						backgroundColor: [
+							"#ff0000",
+							"#ffa500",
+							"#ffff00",
+							"#008000",
+							"#0000ff"
+						],
+						label: 'Worker Stat'
+					}],
+					labels: [
+						'% NotStarted',
+						'% Active',
+						'% Verification',
+						'% Confirmed',
+						'% Finished'
+					]
+				},
+				options: {
+					responsive: true,
+					legend: {
+						position: 'top',
+					},
+					title: {
+						display: true,
+						text: 'Worker Statistics'
+					},
+					animation: {
+						animateScale: true,
+						animateRotate: true
+					}
+				}
+			};
+
+			window.onload = function() {
+				var ctx = document.getElementById('managerChart').getContext('2d');
+				window.myDoughnut = new Chart(ctx, config);
+
+				var ctx1 = document.getElementById('workerChart').getContext('2d');
+				window.myDoughnut1 = new Chart(ctx1, config1);
+			};
+
+		</script>
+
+	</section>
+
+<script>
+	function GetUserById(id) {
+		$("#UserModal").modal("show");
+		var data = new FormData();
+		data.append("Id", id);
+		$.ajax({
+			type: "POST",
+			url: "@Url.Action("GetCurrentUserByIdJson","Home")",
+			contentType: false,
+			processData: false,
+			data: data,
+			success: function(data) {
+				$("#EditFirstName").val(data.firstName);
+				$("#EditLastName").val(data.lastName);
+				$("#UserId").val(data.id);
+				$("#EditOfficePost").val(data.officePost);
+				$("#EditUserDepartment").val(data.department);
+				$("#EditPhone").val(data.phone);
+				$("#EditEmail").val(data.email);
+			},
+			error: function(request) {
+				console.log(request);
+				toastr["error"](request.message);
+			}
+		});
+	};
+
+	function UpdateUserModal() {
+		var data = new FormData();
+		data.append("Id",  $("#UserId").val());
+		data.append("FirstName", $("#EditFirstName").val());
+		data.append("LastName", $("#EditLastName").val());
+		data.append("OfficePost", $("#EditOfficePost").val());
+		data.append("Department", $("#EditUserDepartment").val());
+		data.append("Phone", $("#EditPhone").val());
+		data.append("Email", $("#EditEmail").val());
+		$.ajax({
+			type: "POST",
+			url: "@Url.Action("UpdateUser","Home")",
+			contentType: false,
+			processData: false,
+			data: data,
+			success: function(data) {
+				toastr["success"]("Запись изменена");
+				$("#UserModal").modal("hide");
+				setTimeout(location.reload(), 3000);
+			},
+			error: function(request) {
+				toastr["error"](request.message);
+			}
+		});
+	};
 
 </script>

@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 using PisMirShow.Models;
+using PisMirShow.ViewModels;
 
 namespace PisMirShow.Controllers
 {
@@ -25,6 +27,32 @@ namespace PisMirShow.Controllers
         public IActionResult Profile()
         {
 	        var user = GetCurrentUser();
+
+	        var managerTasks = DbContext.Tasks.Where(t => t.FromUserId == user.Id);
+	        var workerTasks = DbContext.Tasks.Where(t => t.ToUserId == user.Id);
+
+	        double allManagerTasks = managerTasks.Count() / 100.0;
+	        double allWorkerTasks = workerTasks.Count() / 100.0;
+	        ViewBag.Statistic = new List<StatisticsViewModel>
+	        {
+		        new StatisticsViewModel
+		        {
+			        Active = managerTasks.Count(t => t.Status == TaskItem.TaskStatus.Active) / allManagerTasks,
+			        Confirmed = managerTasks.Count(t => t.Status == TaskItem.TaskStatus.Confirmed) / allManagerTasks,
+			        Finished = managerTasks.Count(t => t.Status == TaskItem.TaskStatus.Finished) / allManagerTasks,
+			        NotStarted = managerTasks.Count(t => t.Status == TaskItem.TaskStatus.NotStarted) / allManagerTasks,
+			        Verification = managerTasks.Count(t => t.Status == TaskItem.TaskStatus.Verification) / allManagerTasks
+		        },
+		        new StatisticsViewModel
+		        {
+			        Active = workerTasks.Count(t => t.Status == TaskItem.TaskStatus.Active) / allWorkerTasks,
+			        Confirmed = workerTasks.Count(t => t.Status == TaskItem.TaskStatus.Confirmed) / allWorkerTasks,
+			        Finished = workerTasks.Count(t => t.Status == TaskItem.TaskStatus.Finished) / allWorkerTasks,
+			        NotStarted = workerTasks.Count(t => t.Status == TaskItem.TaskStatus.NotStarted) / allWorkerTasks,
+			        Verification = workerTasks.Count(t => t.Status == TaskItem.TaskStatus.Verification) / allWorkerTasks,
+		        }
+	        };
+
             return View(user);
         }
 

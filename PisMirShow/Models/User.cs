@@ -22,6 +22,7 @@ namespace PisMirShow.Models
         public string OfficePost { get; set; }
         public string Department { get; set; }
         public string BirthdayDay { get; set; }
+        public string Avatar { get; set; }
 
         public int? RoleId { get; set; }
         public virtual Role Role { get; set; }

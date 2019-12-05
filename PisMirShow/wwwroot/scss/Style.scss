@@ -95,3 +95,35 @@ html {
 .cursor-pointer {
 	cursor: pointer;
 }
+
+#Avatar {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    align-items: center;
+
+    & > div {
+        background-size: cover;
+        background-position: center center;
+        border-radius: 100%;
+        border: 3px solid #ecf0f1;
+        width: 220px;
+        height: 220px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        #avatarEdit {
+            display: none;
+        }
+
+        &:hover {
+            filter: grayscale(100%);
+
+            #avatarEdit {
+                display: block;
+            }
+        }
+    }
+}

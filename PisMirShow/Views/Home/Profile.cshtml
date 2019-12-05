@@ -1,135 +1,151 @@
 ﻿@using PisMirShow.ViewModels;
 @model User;
 @{
-    ViewData["Title"] = "Личный кабинет";
+	ViewData["Title"] = "Личный кабинет";
 	List<StatisticsViewModel> statistics = ViewBag.Statistic;
+	List<StatisticsDateViewModel> statisticWeek = ViewBag.StatisticWeek;
+	List<StatisticsDateViewModel> statisticMouth = ViewBag.StatisticMouth;
+	List<StatisticsDateViewModel> top = ViewBag.TopTaskChartData;
+
+	List<string> colors = ViewBag.ColorsList;
 }
 
 <h1 class="mt-5">
-    Профиль пользователя
-    <a><i class="fas fa-user-edit" style="font-size:0.7em" onclick="GetUserById(@Model.Id)"></i></a>
+	Профиль пользователя
+	<a><i class="fas fa-user-edit" style="font-size:0.7em" onclick="GetUserById(@Model.Id)"></i></a>
 </h1>
-    <section>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8">
-                    <p class="mt-5">Имя: @Model.GetFullName()</p>
-                    <p class="mt-3">
-                        Роль в системе:
-                        @(Model.RoleId == 1 ? "Пользователь" : "Администратор")
-                    </p>
-                    <p class="mt-3">Email: @Model.Email</p>
-                    <p class="mt-3">Дата рождения: @Model.BirthdayDay</p>
-                    <p class="mt-3">Должность: @Model.OfficePost</p>
-                    <p class="mt-3">Отдел: @Model.Department</p>
-                    <p class="mt-3">Номер телефона: @Model.Phone</p>
-                    <p class="mt-3">Дата регистрации: @Model.RegisterTime</p>
-                </div>
-                <div class="col-md-4 mt-5 text-center">
-                    <div id="Avatar">
-                        <div onclick="$('#changeAvatarModal').modal('show')" style="background-image: url('@(string.IsNullOrEmpty(Model.Avatar) ? "/files/avatars/nonavatar.png": Model.Avatar)');">
-                            <i class="fas fa-pen position-absolute bigFontSize" id="avatarEdit" style="color: white"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <div class="modal" tabindex="-1" role="dialog" id="UserModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="FullName">Изменение данных</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="UserId" class="form-control-label">Id:</label>
-                            <input type="text" class="form-control" id="UserId" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="EditFirstName" class="form-control-label">Имя:</label>
-                            <input type="text" class="form-control" id="EditFirstName">
-                        </div>
-                        <div class="form-group">
-                            <label for="EditLastName" class="form-control-label">Фамилия:</label>
-                            <input type="text" class="form-control" id="EditLastName">
-                        </div>
-                        <div class="form-group">
-                            <label for="EditOfficePost" class="form-control-label">Должность:</label>
-                            <input type="text" class="form-control" id="EditOfficePost">
-                        </div>
-                        <div class="form-group">
-                            <label for="EditUserDepartment" class="form-control-label">Отдел: </label>
-                            <input type="text" class="form-control" id="EditUserDepartment">
-                        </div>
-                        <div class="form-group">
-                            <label for="EditPhone" class="form-control-label">Номер телефона:</label>
-                            <input type="text" class="form-control " id="EditPhone">
-                        </div>
-                        <div class="form-group">
-                            <label for="EditEmail" class="form-control-label">Email:</label>
-                            <input type="text" class="form-control" id="EditEmail">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    <button type="button" class="btn btn-primary" onclick="UpdateUserModal()">Сохранить</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="changeAvatarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="row mt-3 w-100">
-                        <div class="col-md-12">
-                            <h4 class="modal-title w-100 text-center" id="myModalLabel">Смена аватара</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <div class="col-md-12">
-                        <div class="input-group mb-3 mt-3 p-0">
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="avatarImageSource">
-                                <label class="custom-file-label" for="avatarImageSource" id="avatarImagePath" aria-describedby="Upload" style="overflow: hidden; white-space: nowrap;">@(Model.Avatar ?? "Выберите аватар")</label>
-                            </div>
-                            <div class="input-group-append">
-                                <a class="input-group-text" id="uploadavatarImage">Загрузить</a>
-                            </div>
-                        </div>
-                        <input type="hidden" asp-for="@Model.Avatar" value="@Model.Avatar" id="avatarImage" />
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Закрыть</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-	<section>
-		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-
-		<div class="row mt-5">
-			<div class="col-lg-6">
-				<canvas class="m-auto" id="managerChart"></canvas>
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8">
+				<p class="mt-5">Имя: @Model.GetFullName()</p>
+				<p class="mt-3">
+					Роль в системе:
+					@(Model.RoleId == 1 ? "Пользователь" : "Администратор")
+				</p>
+				<p class="mt-3">Email: @Model.Email</p>
+				<p class="mt-3">Дата рождения: @Model.BirthdayDay</p>
+				<p class="mt-3">Должность: @Model.OfficePost</p>
+				<p class="mt-3">Отдел: @Model.Department</p>
+				<p class="mt-3">Номер телефона: @Model.Phone</p>
+				<p class="mt-3">Дата регистрации: @Model.RegisterTime</p>
 			</div>
-			<div class="col-lg-6 mt-5 mt-lg-0">
-				<canvas class="m-auto" id="workerChart"></canvas>
+			<div class="col-md-4 mt-5 text-center">
+				<div id="Avatar">
+					<div onclick="$('#changeAvatarModal').modal('show')" style="background-image: url('@(string.IsNullOrEmpty(Model.Avatar) ? "/files/avatars/nonavatar.png": Model.Avatar)');">
+						<i class="fas fa-pen position-absolute bigFontSize" id="avatarEdit" style="color: white"></i>
+					</div>
+				</div>
 			</div>
 		</div>
+	</div>
+</section>
 
-		<script>
+<div class="modal" tabindex="-1" role="dialog" id="UserModal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="FullName">Изменение данных</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<label for="UserId" class="form-control-label">Id:</label>
+						<input type="text" class="form-control" id="UserId" readonly>
+					</div>
+					<div class="form-group">
+						<label for="EditFirstName" class="form-control-label">Имя:</label>
+						<input type="text" class="form-control" id="EditFirstName">
+					</div>
+					<div class="form-group">
+						<label for="EditLastName" class="form-control-label">Фамилия:</label>
+						<input type="text" class="form-control" id="EditLastName">
+					</div>
+					<div class="form-group">
+						<label for="EditOfficePost" class="form-control-label">Должность:</label>
+						<input type="text" class="form-control" id="EditOfficePost">
+					</div>
+					<div class="form-group">
+						<label for="EditUserDepartment" class="form-control-label">Отдел: </label>
+						<input type="text" class="form-control" id="EditUserDepartment">
+					</div>
+					<div class="form-group">
+						<label for="EditPhone" class="form-control-label">Номер телефона:</label>
+						<input type="text" class="form-control " id="EditPhone">
+					</div>
+					<div class="form-group">
+						<label for="EditEmail" class="form-control-label">Email:</label>
+						<input type="text" class="form-control" id="EditEmail">
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+				<button type="button" class="btn btn-primary" onclick="UpdateUserModal()">Сохранить</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="changeAvatarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+	 aria-hidden="true">
+	<div class="modal-dialog modal-md" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="row mt-3 w-100">
+					<div class="col-md-12">
+						<h4 class="modal-title w-100 text-center" id="myModalLabel">Смена аватара</h4>
+					</div>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="col-md-12">
+					<div class="input-group mb-3 mt-3 p-0">
+						<div class="custom-file">
+							<input type="file" class="custom-file-input" id="avatarImageSource">
+							<label class="custom-file-label" for="avatarImageSource" id="avatarImagePath" aria-describedby="Upload" style="overflow: hidden; white-space: nowrap;">@(Model.Avatar ?? "Выберите аватар")</label>
+						</div>
+						<div class="input-group-append">
+							<a class="input-group-text" id="uploadavatarImage">Загрузить</a>
+						</div>
+					</div>
+					<input type="hidden" asp-for="@Model.Avatar" value="@Model.Avatar" id="avatarImage" />
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Закрыть</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<section>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+	<div class="row mt-5">
+		<div class="col-lg-6">
+			<canvas class="m-auto" id="managerChart"></canvas>
+		</div>
+		<div class="col-lg-6 mt-5 mt-lg-0">
+			<canvas class="m-auto" id="workerChart"></canvas>
+		</div>
+	</div>
+	<div class="row mt-5">
+		<div class="col-lg-6">
+			<canvas class="m-auto" id="weekChart"></canvas>
+		</div>
+		<div class="col-lg-6">
+			<canvas class="m-auto" id="topChart"></canvas>
+		</div>
+	</div>
+	<div class="col-lg-12 mt-5">
+		<canvas class="m-auto" id="monthChart"></canvas>
+	</div>
+
+	<script>
 			var config = {
 				type: 'doughnut',
 				data: {
@@ -218,23 +234,145 @@
 				}
 			};
 
+			var config2 = {
+				type: 'line',
+				data: {
+					labels: [
+						@for (int i = 0; i < 7; i++)
+						{
+							@: "@statisticWeek[i].Date",
+						}
+						],
+					datasets: [{
+						label: 'Ваша недельная успеваемость',
+						steppedLine: {
+							steppedLine: true
+						},
+						backgroundColor: "#9400D3",
+						borderColor: "#9400D3",
+						data: [
+							@for (int i = 0; i < 7; i++)
+						{
+							@statisticWeek[i].Value@:,
+						}
+							],
+						fill: "start"
+					}]
+				},
+				options: {
+					responsive: true,
+					title: {
+						display: true,
+					}
+				}
+			};
+
+			var config3 = {
+				type: 'horizontalBar',
+				data: {
+					labels: [
+						@foreach (var temp in top)
+						{
+							@: '@temp.Date',
+						}
+					],
+					datasets: [{
+						label: 'завершенно',
+						backgroundColor: "@colors[0]",
+						data: [
+							@for(int i = 0; i < top.Count; i++)
+							{
+								@top[i].Value @:,
+							}
+						]
+					}]
+				},
+				options: {
+					elements: {
+						rectangle: {
+							borderWidth: 2
+						}
+					},
+					responsive: true,
+					legend: {
+						display: false,
+					},
+					title: {
+						display: true,
+						text: 'TOP (кол-во завершенных тасков за неделю)'
+					},
+					scales: {
+						xAxes: [
+							{
+								ticks: {
+									min: 0,
+									stepSize: 1
+								}
+							}
+						]
+					}
+				}
+			};
+
+			var config4 = {
+				type: 'line',
+				data: {
+					labels: [
+						@for (int i = 0; i < 30; i++)
+						{
+							@: "@statisticMouth[i].Date",
+						}
+					],
+					datasets: [{
+						label: 'Ваша месячая успеваемость',
+						steppedLine: {
+							steppedLine: true
+						},
+						backgroundColor: "#86c5da",
+						borderColor: "#86c5da",
+						data: [
+							@for (int i = 0; i < 30; i++)
+						{
+							@statisticMouth[i].Value@:,
+						}
+						],
+						fill: 'start'
+					}]
+				},
+				options: {
+					responsive: true,
+					title: {
+						display: true,
+					}
+				}
+			};
+
 			window.onload = function() {
 				var ctx = document.getElementById('managerChart').getContext('2d');
 				window.myDoughnut = new Chart(ctx, config);
 
 				var ctx1 = document.getElementById('workerChart').getContext('2d');
 				window.myDoughnut1 = new Chart(ctx1, config1);
+
+				var ctx2 = document.getElementById('weekChart').getContext('2d');
+				window.myDoughnut1 = new Chart(ctx2, config2);
+
+				var ctx3 = document.getElementById('topChart').getContext('2d');
+				window.myDoughnut1 = new Chart(ctx3, config3);
+
+				var ctx4 = document.getElementById('monthChart').getContext('2d');
+				window.myDoughnut1 = new Chart(ctx4, config4);
 			};
 
-		</script>
+	</script>
 
 
-		@*https://www.chartjs.org/samples/latest/charts/line/stepped.html*@ 
-		@*эффективность за неделю*@
-		@*эффективность за месяц*@
-		
-		@*эффективность по компании топ (месяц, неделя, день)*@
-	</section>
+	@*https://www.chartjs.org/samples/latest/charts/line/stepped.html*@
+	@*эффективность за неделю*@
+	@*эффективность за месяц*@
+
+	@*эффективность по компании топ (месяц, неделя, день)*@
+</section>
 
 <script>
     $(document).ready(function () {

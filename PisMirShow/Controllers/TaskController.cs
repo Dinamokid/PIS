@@ -127,6 +127,10 @@ namespace PisMirShow.Controllers
             var temp = DbContext.Tasks.FirstOrDefault(f => f.Id == taskId);
             if (temp == null) return BadRequest();
             temp.Status = (TaskItem.TaskStatus)status;
+            if ((TaskItem.TaskStatus) status == TaskItem.TaskStatus.Finished)
+            {
+				temp.EndDate = DateTime.UtcNow;
+            }
             DbContext.SaveChanges();
             return Ok();
         }

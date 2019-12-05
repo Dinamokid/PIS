@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
+using PisMirShow.Extensions;
 using PisMirShow.Models;
 using PisMirShow.ViewModels;
+using PisMirShow.Extensions;
 
 namespace PisMirShow.Controllers
 {
@@ -52,6 +55,45 @@ namespace PisMirShow.Controllers
 			        Verification = workerTasks.Count(t => t.Status == TaskItem.TaskStatus.Verification) / allWorkerTasks,
 		        }
 	        };
+
+	        var finishedTask = workerTasks.Where(t => t.EndDate != null).ToList();
+
+	        var statisticWeek = new List<StatisticsDateViewModel>();
+	        for (int i = 7; i > 0; i--)
+	        {
+				statisticWeek.Add( new StatisticsDateViewModel{
+					Date = DateTime.UtcNow.TakeAwayDay(i - 1).ToLocalTime().Date.ToShortDateString(),
+					Value = finishedTask.Count(t =>
+						t.EndDate?.ToLocalTime() >= DateTime.UtcNow.TakeAwayDay(i - 1).ToLocalTime().Date
+						&& t.EndDate?.ToLocalTime() <= DateTime.UtcNow.TakeAwayDay(i - 2).ToLocalTime().Date)
+					}
+				);
+	        }
+	        ViewBag.StatisticWeek = statisticWeek;
+
+	        var statisticMouth = new List<StatisticsDateViewModel>();
+	        for (int i = 30; i > 0; i--)
+	        {
+		        statisticMouth.Add( new StatisticsDateViewModel{
+				        Date = DateTime.UtcNow.TakeAwayDay(i - 1).ToLocalTime().Date.ToShortDateString(),
+				        Value = finishedTask.Count(t =>
+					        t.EndDate?.ToLocalTime() >= DateTime.UtcNow.TakeAwayDay(i - 1).ToLocalTime().Date
+					        && t.EndDate?.ToLocalTime() <= DateTime.UtcNow.TakeAwayDay(i - 2).ToLocalTime().Date)
+			        }
+		        );
+	        }
+	        ViewBag.StatisticMouth = statisticMouth;
+
+	        var topTask = DbContext.Tasks.Include(t=>t.ToUser).AsNoTracking().Where(t => t.Status == TaskItem.TaskStatus.Finished);
+
+	        var usersInTasks = topTask.Select(t => t.ToUserId).Distinct().Select(temp => new StatisticsDateViewModel
+	        {
+		        Date = topTask.First(t => t.ToUserId == temp).ToUser.GetFullName(),
+		        Value = topTask.Count(t => t.ToUserId == temp)
+	        }).OrderByDescending(t=>t.Value).ToList();
+	        ViewBag.TopTaskChartData = usersInTasks;
+	        
+	        ViewBag.ColorsList = ColorExtensions.GetHexColors(usersInTasks.Count);
 
             return View(user);
         }

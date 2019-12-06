@@ -84,9 +84,10 @@ namespace PisMirShow.Controllers
 	        }
 	        ViewBag.StatisticMouth = statisticMouth;
 
-	        var topTask = DbContext.Tasks.Include(t=>t.ToUser).AsNoTracking().Where(t => t.Status == TaskItem.TaskStatus.Finished);
+	        var topTask = DbContext.Tasks.Include(t => t.ToUser).AsNoTracking().Where(t => t.Status == TaskItem.TaskStatus.Finished);
 
-	        var usersInTasks = topTask.Select(t => t.ToUserId).Distinct().Select(temp => new StatisticsDateViewModel
+	        var usersInTasks = topTask.Where(t => t.EndDate.IsLessThanWeek())
+		        .Select(t => t.ToUserId).Distinct().Select(temp => new StatisticsDateViewModel
 	        {
 		        Date = topTask.First(t => t.ToUserId == temp).ToUser.GetFullName(),
 		        Value = topTask.Count(t => t.ToUserId == temp)

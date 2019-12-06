@@ -186,6 +186,16 @@
 					animation: {
 						animateScale: true,
 						animateRotate: true
+					},
+					scales: {
+						yAxes: [
+							{
+								ticks: {
+									min: 0,
+									stepSize: 1
+								}
+							}
+						]
 					}
 				}
 			};
@@ -230,6 +240,16 @@
 					animation: {
 						animateScale: true,
 						animateRotate: true
+					},
+					scales: {
+						yAxes: [
+							{
+								ticks: {
+									min: 0,
+									stepSize: 1
+								}
+							}
+						]
 					}
 				}
 			};
@@ -261,8 +281,22 @@
 				},
 				options: {
 					responsive: true,
+					legend: {
+						display: false,
+					},
 					title: {
 						display: true,
+						text: 'Ваша недельная успеваемость'
+					},
+					scales: {
+						yAxes: [
+							{
+								ticks: {
+									min: 0,
+									stepSize: 1
+								}
+							}
+						]
 					}
 				}
 			};
@@ -341,8 +375,22 @@
 				},
 				options: {
 					responsive: true,
+					legend: {
+						display: false,
+					},
 					title: {
 						display: true,
+						text: 'Ваша месячая успеваемость'
+					},
+					scales: {
+						yAxes: [
+							{
+								ticks: {
+									min: 0,
+									stepSize: 1
+								}
+							}
+						]
 					}
 				}
 			};

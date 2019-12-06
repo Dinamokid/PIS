@@ -18,5 +18,11 @@ namespace PisMirShow.Extensions
 		{
 			return firstDateTime - TimeSpan.FromDays(30);
 		}
+
+		public static bool IsLessThanWeek(this DateTime? firstDateTime)
+		{
+			if (firstDateTime == null) return false;
+			return firstDateTime.Value.ToLocalTime() >= DateTime.UtcNow.TakeAwayWeek().ToLocalTime();
+		}
 	}
 }

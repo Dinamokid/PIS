@@ -1,0 +1,77 @@
+﻿@model PisMirShow.ViewModels.DirectoryDataViewModel
+@{
+	ViewData["Title"] = "Справочник";
+}
+
+<section>
+	<ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
+		<li class="nav-item">
+			<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Список сотрудников</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Информация о клиентах</a>
+		</li>
+	</ul>
+	<div class="tab-content" id="myTabContent">
+		@*Список сотрудников*@
+		<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+			<div class="row">
+				@foreach (var temp in Model.Users)
+				{
+					<div class="col-12 mt-4">
+						<div class="card" @*onclick="window.location.href = '@Url.Action("Task")/@temp.Id';"*@>
+							<div class="p-3 cursor-pointer">
+								<h4>@temp.GetFullName()</h4>
+								<div class="row">
+									<div class="col-lg-3">
+										<img src="@temp.Avatar" class="w-100" alt=""/>
+									</div>
+									<div class="col-lg-9">
+										<p class="m-0">
+											Отдел: @temp.Department
+										</p>
+										<p class="m-0">
+											Должность: @temp.OfficePost
+										</p>
+										<p class="m-0">
+											Контакты: <br />
+											<div class="pl-4">
+												┝ Email: @temp.Email <br />
+												┕ Телефон: @temp.Phone
+											</div>
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+		@*Информация о клиентах*@
+		<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+			@foreach (var temp in Model.DirectoryDataList.Where(t=>t.DirectoryType == DirectoryType.Clients))
+			{
+				<div class="col-12 mt-4">
+					<div class="card" @*onclick="window.location.href = '@Url.Action("Task")/@temp.Id';"*@>
+						<div class="p-3 cursor-pointer position-relative">
+							<h4>@temp.Title</h4>
+							<div class="row">
+								<div class="col-12">
+									<p class="m-0">
+										@temp.Text
+									</p>
+								</div>
+							</div>
+							<i class="fas fa-times position-absolute" onclick="window.location.href = '@Url.Action("DeleteDirectoryData","home")?id=@temp.Id';" style="top: 15px; right: 15px;"></i>
+						</div>
+					</div>
+				</div>
+			}
+			
+		<br />
+		<br />
+			<partial name="../Particles/_DirectoryAdder" model="new DirectoryData{DirectoryType = DirectoryType.Clients}"/>
+		</div>
+	</div>
+</section>

@@ -9,7 +9,6 @@ using NToastNotify;
 using PisMirShow.Extensions;
 using PisMirShow.Models;
 using PisMirShow.ViewModels;
-using PisMirShow.Extensions;
 
 namespace PisMirShow.Controllers
 {
@@ -105,6 +104,20 @@ namespace PisMirShow.Controllers
 	        return View(user);
         }
 
+        public IActionResult Directory()
+        {
+	        var users = DbContext.Users.ToList();
+			users.ForEach(t => t.Password = null);
+
+			var model = new DirectoryDataViewModel
+			{
+				Users = users,
+				DirectoryDataList = DbContext.DirectoryData.ToList()
+			};
+
+	        return View(model);
+        }
+
 		public IActionResult About()
         {
             return View();
@@ -158,5 +171,23 @@ namespace PisMirShow.Controllers
 				user.Email
 			});
 		}
+
+        [HttpPost]
+        public IActionResult AddDirectoryData(DirectoryData model)
+        {
+	        DbContext.DirectoryData.Add(model);
+	        DbContext.SaveChanges();
+	        return RedirectToAction("Directory");
+        }
+
+        [HttpGet]
+        public IActionResult DeleteDirectoryData(int id)
+        {
+	        var temp = DbContext.DirectoryData.FirstOrDefault(t => t.Id == id);
+	        if (temp == null) ToastNotification.AddErrorToastMessage("Такого id не существует");
+	        DbContext.DirectoryData.Remove(temp);
+	        DbContext.SaveChanges();
+	        return RedirectToAction("Directory");
+        }
     }
 }

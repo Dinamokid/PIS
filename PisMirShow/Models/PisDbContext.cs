@@ -11,6 +11,7 @@ namespace PisMirShow
         public DbSet<TaskItem> Tasks { get; set; }
         public DbSet<TaskComments> TaskComments { get; set; }
         public DbSet<Role> Roles { get; set; }
+		public DbSet<DirectoryData> DirectoryData { get; set; }
         
         public PisDbContext(DbContextOptions<PisDbContext> options)
             : base(options)

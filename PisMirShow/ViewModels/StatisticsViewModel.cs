@@ -2,10 +2,10 @@
 {
 	public class StatisticsViewModel
 	{
-		public double NotStarted { get; set; }
-		public double Active { get; set; }
-		public double Verification { get; set; }
-		public double Confirmed { get; set; }
-		public double Finished { get; set; }
+		public string NotStarted { get; set; }
+		public string Active { get; set; }
+		public string Verification { get; set; }
+		public string Confirmed { get; set; }
+		public string Finished { get; set; }
 	}
 }

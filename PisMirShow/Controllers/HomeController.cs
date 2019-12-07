@@ -40,20 +40,20 @@ namespace PisMirShow.Controllers
 	        {
 		        new StatisticsViewModel
 		        {
-			        Active = managerTasks.Count(t => t.Status == TaskItem.TaskStatus.Active) / allManagerTasks,
-			        Confirmed = managerTasks.Count(t => t.Status == TaskItem.TaskStatus.Confirmed) / allManagerTasks,
-			        Finished = managerTasks.Count(t => t.Status == TaskItem.TaskStatus.Finished) / allManagerTasks,
-			        NotStarted = managerTasks.Count(t => t.Status == TaskItem.TaskStatus.NotStarted) / allManagerTasks,
-			        Verification = managerTasks.Count(t => t.Status == TaskItem.TaskStatus.Verification) / allManagerTasks
-		        },
+			        Active = Math.Round(managerTasks.Count(t => t.Status == TaskItem.TaskStatus.Active) / allManagerTasks, 3).ToString().Replace(',','.'),
+			        Confirmed = Math.Round(managerTasks.Count(t => t.Status == TaskItem.TaskStatus.Confirmed) / allManagerTasks, 3).ToString().Replace(',','.'),
+			        Finished = Math.Round(managerTasks.Count(t => t.Status == TaskItem.TaskStatus.Finished) / allManagerTasks, 3).ToString().Replace(',','.'),
+			        NotStarted = Math.Round(managerTasks.Count(t => t.Status == TaskItem.TaskStatus.NotStarted) / allManagerTasks, 3).ToString().Replace(',','.'),
+			        Verification = Math.Round(managerTasks.Count(t => t.Status == TaskItem.TaskStatus.Verification) / allManagerTasks, 3).ToString().Replace(',','.')
+                },
 		        new StatisticsViewModel
 		        {
-			        Active = workerTasks.Count(t => t.Status == TaskItem.TaskStatus.Active) / allWorkerTasks,
-			        Confirmed = workerTasks.Count(t => t.Status == TaskItem.TaskStatus.Confirmed) / allWorkerTasks,
-			        Finished = workerTasks.Count(t => t.Status == TaskItem.TaskStatus.Finished) / allWorkerTasks,
-			        NotStarted = workerTasks.Count(t => t.Status == TaskItem.TaskStatus.NotStarted) / allWorkerTasks,
-			        Verification = workerTasks.Count(t => t.Status == TaskItem.TaskStatus.Verification) / allWorkerTasks,
-		        }
+			        Active = Math.Round(workerTasks.Count(t => t.Status == TaskItem.TaskStatus.Active) / allWorkerTasks, 3).ToString().Replace(',','.'),
+                    Confirmed = Math.Round(workerTasks.Count(t => t.Status == TaskItem.TaskStatus.Confirmed) / allWorkerTasks, 3).ToString().Replace(',','.'),
+                    Finished = Math.Round(workerTasks.Count(t => t.Status == TaskItem.TaskStatus.Finished) / allWorkerTasks, 3).ToString().Replace(',','.'),
+                    NotStarted = Math.Round(workerTasks.Count(t => t.Status == TaskItem.TaskStatus.NotStarted) / allWorkerTasks, 3).ToString().Replace(',','.'),
+                    Verification = Math.Round(workerTasks.Count(t => t.Status == TaskItem.TaskStatus.Verification) / allWorkerTasks, 3).ToString().Replace(',','.'),
+                }
 	        };
 
 	        var finishedTask = workerTasks.Where(t => t.EndDate != null).ToList();

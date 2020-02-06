@@ -146,70 +146,72 @@
 	</div>
 
 	<script>
-			var config = {
-				type: 'doughnut',
-				data: {
-					datasets: [{
-						data: [
-							@(statistics[0].NotStarted),
+		var config = {
+			type: 'doughnut',
+			data: {
+				datasets: [{
+					data: [
+						@(statistics[0].NotStarted),
 							@(statistics[0].Active),
 							@(statistics[0].Verification),
 							@(statistics[0].Confirmed),
 							@(statistics[0].Finished)
-						],
-						backgroundColor: [
-							"#ff0000",
-							"#ffa500",
-							"#ffff00",
-							"#008000",
-							"#0000ff"
-						],
-						label: 'Manager Stat'
-					}],
-					labels: [
-						'% Не начаты',
-						'% В работе',
-						'% Ожидающие проверки',
-						'% Проверенные',
-						'% Законченные'
-					]
+						//15,10,20,40,15
+					],
+					backgroundColor: [
+						"#ff0000",
+						"#ffa500",
+						"#ffff00",
+						"#008000",
+						"#0000ff"
+					],
+					label: 'Manager Stat'
+				}],
+				labels: [
+					'% Не начаты',
+					'% В работе',
+					'% Ожидающие проверки',
+					'% Проверенные',
+					'% Законченные'
+				]
+			},
+			options: {
+				responsive: true,
+				legend: {
+					position: 'top',
 				},
-				options: {
-					responsive: true,
-					legend: {
-						position: 'top',
-					},
-					title: {
-						display: true,
-						text: 'Выданные задания'
-					},
-					animation: {
-						animateScale: true,
-						animateRotate: true
-					},
-					scales: {
-						yAxes: [
-							{
-								ticks: {
-									min: 0,
-									stepSize: 1
-								}
+				title: {
+					display: true,
+					text: 'Выданные задания'
+				},
+				animation: {
+					animateScale: true,
+					animateRotate: true
+				},
+				scales: {
+					yAxes: [
+						{
+							ticks: {
+								min: 0,
+								stepSize: 1
 							}
-						]
-					}
+						}
+					]
 				}
-			};
+			}
+		};
 
-			var config1 = {
-				type: 'doughnut',
-				data: {
-					datasets: [{
-						data: [
-							@(statistics[1].NotStarted),
+		var config1 = {
+			type: 'doughnut',
+			data: {
+				datasets: [{
+					data: [
+						@(statistics[1].NotStarted),
 							@(statistics[1].Active),
 							@(statistics[1].Verification),
 							@(statistics[1].Confirmed),
 							@(statistics[1].Finished)
+						//40,15,25,10,10
 						],
 						backgroundColor: [
 							"#ff0000",
@@ -262,7 +264,7 @@
 						{
 							@: "@statisticWeek[i].Date",
 						}
-						],
+					],
 					datasets: [{
 						label: 'Ваша недельная успеваемость',
 						steppedLine: {
@@ -275,7 +277,8 @@
 						{
 							@statisticWeek[i].Value@:,
 						}
-							],
+							//5,4,8,1,5,2,3
+						],
 						fill: "start"
 					}]
 				},
@@ -299,16 +302,17 @@
 						]
 					}
 				}
-			};
+		};
 
-			var config3 = {
-				type: 'horizontalBar',
-				data: {
-					labels: [
-						@foreach (var temp in top)
+		var config3 = {
+			type: 'horizontalBar',
+			data: {
+				labels: [
+					@foreach (var temp in top)
 						{
 							@: '@temp.Date',
 						}
+					//'Авдоничев Александр','Крючков Савелий'
 					],
 					datasets: [{
 						label: 'завершенно',
@@ -318,6 +322,7 @@
 							{
 								@top[i].Value @:,
 							}
+							//6,5
 						]
 					}]
 				},
@@ -369,6 +374,7 @@
 						{
 							@statisticMouth[i].Value@:,
 						}
+							//2,3,1,0,7,2,7,3,2,1,4,3,5,0,7,2,7,3,2,1,4,3,5,5,4,8,1,5,2,3
 						],
 						fill: 'start'
 					}]

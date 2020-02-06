@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData["Title"] - СЭД</title>
+	<title>@(ViewData["Title"] == null ? "PWS" : ViewData["Title"] +" | PWS")</title>
 
 	<script src="/lib/jquery/dist/jquery.js"></script>
 	<link rel="stylesheet" href="/lib/mdb/css/bootstrap.min.css" />

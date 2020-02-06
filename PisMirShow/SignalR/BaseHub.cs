@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using PisMirShow.Models;
 
 namespace PisMirShow.SignalR
 {
@@ -29,5 +32,15 @@ namespace PisMirShow.SignalR
 			Connections.Remove(name, Context.ConnectionId);
 			await base.OnDisconnectedAsync(ex);
 		}
+
+        private int GetCurrentUserId(){
+            if (int.TryParse(Context.User.Identity.Name, out int userId)) {
+               return userId;
+            } else {
+                throw new Exception("Не удалось распарсить User ID");
+            }
+        }
+
+        protected User GetCurrentUser() => DbContext.Users.Include(u => u.Role).FirstOrDefault(u => u.Id == GetCurrentUserId());
     }
 }

@@ -21,10 +21,17 @@ namespace PisMirShow.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.Messages = DbContext.Posts.AsNoTracking().OrderBy(u => u.Id);
+            ViewBag.Messages = DbContext.Posts.Include(p => p.Author).AsNoTracking().OrderBy(u => u.Id);
             var user = GetCurrentUser();
             return View(user);
         }
+
+		public IActionResult Dialogs() {
+			//ViewBag.Messages = DbContext.Messages.AsNoTracking().Where(m => m.Author).OrderBy(u => u.Id).ToList();
+			//ViewBag.Dialogs = DbContext.Messages.AsNoTracking().Where(u => u.Id)
+			var user = GetCurrentUser();
+			return View(user);
+		}
 
         public IActionResult Profile()
         {

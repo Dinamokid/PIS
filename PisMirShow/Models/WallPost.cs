@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PisMirShow.Models
 {
@@ -12,7 +9,10 @@ namespace PisMirShow.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public string Author { get; set; }
+        [ForeignKey("Author")]
+        public int AuthorId { get; set; }
+        public virtual User Author{ get; set; }
+
         public string Message { get; set; }
         public DateTime CreatedDate { get; set; }
     }

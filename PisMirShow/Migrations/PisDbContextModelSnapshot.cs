@@ -71,6 +71,29 @@ namespace PisMirShow.Migrations
                     b.ToTable("Files");
                 });
 
+            modelBuilder.Entity("PisMirShow.Models.Messages", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AuthorId");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("Message");
+
+                    b.Property<int>("RecipientId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("RecipientId");
+
+                    b.ToTable("Messages");
+                });
+
             modelBuilder.Entity("PisMirShow.Models.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -189,13 +212,15 @@ namespace PisMirShow.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Author");
+                    b.Property<int>("AuthorId");
 
                     b.Property<DateTime>("CreatedDate");
 
                     b.Property<string>("Message");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
 
                     b.ToTable("Posts");
                 });
@@ -209,6 +234,19 @@ namespace PisMirShow.Migrations
                     b.HasOne("PisMirShow.Models.TaskItem", "Task")
                         .WithMany("Files")
                         .HasForeignKey("TaskId");
+                });
+
+            modelBuilder.Entity("PisMirShow.Models.Messages", b =>
+                {
+                    b.HasOne("PisMirShow.Models.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("PisMirShow.Models.User", "Recipient")
+                        .WithMany()
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("PisMirShow.Models.TaskComments", b =>
@@ -240,6 +278,14 @@ namespace PisMirShow.Migrations
                     b.HasOne("PisMirShow.Models.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId");
+                });
+
+            modelBuilder.Entity("PisMirShow.Models.WallPost", b =>
+                {
+                    b.HasOne("PisMirShow.Models.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

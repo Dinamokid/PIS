@@ -98,13 +98,7 @@ namespace PisMirShow.Controllers
             return View(user);
         }
 
-        public IActionResult Dialogs()
-        {
-	        var user = GetCurrentUser();
-	        return View(user);
-        }
-
-        public IActionResult Directory()
+		public IActionResult Directory()
         {
 	        var users = DbContext.Users.ToList();
 			users.ForEach(t => t.Password = null);

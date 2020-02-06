@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.WebEncoders;
 using NToastNotify;
+using PisMirShow.SignalR;
 
 namespace PisMirShow
 {
@@ -78,7 +79,7 @@ namespace PisMirShow
             app.UseAuthentication();
             app.UseNToastNotify();
 
-			app.UseMvc(routes =>
+            app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
@@ -93,10 +94,6 @@ namespace PisMirShow
             app.UseSignalR(routes =>
             {
                 routes.MapHub<ChatHub>("/chat");
-            });
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<DialogHub>("/dialog");
             });
         }
     }

@@ -34,7 +34,7 @@ namespace PisMirShow.Controllers
 	        await next();
         }
 
-        protected User GetCurrentUser() =>  DbContext.Users.Include(u => u.Role).FirstOrDefault(u => u.Login == User.Identity.Name);
+        protected User GetCurrentUser() => DbContext.Users.Include(u => u.Role).FirstOrDefault(u => u.Id.ToString() == User.Identity.Name);
 
         protected User GetUserById(int? id)
         {

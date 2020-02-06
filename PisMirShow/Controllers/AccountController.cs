@@ -99,8 +99,8 @@ namespace PisMirShow.Controllers
             User user = await DbContext.Users.Include(u => u.Role).AsNoTracking().FirstOrDefaultAsync(u => u.Login == userName);
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
-				new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.Name)
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString()),
+				new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.Name),
 			};
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
@@ -112,7 +112,7 @@ namespace PisMirShow.Controllers
             return RedirectToAction("Login", "Account");
         }
 
-        private async void DeleteFile(string deleteFilePath)
+        private void DeleteFile(string deleteFilePath)
         {
             if (deleteFilePath != string.Empty)
             {

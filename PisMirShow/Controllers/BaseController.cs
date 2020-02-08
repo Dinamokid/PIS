@@ -24,19 +24,23 @@ namespace PisMirShow.Controllers
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-	        var user = GetCurrentUser();
+			if (!User.Identity.IsAuthenticated)
+            {
+                await next();
+            }
+
+            var user = GetCurrentUser();
 	        if (user != null)
 	        {
-		        ViewBag.CurrentUserName = User.Identity.Name;
-		        ViewBag.CurrentUserId = user.Id;
-		        ViewBag.CurrentUserFullName = user.GetFullName();
+                ViewBag.CurrentUserId = user.Id;
+                ViewBag.CurrentUserFullName = user.GetFullName();
 	        }
 	        await next();
         }
 
-        protected User GetCurrentUser() => DbContext.Users.Include(u => u.Role).FirstOrDefault(u => u.Id.ToString() == User.Identity.Name);
+		protected User GetCurrentUser() => DbContext.Users.Include(u => u.Role).FirstOrDefault(u => u.Id.ToString() == User.Identity.Name);
 
-        protected User GetUserById(int? id)
+		protected User GetUserById(int? id)
         {
 	        return DbContext.Users.FirstOrDefault(u => u.Id == id);
         }
@@ -45,5 +49,5 @@ namespace PisMirShow.Controllers
         {
 	        return DbContext.Users.FirstOrDefault(u => u.Login == login);
         }
-    }
+	}
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PisMirShow.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -35,6 +36,25 @@ namespace PisMirShow.Models
         public string GetFullName()
         {
             return string.Join(" ", LastName, FirstName).Trim();
+        }
+
+        public User GetUserSafe()
+        {
+            return new User
+            {
+                Avatar = Avatar,
+                BirthdayDay = BirthdayDay,
+                Department = Department,
+                Email = Email,
+                FirstName = FirstName,
+                LastName = LastName,
+                Id = Id,
+                Login = Login,
+                OfficePost = OfficePost,
+                Phone = Phone,
+                RoleId = RoleId,
+                Role = Role
+            };
         }
     }
 

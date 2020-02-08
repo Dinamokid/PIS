@@ -71,7 +71,7 @@ namespace PisMirShow.Migrations
                     b.ToTable("Files");
                 });
 
-            modelBuilder.Entity("PisMirShow.Models.Messages", b =>
+            modelBuilder.Entity("PisMirShow.Models.Message", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -81,9 +81,11 @@ namespace PisMirShow.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<string>("Message");
-
                     b.Property<int>("RecipientId");
+
+                    b.Property<string>("Text");
+
+                    b.Property<bool>("isReaded");
 
                     b.HasKey("Id");
 
@@ -236,7 +238,7 @@ namespace PisMirShow.Migrations
                         .HasForeignKey("TaskId");
                 });
 
-            modelBuilder.Entity("PisMirShow.Models.Messages", b =>
+            modelBuilder.Entity("PisMirShow.Models.Message", b =>
                 {
                     b.HasOne("PisMirShow.Models.User", "Author")
                         .WithMany()

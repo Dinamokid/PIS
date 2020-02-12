@@ -92,3 +92,6 @@ html {
       filter: grayscale(100%); }
       #Avatar > div:hover #avatarEdit {
         display: block; }
+
+.text-gray {
+  color: gray !important; }

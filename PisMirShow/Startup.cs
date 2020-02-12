@@ -93,11 +93,11 @@ namespace PisMirShow
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<ChatHub>("/chat");
+                routes.MapHub<ChatHub>("/chat-hub");
             });
             app.UseSignalR(routes =>
             {
-                routes.MapHub<Dialogs>("/dialog");
+                routes.MapHub<Dialogs>("/dialog-hub");
             });
         }
     }

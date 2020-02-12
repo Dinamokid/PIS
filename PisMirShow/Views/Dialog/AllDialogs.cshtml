@@ -1,0 +1,64 @@
+﻿@using PisMirShow.Models.Account
+@using PisMirShow.ViewModels.Dialogs
+@model User
+@{
+    ViewData["Title"] = "Диалоги";
+}
+
+<div class="container">
+    <div class="col-md-12 mt-4 p-0">
+        <div id="chatroom" class="mb-2">
+            @foreach (var dialog in (List<DialogViewModel>)ViewBag.Dialogs)
+			{
+			<div class="mt-2 pb-3 border-bottom cursor-pointer">
+				<div class="d-flex">
+					<div class="col-1" onclick="location.href = '@Url.Action("Profile", "Home", new { id = dialog.DialogUserId })'">
+						<div style="background-image: url('@dialog.DialogPhotoUrl'); background-size:cover; background-position:center; width: 70px; height: 70px; border-radius: 100%;"></div>
+					</div>
+					<div class="col-9" onclick="location.href = '@Url.Action("Dialog", "Dialog", new { id = dialog.DialogId })'">
+						<div>
+							<b class="w-100">
+								@dialog.DialogName
+							</b>
+						</div>
+						<div class="d-flex pt-2 align-items-center">
+							<div style="background-image: url('@(dialog.LastMessageAvatar ?? dialog.CurrentUserAvatar)'); background-size:cover; background-position:center; width: 40px; height: 40px; border-radius: 100%;"></div>
+							<p class="m-0 ml-2 @(string.IsNullOrEmpty(dialog.LastMessageText) == true ? "text-gray":"")">
+								@(dialog.LastMessageText ?? "Диалог создан, но здесь пока пусто...")
+							</p>
+						</div>
+					</div>
+					<div class="col-2 d-flex align-items-center">
+						<div>
+							@dialog.LastMessageDate
+						</div>
+						<div>
+							@if (dialog.EntryStatus == PisMirShow.Enums.EntryStatus.NotReaded){
+								<i class="fas fa-check-circle info-color"></i>
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+			}
+        </div>
+    </div>
+</div>
+<div id="addDialog"></div>
+
+<script>
+	$(document).ready(function () {
+		$('#addDialog').load('Dialog/AddDialog')
+	});
+</script>
+
+<script src="/signalr.min.js"></script>
+<script>
+    let hubUrl = 'https://localhost:5001/dialog-hub';
+    const hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl(hubUrl)
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
+
+    hubConnection.start();
+</script>

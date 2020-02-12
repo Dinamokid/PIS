@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 using PisMirShow.Models;
+using PisMirShow.Models.Account;
 
 namespace PisMirShow.Controllers
 {

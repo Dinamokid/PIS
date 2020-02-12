@@ -22,9 +22,11 @@ namespace PisMirShow.Controllers
         public IActionResult AllTasks()
         {
             DellEmptyTasks();
-            var task = DbContext.Tasks.Include(t => t.ToUser).Include(t => t.FromUser).AsNoTracking().OrderBy(t=>t.DeadLine).ToList();
-            return View(task);
-        }
+            var user = GetCurrentUser().GetUserSafe();
+			var task = DbContext.Tasks.Include(t => t.ToUser).Include(t => t.FromUser).AsNoTracking()
+				.Where(t => t.ToUserId == user.Id || t.FromUserId == user.Id).OrderBy(t => t.DeadLine).ToList();
+			return View(task);
+		}
 
         public IActionResult Task(int id)
         {

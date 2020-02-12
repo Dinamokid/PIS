@@ -19,6 +19,120 @@ namespace PisMirShow.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("PisMirShow.Models.Account.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("PisMirShow.Models.Account.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Avatar");
+
+                    b.Property<string>("BirthdayDay");
+
+                    b.Property<string>("Department");
+
+                    b.Property<string>("Email");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<DateTime?>("LastEnter");
+
+                    b.Property<string>("LastName");
+
+                    b.Property<string>("Login");
+
+                    b.Property<string>("OfficePost");
+
+                    b.Property<string>("Password");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(12);
+
+                    b.Property<DateTime>("RegisterTime");
+
+                    b.Property<int?>("RoleId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("PisMirShow.Models.Dialogs.Dialog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("DialogType");
+
+                    b.Property<int>("EntryStatus");
+
+                    b.Property<DateTime>("LastUpdate");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Dialogs");
+                });
+
+            modelBuilder.Entity("PisMirShow.Models.Dialogs.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AuthorId");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<int>("DialogId");
+
+                    b.Property<int>("RecipientId");
+
+                    b.Property<string>("Text");
+
+                    b.Property<bool>("isReaded");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("DialogId");
+
+                    b.HasIndex("RecipientId");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("PisMirShow.Models.Dialogs.UserDialog", b =>
+                {
+                    b.Property<int>("UserId");
+
+                    b.Property<int>("DialogId");
+
+                    b.HasKey("UserId", "DialogId");
+
+                    b.HasIndex("DialogId");
+
+                    b.ToTable("UsersDialogs");
+                });
+
             modelBuilder.Entity("PisMirShow.Models.DirectoryData", b =>
                 {
                     b.Property<int>("Id")
@@ -69,44 +183,6 @@ namespace PisMirShow.Migrations
                     b.HasIndex("TaskId");
 
                     b.ToTable("Files");
-                });
-
-            modelBuilder.Entity("PisMirShow.Models.Message", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AuthorId");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<int>("RecipientId");
-
-                    b.Property<string>("Text");
-
-                    b.Property<bool>("isReaded");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("RecipientId");
-
-                    b.ToTable("Messages");
-                });
-
-            modelBuilder.Entity("PisMirShow.Models.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("PisMirShow.Models.TaskComments", b =>
@@ -168,46 +244,6 @@ namespace PisMirShow.Migrations
                     b.ToTable("Tasks");
                 });
 
-            modelBuilder.Entity("PisMirShow.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Avatar");
-
-                    b.Property<string>("BirthdayDay");
-
-                    b.Property<string>("Department");
-
-                    b.Property<string>("Email");
-
-                    b.Property<string>("FirstName");
-
-                    b.Property<DateTime?>("LastEnter");
-
-                    b.Property<string>("LastName");
-
-                    b.Property<string>("Login");
-
-                    b.Property<string>("OfficePost");
-
-                    b.Property<string>("Password");
-
-                    b.Property<string>("Phone")
-                        .HasMaxLength(12);
-
-                    b.Property<DateTime>("RegisterTime");
-
-                    b.Property<int?>("RoleId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("Users");
-                });
-
             modelBuilder.Entity("PisMirShow.Models.WallPost", b =>
                 {
                     b.Property<int>("Id")
@@ -227,28 +263,53 @@ namespace PisMirShow.Migrations
                     b.ToTable("Posts");
                 });
 
+            modelBuilder.Entity("PisMirShow.Models.Account.User", b =>
+                {
+                    b.HasOne("PisMirShow.Models.Account.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId");
+                });
+
+            modelBuilder.Entity("PisMirShow.Models.Dialogs.Message", b =>
+                {
+                    b.HasOne("PisMirShow.Models.Account.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("PisMirShow.Models.Dialogs.Dialog", "Dialog")
+                        .WithMany("Messages")
+                        .HasForeignKey("DialogId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("PisMirShow.Models.Account.User", "Recipient")
+                        .WithMany()
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("PisMirShow.Models.Dialogs.UserDialog", b =>
+                {
+                    b.HasOne("PisMirShow.Models.Dialogs.Dialog", "Dialog")
+                        .WithMany("Users")
+                        .HasForeignKey("DialogId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("PisMirShow.Models.Account.User", "User")
+                        .WithMany("Dialogs")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("PisMirShow.Models.FileItem", b =>
                 {
-                    b.HasOne("PisMirShow.Models.User", "CreatedUser")
+                    b.HasOne("PisMirShow.Models.Account.User", "CreatedUser")
                         .WithMany("Files")
                         .HasForeignKey("CreatedUserId");
 
                     b.HasOne("PisMirShow.Models.TaskItem", "Task")
                         .WithMany("Files")
                         .HasForeignKey("TaskId");
-                });
-
-            modelBuilder.Entity("PisMirShow.Models.Message", b =>
-                {
-                    b.HasOne("PisMirShow.Models.User", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("PisMirShow.Models.User", "Recipient")
-                        .WithMany()
-                        .HasForeignKey("RecipientId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("PisMirShow.Models.TaskComments", b =>
@@ -258,7 +319,7 @@ namespace PisMirShow.Migrations
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("PisMirShow.Models.User", "User")
+                    b.HasOne("PisMirShow.Models.Account.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -266,25 +327,18 @@ namespace PisMirShow.Migrations
 
             modelBuilder.Entity("PisMirShow.Models.TaskItem", b =>
                 {
-                    b.HasOne("PisMirShow.Models.User", "FromUser")
+                    b.HasOne("PisMirShow.Models.Account.User", "FromUser")
                         .WithMany()
                         .HasForeignKey("FromUserId");
 
-                    b.HasOne("PisMirShow.Models.User", "ToUser")
+                    b.HasOne("PisMirShow.Models.Account.User", "ToUser")
                         .WithMany()
                         .HasForeignKey("ToUserId");
                 });
 
-            modelBuilder.Entity("PisMirShow.Models.User", b =>
-                {
-                    b.HasOne("PisMirShow.Models.Role", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("RoleId");
-                });
-
             modelBuilder.Entity("PisMirShow.Models.WallPost", b =>
                 {
-                    b.HasOne("PisMirShow.Models.User", "Author")
+                    b.HasOne("PisMirShow.Models.Account.User", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade);

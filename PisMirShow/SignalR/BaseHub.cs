@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using PisMirShow.Models;
+using PisMirShow.Models.Account;
 
 namespace PisMirShow.SignalR
 {

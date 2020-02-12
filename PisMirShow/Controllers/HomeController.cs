@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 using PisMirShow.Extensions;
 using PisMirShow.Models;
+using PisMirShow.Models.Account;
 using PisMirShow.ViewModels;
 
 namespace PisMirShow.Controllers
@@ -27,44 +28,23 @@ namespace PisMirShow.Controllers
 			return View(user);
 		}
 
-		public IActionResult Dialogs()
+		[Route("Profile/{id}")]
+		public IActionResult Profile(int id = 0)
 		{
-			var user = GetCurrentUser().GetUserSafe();
-
-			//var mockapp = new Message[] {
-			//	new Message{AuthorId = 2, CreatedDate = DateTime.UtcNow, Text="test1", RecipientId=3, isReaded=false },
-			//	new Message{AuthorId = 3, CreatedDate = DateTime.UtcNow, Text="test2", RecipientId=2, isReaded=false },
-			//	new Message{AuthorId = 2, CreatedDate = DateTime.UtcNow, Text="test3", RecipientId=3, isReaded=false },
-			//	new Message{AuthorId = 3, CreatedDate = DateTime.UtcNow, Text="test4", RecipientId=2, isReaded=false },
-			//};
-
-			//DbContext.Messages.AddRange(mockapp);
-			//DbContext.SaveChanges();
-
-			var userMessages = DbContext.Messages
-				.Include(m => m.Author)
-				.Include(m => m.Recipient)
-				.Where(m => m.AuthorId == user.Id || m.RecipientId == user.Id)
-				.OrderByDescending(m => m.CreatedDate).ToList();
-
-			//TO-DO: Сменить реализацию, переделать в запрос по возможности
-			var trashList = new List<Message>();
-			foreach (var temp in userMessages) {
-				var trash = userMessages.Where(u=>u.AuthorId == temp.AuthorId || u.RecipientId == temp.AuthorId).ToList();
-				var message = trash.First();
-				trash.Remove(message);
-				trashList.AddRange(trash);
+			User user = new User();
+			if (id == 0)
+			{
+				user = GetCurrentUser().GetUserSafe();
 			}
-			userMessages.RemoveAll(m => trashList.Any(t => m == t));
-
-			ViewBag.Dialogs = userMessages;
+			else
+			{
+				user = GetUserById(id);
 				
-			return View(user);
-		}
-
-		public IActionResult Profile()
-		{
-			var user = GetCurrentUser().GetUserSafe();
+				if (user == null)
+				{
+					user = GetCurrentUser().GetUserSafe();
+				}
+			}
 
 			var managerTasks = DbContext.Tasks.Where(t => t.FromUserId == user.Id);
 			var workerTasks = DbContext.Tasks.Where(t => t.ToUserId == user.Id);

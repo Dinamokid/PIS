@@ -1,0 +1,60 @@
+﻿@using PisMirShow.ViewModels.Account
+@model List<UserViewModel>
+
+@{ 
+	int dialogCounter = 0;
+}
+
+<style>
+	#addDialogModal div:nth-child(1){
+		border-top: none !important;
+		padding-top: 0 !important;
+	}
+</style>
+
+<a data-toggle="modal" data-target="#addDialogModal">
+	<i class="fas fa-plus-circle position-fixed" style="bottom: 65px; right: 15px; font-size: 50px;"></i>
+</a>
+
+<div class="modal fade" id="addDialogModal" tabindex="-1" role="dialog" aria-labelledby="addDialogModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="addDialogModalLabel">Новый диалог</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form id="addDialogForm" method="post" asp-controller="Dialog" asp-action="AddDialog">
+					@foreach (var item in Model)
+					{
+						<div class="mt-2 pt-3 pt-b border-top ">
+							<div class="d-flex">
+								<div class="col-1">
+									<input type="checkbox" name="userIds" value="@item.Id" />
+								</div>
+								<div class="col-3">
+									<div class="m-auto" style="background-image: url('@item.Avatar'); background-size:cover; background-position:center; width: 60px; height: 60px; border-radius: 100%;"></div>
+								</div>
+								<div class="col-8">
+									<div class="d-flex align-items-center h-100">
+										<b class="w-100">
+											@item.FullName
+										</b>
+									</div>
+								</div>
+							</div>
+						</div>
+						dialogCounter++;
+					}
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+				<button type="button" class="btn btn-primary" onclick="$(`#addDialogForm`).submit();">Выбрать</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 using PisMirShow.Models;
+using PisMirShow.Models.Account;
 using PisMirShow.ViewModels;
 
 namespace PisMirShow.Controllers
@@ -68,28 +69,31 @@ namespace PisMirShow.Controllers
                 User user = await DbContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
                 if (user == null)
                 {
-                    // добавляем пользователя в бд
-                    DbContext.Users.Add(new User
-                    {
-                        Email = model.Email,
-                        Password = model.Password,
-                        RegisterTime = DateTime.UtcNow,
-                        BirthdayDay = model.BirthdayDay,
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        Department = model.Department,
-                        Login = model.Login,
-                        OfficePost = model.OfficePost,
-						RoleId = 1,
-						Phone = model.Phone
-                    });
-                    await DbContext.SaveChangesAsync();
+                    if (model.Password == model.ConfirmPassword){
+                        // добавляем пользователя в бд
+                        DbContext.Users.Add(new User
+                        {
+                            Email = model.Email,
+                            Password = model.Password,
+                            RegisterTime = DateTime.UtcNow,
+                            BirthdayDay = model.BirthdayDay,
+                            FirstName = model.FirstName,
+                            LastName = model.LastName,
+                            Department = model.Department,
+                            Login = model.Login,
+                            OfficePost = model.OfficePost,
+                            RoleId = 1,
+                            Phone = model.Phone
+                        });
+                        await DbContext.SaveChangesAsync();
 
-                    await Authenticate(model.Login); // аутентификация
+                        await Authenticate(model.Login); // аутентификация
 
-                    return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Home");
+                    }
+                    ToastNotification.AddErrorToastMessage("Пароли не совпадают");
                 }
-                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                ToastNotification.AddErrorToastMessage("Пользователь с таким email уже зарегистрирован");
             }
             return View(model);
         }

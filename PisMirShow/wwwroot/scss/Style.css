@@ -95,3 +95,9 @@ html {
 
 .text-gray {
   color: gray !important; }
+
+#toast-container > .toast-info {
+  background-image: none !important; }
+
+#toast-container > div {
+  padding: 15px; }

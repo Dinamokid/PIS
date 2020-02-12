@@ -5,8 +5,7 @@ namespace PisMirShow.SignalR
 {
     public class ConnectionMapping<T>
     {
-        private static readonly Dictionary<T, HashSet<string>> _connections =
-            new Dictionary<T, HashSet<string>>();
+        private static readonly Dictionary<T, HashSet<string>> _connections = new Dictionary<T, HashSet<string>>();
 
         public static int Count
         {
@@ -34,7 +33,7 @@ namespace PisMirShow.SignalR
             }
         }
 
-		public IReadOnlyList<string> GetConnectionsStrings(T key)
+		private IReadOnlyList<string> GetConnectionsStrings(T key)
 		{
 			HashSet<string> connections;
 			if (_connections.TryGetValue(key, out connections))
@@ -45,7 +44,19 @@ namespace PisMirShow.SignalR
 			return (IReadOnlyList<string>)Enumerable.Empty<string>();
 		}
 
-        public bool GetConnections(T key)
+		public IReadOnlyList<string> GetConnectionsStrings(List<T> dialogUsers)
+		{
+            List<string> connections = new List<string>();
+
+            foreach (var item in dialogUsers)
+            {
+                connections.AddRange(GetConnectionsStrings(item));
+            }            
+
+            return connections;
+        }
+
+		public bool GetConnections(T key)
         {
             HashSet<string> connections;
             if (_connections.TryGetValue(key, out connections))

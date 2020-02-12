@@ -35,26 +35,23 @@ namespace PisMirShow.Controllers
 					.ThenInclude(d => d.User)
 				.Include(d => d.Messages)
 					.ThenInclude(t => t.Author)
-				.Include(d => d.Messages)
-					.ThenInclude(t => t.Recipient)
 				.OrderByDescending(d => d.LastUpdate)
 				.Select(c => new
 				{
 					Dialog = c,
 					Message = c.Messages.OrderByDescending(p => p.CreatedDate).FirstOrDefault()
 				})
-				.Select(a => a.Dialog)
 				.Select(d => new DialogViewModel
 				{
-					DialogName = d.Users.First(t => t.UserId != user.Id).User.GetFullName(),
-					DialogPhotoUrl = d.Users.First(t => t.UserId != user.Id).User.Avatar,
-					DialogUserId = d.Users.First(t => t.UserId != user.Id).User.Id,
-					LastMessageAvatar = d.Messages.FirstOrDefault().Author.Avatar,
-					LastMessageDate = d.LastUpdate.ToString("g"),
-					LastMessageText = d.Messages.FirstOrDefault().Text,
-					EntryStatus = d.EntryStatus,
+					DialogName = d.Dialog.Users.First(t => t.UserId != user.Id).User.GetFullName(),
+					DialogPhotoUrl = d.Dialog.Users.First(t => t.UserId != user.Id).User.Avatar,
+					DialogUserId = d.Dialog.Users.First(t => t.UserId != user.Id).User.Id,
+					LastMessageAvatar = d.Message.Author.Avatar,
+					LastMessageDate = d.Dialog.LastUpdate.ToString("g"),
+					LastMessageText = d.Message.Text,
+					EntryStatus = d.Dialog.EntryStatus,
 					CurrentUserAvatar = user.Avatar,
-					DialogId = d.Id,
+					DialogId = d.Dialog.Id,
 				})
 				.ToList();
 
@@ -87,9 +84,25 @@ namespace PisMirShow.Controllers
 		}
 
 		[Route("Dialog/WithId/{id}")]
-		public string Dialog(int id)
+		public IActionResult Dialog(int id)
 		{
-			return $"Диалог c ID:{id}";
+			if (!DbContext.Dialogs.Any(d => d.Id == id))
+			{
+				return RedirectToAction("AllDialogs", "Dialog");
+			}
+
+			var messages = DbContext.Messages.Where(m => m.DialogId == id)
+				.Include(m => m.Author)
+				.Include(m => m.Dialog)
+				.AsNoTracking()
+				.ToList();
+
+			ViewBag.Dialog = DbContext.Dialogs.AsNoTracking()
+				.Include(d => d.Users)
+				.ThenInclude(d => d.User)
+				.FirstOrDefault(d => d.Users.Any(t => t.DialogId == id));
+
+			return View(messages);
 		}
 
 		private void AddUsersInDialog(List<int> usersId, int dialogId)

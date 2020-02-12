@@ -17,10 +17,6 @@ namespace PisMirShow.Models.Dialogs
         public string Text { get; set; }
         public DateTime CreatedDate { get; set; }
 
-        [ForeignKey("Recipient")]
-		public int RecipientId { get; set; }
-		public virtual User Recipient { get; set; }
-
         public bool isReaded { get; set; }
 
         public int DialogId { get; set; }

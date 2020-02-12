@@ -103,8 +103,6 @@ namespace PisMirShow.Migrations
 
                     b.Property<int>("DialogId");
 
-                    b.Property<int>("RecipientId");
-
                     b.Property<string>("Text");
 
                     b.Property<bool>("isReaded");
@@ -114,8 +112,6 @@ namespace PisMirShow.Migrations
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("DialogId");
-
-                    b.HasIndex("RecipientId");
 
                     b.ToTable("Messages");
                 });
@@ -280,11 +276,6 @@ namespace PisMirShow.Migrations
                     b.HasOne("PisMirShow.Models.Dialogs.Dialog", "Dialog")
                         .WithMany("Messages")
                         .HasForeignKey("DialogId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("PisMirShow.Models.Account.User", "Recipient")
-                        .WithMany()
-                        .HasForeignKey("RecipientId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

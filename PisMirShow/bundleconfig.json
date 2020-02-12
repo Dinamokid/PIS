@@ -1,0 +1,16 @@
+[
+  {
+    "outputFileName": "wwwroot/js/SignalR/Dialog.min.js",
+    "inputFiles": [
+      "wwwroot/js/SignalR/Dialog.js",
+      "wwwroot/js/SignalR/Base.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/SignalR/AllDialogs.min.js",
+    "inputFiles": [
+        "wwwroot/js/SignalR/AllDialogs.js",
+        "wwwroot/js/SignalR/Base.js"
+    ]
+  }
+]

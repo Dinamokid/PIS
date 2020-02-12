@@ -1,3 +1,4 @@
 ﻿@{
     Layout = "_Layout";
+	ViewBag.Host = $"{this.Context.Request.Scheme}://{this.Context.Request.Host}";
 }

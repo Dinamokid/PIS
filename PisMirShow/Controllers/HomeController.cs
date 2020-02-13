@@ -29,6 +29,7 @@ namespace PisMirShow.Controllers
 		}
 
 		[Route("Profile/{id}")]
+		[Route("Profile")]
 		public IActionResult Profile(int id = 0)
 		{
 			User user = new User();

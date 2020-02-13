@@ -296,7 +296,7 @@ namespace PisMirShow.Controllers
 				result.Add(temp.Split('.')[temp.Split('.').Length - 1]);
 			}
 
-			return result;
+			return result.Distinct().ToList();
 		}
 	}
 }

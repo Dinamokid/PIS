@@ -27,14 +27,15 @@ namespace PisMirShow.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string redirectUrl)
         {
+            ViewBag.RedirectURL = redirectUrl;
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginModel model)
+        public async Task<IActionResult> Login(LoginModel model, string redirectURL)
         {
 	        if (!ModelState.IsValid) return View(model);
 	        try
@@ -44,8 +45,10 @@ namespace PisMirShow.Controllers
 	            if (user != null)
 	            {
 		            await Authenticate(model.Login); // аутентификация
+                    if (string.IsNullOrEmpty(redirectURL))
+		                return RedirectToAction("Index", "Home");
 
-		            return RedirectToAction("Index", "Home");
+                    return Redirect(redirectURL);
 	            }
             }
             catch {

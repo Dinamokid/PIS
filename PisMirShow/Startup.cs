@@ -42,6 +42,7 @@ namespace PisMirShow
                 .AddCookie(options => 
                 {
 					options.LoginPath = new PathString("/Account/Login");
+                    options.ReturnUrlParameter = "redirectUrl";
 					options.AccessDeniedPath = new PathString("/Home/Index");
 				});
 

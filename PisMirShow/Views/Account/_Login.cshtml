@@ -10,6 +10,7 @@
     <input type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Пароль" required asp-for="Password">
     <span asp-validation-for="Password" />
 </div>
+<input type="hidden" name="redirectURL" value="@ViewBag.RedirectURL"/>
 <div class="d-flex justify-content-around">
     @*
         <div>

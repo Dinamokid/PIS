@@ -3,6 +3,17 @@
   text-align: center;
   word-break: break-all; }
 
+::-webkit-scrollbar {
+  width: 6px; }
+
+::-webkit-scrollbar-track {
+  width: 2px; }
+
+::-webkit-scrollbar-thumb {
+  background: rgba(172, 181, 185, 0.4);
+  width: 45px;
+  border-radius: 10px; }
+
 html {
   font-size: 14px; }
 
@@ -66,6 +77,12 @@ html {
 #chatroom {
   height: 68vh;
   overflow: auto; }
+
+#dialog {
+  padding-right: 10px;
+  height: 65vh;
+  overflow: auto;
+  text-overflow: ellipsis; }
 
 .cursor-pointer {
   cursor: pointer; }

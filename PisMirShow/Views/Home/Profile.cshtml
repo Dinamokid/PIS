@@ -14,7 +14,10 @@
 
 <h1 class="mt-5">
 	Профиль пользователя
-	<a><i class="fas fa-user-edit" style="font-size:0.7em" onclick="GetUserById(@Model.Id)"></i></a>
+	@if (Model.Id == ViewBag.CurrentUserId)
+	{
+		<a><i class="fas fa-user-edit" style="font-size:0.7em" onclick="GetUserInfoById(@Model.Id)"></i></a>
+	}
 </h1>
 <section>
 	<div class="container">
@@ -34,7 +37,7 @@
 			</div>
 			<div class="col-md-4 mt-5 text-center">
 				<div id="Avatar">
-					<div onclick="$('#changeAvatarModal').modal('show')" style="background-image: url('@(string.IsNullOrEmpty(Model.Avatar) ? "/files/avatars/nonavatar.png": Model.Avatar)');">
+					<div class="@(Model.Id == ViewBag.CurrentUserId ? "editable":"")" onclick="$('#changeAvatarModal').modal('show')" style="background-image: url('@(string.IsNullOrEmpty(Model.Avatar) ? "/files/avatars/nonavatar.png": Model.Avatar)');">
 						<i class="fas fa-pen position-absolute bigFontSize" id="avatarEdit" style="color: white"></i>
 					</div>
 				</div>
@@ -42,87 +45,6 @@
 		</div>
 	</div>
 </section>
-
-<div class="modal" tabindex="-1" role="dialog" id="UserModal">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="FullName">Изменение данных</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<form>
-					<div class="form-group">
-						<label for="UserId" class="form-control-label">Id:</label>
-						<input type="text" class="form-control" id="UserId" readonly>
-					</div>
-					<div class="form-group">
-						<label for="EditFirstName" class="form-control-label">Имя:</label>
-						<input type="text" class="form-control" id="EditFirstName">
-					</div>
-					<div class="form-group">
-						<label for="EditLastName" class="form-control-label">Фамилия:</label>
-						<input type="text" class="form-control" id="EditLastName">
-					</div>
-					<div class="form-group">
-						<label for="EditOfficePost" class="form-control-label">Должность:</label>
-						<input type="text" class="form-control" id="EditOfficePost">
-					</div>
-					<div class="form-group">
-						<label for="EditUserDepartment" class="form-control-label">Отдел: </label>
-						<input type="text" class="form-control" id="EditUserDepartment">
-					</div>
-					<div class="form-group">
-						<label for="EditPhone" class="form-control-label">Номер телефона:</label>
-						<input type="text" class="form-control " id="EditPhone">
-					</div>
-					<div class="form-group">
-						<label for="EditEmail" class="form-control-label">Email:</label>
-						<input type="text" class="form-control" id="EditEmail">
-					</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-				<button type="button" class="btn btn-primary" onclick="UpdateUserModal()">Сохранить</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="modal fade" id="changeAvatarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-	 aria-hidden="true">
-	<div class="modal-dialog modal-md" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<div class="row mt-3 w-100">
-					<div class="col-md-12">
-						<h4 class="modal-title w-100 text-center" id="myModalLabel">Смена аватара</h4>
-					</div>
-				</div>
-			</div>
-			<div class="modal-body">
-				<div class="col-md-12">
-					<div class="input-group mb-3 mt-3 p-0">
-						<div class="custom-file">
-							<input type="file" class="custom-file-input" id="avatarImageSource">
-							<label class="custom-file-label" for="avatarImageSource" id="avatarImagePath" aria-describedby="Upload" style="overflow: hidden; white-space: nowrap;">@(Model.Avatar ?? "Выберите аватар")</label>
-						</div>
-						<div class="input-group-append">
-							<a class="input-group-text" id="uploadavatarImage">Загрузить</a>
-						</div>
-					</div>
-					<input type="hidden" asp-for="@Model.Avatar" value="@Model.Avatar" id="avatarImage" />
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Закрыть</button>
-			</div>
-		</div>
-	</div>
-</div>
 
 <section>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
@@ -421,16 +343,93 @@
 			};
 
 	</script>
-
-
-	@*https://www.chartjs.org/samples/latest/charts/line/stepped.html*@
-	@*эффективность за неделю*@
-	@*эффективность за месяц*@
-
-	@*эффективность по компании топ (месяц, неделя, день)*@
 </section>
 
-<script>
+@if (Model.Id == ViewBag.CurrentUserId)
+{
+
+	<div class="modal" tabindex="-1" role="dialog" id="UserModal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="FullName">Изменение данных</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="form-group">
+							<label for="UserId" class="form-control-label">Id:</label>
+							<input type="text" class="form-control" id="UserId" readonly>
+						</div>
+						<div class="form-group">
+							<label for="EditFirstName" class="form-control-label">Имя:</label>
+							<input type="text" class="form-control" id="EditFirstName">
+						</div>
+						<div class="form-group">
+							<label for="EditLastName" class="form-control-label">Фамилия:</label>
+							<input type="text" class="form-control" id="EditLastName">
+						</div>
+						<div class="form-group">
+							<label for="EditOfficePost" class="form-control-label">Должность:</label>
+							<input type="text" class="form-control" id="EditOfficePost">
+						</div>
+						<div class="form-group">
+							<label for="EditUserDepartment" class="form-control-label">Отдел: </label>
+							<input type="text" class="form-control" id="EditUserDepartment">
+						</div>
+						<div class="form-group">
+							<label for="EditPhone" class="form-control-label">Номер телефона:</label>
+							<input type="text" class="form-control " id="EditPhone">
+						</div>
+						<div class="form-group">
+							<label for="EditEmail" class="form-control-label">Email:</label>
+							<input type="text" class="form-control" id="EditEmail">
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+					<button type="button" class="btn btn-primary" onclick="UpdateUserModal()">Сохранить</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="changeAvatarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+		 aria-hidden="true">
+		<div class="modal-dialog modal-md" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="row mt-3 w-100">
+						<div class="col-md-12">
+							<h4 class="modal-title w-100 text-center" id="myModalLabel">Смена аватара</h4>
+						</div>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-12">
+						<div class="input-group mb-3 mt-3 p-0">
+							<div class="custom-file">
+								<input type="file" class="custom-file-input" id="avatarImageSource">
+								<label class="custom-file-label" for="avatarImageSource" id="avatarImagePath" aria-describedby="Upload" style="overflow: hidden; white-space: nowrap;">@(Model.Avatar ?? "Выберите аватар")</label>
+							</div>
+							<div class="input-group-append">
+								<a class="input-group-text" id="uploadavatarImage">Загрузить</a>
+							</div>
+						</div>
+						<input type="hidden" asp-for="@Model.Avatar" value="@Model.Avatar" id="avatarImage" />
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Закрыть</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
     $(document).ready(function () {
 		$("#uploadavatarImage").on("click", function() {
 				let fileData = $('#avatarImageSource').prop('files')[0];
@@ -457,7 +456,7 @@
         });
     });
 
-	function GetUserById(id) {
+	function GetUserInfoById(id) {
 		$("#UserModal").modal("show");
 		var data = new FormData();
 		data.append("Id", id);
@@ -508,5 +507,5 @@
 			}
 		});
 	};
-
-</script>
+	</script>
+}

@@ -30,6 +30,7 @@ namespace PisMirShow.Controllers
 
 		[Route("Profile/{id}")]
 		[Route("Profile")]
+		//TODO: запретить редактирование профиля сторонними юзерами
 		public IActionResult Profile(int id = 0)
 		{
 			User user = new User();
@@ -171,7 +172,7 @@ namespace PisMirShow.Controllers
 		[HttpPost]
 		public JsonResult GetCurrentUserByIdJson(int id)
 		{
-			var user = GetCurrentUser();
+			var user = GetCurrentUser().GetUserSafe();
 			if (user == null) return Json(new { message = "error" });
 			return Json(new
 			{

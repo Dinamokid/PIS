@@ -13,8 +13,6 @@ namespace PisMirShow.SignalR
 
         public async Task Send(string message)
         {
-            //TODO: рассылка конкретным юзерам
-            //await Clients.Clients(Connections.GetConnectionsStrings(name)).SendAsync("Send", "TEST", name, DateTime.UtcNow.ToString("g"));
             //TODO: добавить задачи (открытие закрытие)
             //TODO: загрузка файлов (модель (id,ссылка, List<Users> кто утвердил))
             //TODO: прочитал в живую ленту

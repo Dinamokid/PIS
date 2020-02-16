@@ -105,9 +105,9 @@ html {
     align-items: center; }
     #Avatar > div #avatarEdit {
       display: none; }
-    #Avatar > div:hover {
+    #Avatar > div.editable:hover {
       filter: grayscale(100%); }
-      #Avatar > div:hover #avatarEdit {
+      #Avatar > div.editable:hover #avatarEdit {
         display: block; }
 
 .text-gray {

@@ -140,7 +140,7 @@ html {
             display: none;
         }
 
-        &:hover {
+        &.editable:hover {
             filter: grayscale(100%);
 
             #avatarEdit {

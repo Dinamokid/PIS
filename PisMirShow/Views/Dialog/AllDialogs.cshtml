@@ -19,7 +19,7 @@
 						<div class="col-1" onclick="location.href = '@Url.Action("Profile", "Home", new { id = dialog.DialogUserId })'">
 							<div style="background-image: url('@dialog.DialogPhotoUrl'); background-size:cover; background-position:center; width: 70px; height: 70px; border-radius: 100%;"></div>
 						</div>
-						<div class="col-9" onclick="location.href = '@Url.Action("Dialog", "Dialog", new { id = dialog.DialogId })'">
+						<div class="col-9" onclick="location.href = '@Url.Action("Dialog", "Dialog", new { dialogId = dialog.DialogId })'">
 							<div>
 								<b class="w-100">
 									@dialog.DialogName

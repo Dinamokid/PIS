@@ -18,7 +18,6 @@ namespace PisMirShow.Controllers
 	{
 		public DialogController(PisDbContext dbContext, IHostingEnvironment env, IToastNotification toastNotification) : base(dbContext, env, toastNotification)
 		{
-
 		}
 		
 		[Route("Dialog/Index")]
@@ -27,9 +26,21 @@ namespace PisMirShow.Controllers
 		[Route("Dialog/Dialogs")]
 		public IActionResult AllDialogs()
 		{
+			ViewBag.Dialogs = GetDialogs(offset: 0);
 			var user = GetCurrentUser().GetUserSafe();
 
-			var dialogs = DbContext.Dialogs.AsNoTracking()
+			return View(user);
+		}
+
+		public JsonResult GetDialogsJSON(int offset = 0)
+		{
+			return Json(GetDialogs(offset));
+		}
+
+		private List<DialogViewModel> GetDialogs(int offset)
+		{
+			var user = GetCurrentUser().GetUserSafe();
+			return DbContext.Dialogs.AsNoTracking()
 				.Where(d => d.Users.Any(t => t.UserId == user.Id))
 				.Include(d => d.Users)
 					.ThenInclude(d => d.User)
@@ -41,6 +52,7 @@ namespace PisMirShow.Controllers
 					Dialog = c,
 					Message = c.Messages.OrderByDescending(p => p.CreatedDate).FirstOrDefault()
 				})
+				.Where(m => m.Message != null)
 				.Select(d => new DialogViewModel
 				{
 					DialogName = d.Dialog.Users.First(t => t.UserId != user.Id).User.GetFullName(),
@@ -53,13 +65,9 @@ namespace PisMirShow.Controllers
 					CurrentUserAvatar = user.Avatar,
 					DialogId = d.Dialog.Id,
 				})
+				.Skip(offset)
+				.Take(20)
 				.ToList();
-
-			//TODO: Не отображать диалоги без сообщений.
-
-			ViewBag.Dialogs = dialogs;
-
-			return View(user);
 		}
 
 		public IActionResult AddDialog()
@@ -83,26 +91,44 @@ namespace PisMirShow.Controllers
 			return RedirectToAction($"Dialog", new { id = dialogId });
 		}
 
-		[Route("Dialog/WithId/{id}")]
-		public IActionResult Dialog(int id)
+		[Route("Dialog/WithId/{dialogId}")]
+		public IActionResult Dialog(int dialogId)
 		{
-			if (!DbContext.Dialogs.Any(d => d.Id == id))
+			var dialog = DbContext.Dialogs.AsNoTracking()
+						.Include(t => t.Users)
+						.ThenInclude(d => d.User)
+						.FirstOrDefault(d => d.Id == dialogId);
+
+			if (dialog == null)
 			{
 				return RedirectToAction("AllDialogs", "Dialog");
 			}
 
-			var messages = DbContext.Messages.Where(m => m.DialogId == id)
+			var user = GetCurrentUser().GetUserSafe();
+
+			if (!dialog.Users.Any(u => u.UserId == user.Id)) {
+				return RedirectToAction("AllDialogs", "Dialog");
+			}
+
+			var messages = GetMessages(dialogId, offset: 0);
+
+			ViewBag.Dialog = dialog;
+
+			return View(messages);
+		}
+
+		public JsonResult GetMessagesJSON(int dialogId, int offset = 0) {
+			return Json(GetMessages(dialogId, offset));
+		}
+
+		private List<Message> GetMessages(int dialogId, int offset) {
+			return DbContext.Messages.Where(m => m.DialogId == dialogId)
 				.Include(m => m.Author)
 				.Include(m => m.Dialog)
 				.AsNoTracking()
+				.Skip(offset)
+				.Take(20)
 				.ToList();
-
-			ViewBag.Dialog = DbContext.Dialogs.AsNoTracking()
-				.Include(d => d.Users)
-				.ThenInclude(d => d.User)
-				.FirstOrDefault(d => d.Users.Any(t => t.DialogId == id));
-
-			return View(messages);
 		}
 
 		private void AddUsersInDialog(List<int> usersId, int dialogId)

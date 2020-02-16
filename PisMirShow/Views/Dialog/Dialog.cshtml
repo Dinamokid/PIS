@@ -9,24 +9,26 @@
 	var HubUrl = '@ViewBag.Host/dialog-hub';
 </script>
 
-	<div class="col-md-12 mt-4 p-0">
-		<div id="dialog" class="mb-2">
-			@foreach (var message in Model)
-			{
-				<div class="mt-3">
-					<div class="d-flex">
-						<b class="border-bottom w-100">@message.Author.GetFullName()</b>
-					</div>
-					<div class="d-flex justify-content-between">
-						<span>
-							@message.Text
-						</span>
-						<span id="date">@message.CreatedDate.ToString("g")</span>
-					</div>
+@*TODO: Обратный ход сообщений*@
+@*Подсветка TODO*@
+<div class="col-md-12 mt-4 p-0">
+	<div id="dialog" class="mb-2">
+		@foreach (var message in Model)
+		{
+			<div class="mt-3">
+				<div class="d-flex">
+					<b class="border-bottom w-100">@message.Author.GetFullName()</b>
 				</div>
-			}
-		</div>
+				<div class="d-flex justify-content-between">
+					<span>
+						@message.Text
+					</span>
+					<span id="date">@message.CreatedDate.ToString("g")</span>
+				</div>
+			</div>
+		}
 	</div>
+</div>
 <div id="inputForm">
 	<div class="row justify-content-center mt-4">
 		<input type="text" class="form-control col-md-6 mb-2 mr-sm-2" id="message" placeholder="Введите сообщение">

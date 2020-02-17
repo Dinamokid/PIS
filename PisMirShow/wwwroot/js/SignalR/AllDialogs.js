@@ -17,7 +17,14 @@ $(document).ready(function () {
 		                        </div>
 	                        </div>
                         </div>`);
+        UpdateDialog(dialogId, message, avatar, createdDate);
     });
+
+    function UpdateDialog(dialogId, message, avatar, createdDate) {
+        $(`#dialog_${dialogId} #message-dialog_${dialogId}`).text(message);
+        $(`#dialog_${dialogId} #lastAutor-dialog_${dialogId}`).css("background-image", `url('${avatar}')`);
+        $(`#dialog_${dialogId} #lastMessageDate-dialog_${dialogId}`).text(createdDate);
+    }
 
     hubConnection.start();
 });

@@ -21,13 +21,15 @@ namespace PisMirShow.SignalR
                 await Clients.Caller.SendAsync("Error", "Не ломай меня");
             }
 
+            if (string.IsNullOrWhiteSpace(message)) return;            
+
 			DbContext.Messages.Add(new Message
 			{
                 AuthorId = user.Id,
                 CreatedDate = DateTime.UtcNow,
                 DialogId = dialogId,
                 isReaded = false,
-                Text = message,
+                Text = message.Trim(),
             });
 
             var dialog = DbContext.Dialogs.Include(t => t.Users).First(t=>t.Id == dialogId);

@@ -8,7 +8,7 @@ $(document).ready(function () {
     //Отобразить сообщение
     hubConnection.on('Send', function (message, name, createdDate, dialogId, avatar) {
         if (DialogID === dialogId) {
-            $("#chatroom").append(`<div class="mt-2">
+            $("#dialog").append(`<div class="mt-2">
                     <div class="d-flex">
                         <b class="border-bottom w-100">`+ name + `</b>
                     </div>
@@ -20,6 +20,7 @@ $(document).ready(function () {
                     </div>
                 </div>`);
             $("#message").val("");
+            $('#dialog').scrollTop($('#dialog')[0].scrollHeight);
         }
         else {
             toastr.info(`Вам пришло новое сообщение от ${name}`);

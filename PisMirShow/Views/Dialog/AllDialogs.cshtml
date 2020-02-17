@@ -14,7 +14,7 @@
 		<div id="chatroom" class="mb-2">
 			@foreach (var dialog in (List<DialogViewModel>)ViewBag.Dialogs)
 			{
-				<div class="mt-2 pb-3 border-bottom cursor-pointer">
+				<div class="mt-2 pb-3 border-bottom cursor-pointer" id="dialog_@dialog.DialogId">
 					<div class="d-flex">
 						<div class="col-1" onclick="location.href = '@Url.Action("Profile", "Home", new { id = dialog.DialogUserId })'">
 							<div style="background-image: url('@dialog.DialogPhotoUrl'); background-size:cover; background-position:center; width: 70px; height: 70px; border-radius: 100%;"></div>
@@ -26,14 +26,14 @@
 								</b>
 							</div>
 							<div class="d-flex pt-2 align-items-center">
-								<div style="background-image: url('@(dialog.LastMessageAvatar ?? dialog.CurrentUserAvatar)'); background-size:cover; background-position:center; width: 40px; height: 40px; border-radius: 100%;"></div>
-								<p class="m-0 ml-2 @(string.IsNullOrEmpty(dialog.LastMessageText) == true ? "text-gray":"")">
+								<div id="lastAutor-dialog_@dialog.DialogId" style="background-image: url('@(dialog.LastMessageAvatar ?? dialog.CurrentUserAvatar)'); background-size:cover; background-position:center; width: 40px; height: 40px; border-radius: 100%;"></div>
+								<p id="message-dialog_@dialog.DialogId" class="m-0 ml-2 @(string.IsNullOrEmpty(dialog.LastMessageText) == true ? "text-gray":"")">
 									@(dialog.LastMessageText ?? "Диалог создан, но здесь пока пусто...")
 								</p>
 							</div>
 						</div>
 						<div class="col-2 d-flex align-items-center">
-							<div>
+							<div id="lastMessageDate-dialog_@dialog.DialogId">
 								@dialog.LastMessageDate
 							</div>
 							<div>

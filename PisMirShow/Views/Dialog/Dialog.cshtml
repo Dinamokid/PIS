@@ -7,10 +7,13 @@
 <script>
 	var DialogID = @(((Dialog)ViewBag.Dialog).Id)
 	var HubUrl = '@ViewBag.Host/dialog-hub';
+	$(document).ready(function () {
+		$('#dialog').scrollTop($('#dialog')[0].scrollHeight);
+	});
 </script>
 
 @{
-//TODO: Обратный ход сообщений
+	//TODO: Подгрузка сообщений
 }
 <div class="col-md-12 mt-4 p-0">
 	<div id="dialog" class="mb-2">

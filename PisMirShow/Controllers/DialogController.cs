@@ -126,8 +126,10 @@ namespace PisMirShow.Controllers
 				.Include(m => m.Author)
 				.Include(m => m.Dialog)
 				.AsNoTracking()
+				.OrderByDescending(m => m.CreatedDate)
 				.Skip(offset)
-				.Take(20)
+				.Take(50)
+				.OrderBy(m => m.CreatedDate)
 				.ToList();
 		}
 

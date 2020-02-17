@@ -30,7 +30,6 @@ namespace PisMirShow.Controllers
 
 		[Route("Profile/{id}")]
 		[Route("Profile")]
-		//TODO: запретить редактирование профиля сторонними юзерами
 		public IActionResult Profile(int id = 0)
 		{
 			User user = new User();

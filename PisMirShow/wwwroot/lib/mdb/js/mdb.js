@@ -4404,7 +4404,6 @@ module.exports = function(Chart) {
 
 				scale.mergeTicksOptions();
 
-				// TODO(SB): I think we should be able to remove this custom case (options.scale)
 				// and consider it as a regular scale part of the "scales"" map only! This would
 				// make the logic easier and remove some useless? custom code.
 				if (item.isDefault) {
@@ -7796,7 +7795,6 @@ module.exports = Element.extend({
 				var cosRotation = Math.cos(angleRadians);
 				var sinRotation = Math.sin(angleRadians);
 
-				// TODO - improve this calculation
 				var labelHeight = (sinRotation * largestTextWidth)
 					+ (tickFont.size * tallestLabelHeightInLines)
 					+ (lineSpace * (tallestLabelHeightInLines - 1))
@@ -16550,7 +16548,6 @@ $('.smooth-scroll').on('click', 'a', function () {
 var dropdownSelectors = $('.dropdown, .dropup'); // Custom function to read dropdown data
 
 function dropdownEffectData(target) {
-  // TODO - page level global?
   var effectInDefault = 'fadeIn';
   var effectOutDefault = 'fadeOut';
   var dropdown = $(target);

@@ -2083,7 +2083,6 @@ $('.smooth-scroll').on('click', 'a', function () {
 var dropdownSelectors = $('.dropdown, .dropup'); // Custom function to read dropdown data
 
 function dropdownEffectData(target) {
-  // TODO - page level global?
   var effectInDefault = 'fadeIn';
   var effectOutDefault = 'fadeOut';
   var dropdown = $(target);

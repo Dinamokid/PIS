@@ -114,7 +114,5 @@ html {
   color: gray !important; }
 
 #toast-container > .toast-info {
-  background-image: none !important; }
-
-#toast-container > div {
+  background-image: none !important;
   padding: 15px; }

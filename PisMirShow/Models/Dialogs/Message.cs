@@ -5,8 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PisMirShow.Models.Dialogs
 {
-	public class Message
-	{
+    public class Message
+    {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
@@ -21,5 +21,8 @@ namespace PisMirShow.Models.Dialogs
 
         public int DialogId { get; set; }
         public virtual Dialog Dialog { get; set; }
+
+        [NotMapped]
+        public int TotalCount {get; set;}
 	}
 }

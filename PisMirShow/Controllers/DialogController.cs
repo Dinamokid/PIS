@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using NToastNotify;
 using PisMirShow.Models.Account;
 using PisMirShow.Models.Dialogs;
@@ -122,14 +123,27 @@ namespace PisMirShow.Controllers
 			return View(messages);
 		}
 
+		[HttpGet]
 		public JsonResult GetMessagesJSON(int dialogId, int offset = 0)
 		{
-			return Json(GetMessages(dialogId, offset));
+			var messages = GetMessages(dialogId, offset);
+			var orderedMessages = messages.MessageList.OrderByDescending(t => t.CreatedDate);
+
+			return Json(
+			new {
+				Messages = orderedMessages.Select(t => new {
+					FullName = t.Author.GetFullName(),
+					Message = t.Text,
+					Date = t.CreatedDate.ToString("g"),
+				}),
+				TotalCount = messages.TotalCount
+			}
+			);
 		}
 
-		private List<Message> GetMessages(int dialogId, int offset)
+		private Messages GetMessages(int dialogId, int offset)
 		{
-			return DbContext.Messages.Where(m => m.DialogId == dialogId)
+			var messages = DbContext.Messages.Where(m => m.DialogId == dialogId)
 				.Include(m => m.Author)
 				.Include(m => m.Dialog)
 				.AsNoTracking()
@@ -138,6 +152,12 @@ namespace PisMirShow.Controllers
 				.Take(50)
 				.OrderBy(m => m.CreatedDate)
 				.ToList();
+
+			return new Messages
+			{
+				MessageList = messages,
+				TotalCount = DbContext.Messages.Where(m => m.DialogId == dialogId).Count()
+			};
 		}
 
 		private void AddUsersInDialog(List<int> usersId, int dialogId)

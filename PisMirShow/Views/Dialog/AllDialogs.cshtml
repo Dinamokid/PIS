@@ -23,7 +23,7 @@
 
 				<div class="mt-2 pb-3 border-bottom cursor-pointer" id="dialog_@dialog.DialogId">
 					<div class="d-flex">
-						<div class="col-1" @(string.IsNullOrEmpty(dialogProfileUrl) ? "" : $"onclick=`location.href = '{dialogProfileUrl}'`")>
+						<div class="col-1" @(string.IsNullOrEmpty(dialogProfileUrl) ? "" : $"onclick=location.href='{dialogProfileUrl}'")>
 							<div style="background-image: url('@dialog.DialogPhotoUrl'); background-size:cover; background-position:center; width: 70px; height: 70px; border-radius: 100%;"></div>
 						</div>
 						<div class="col-9" onclick="location.href = '@Url.Action("Dialog", "Dialog", new { dialogId = dialog.DialogId })'">

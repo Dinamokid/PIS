@@ -3,8 +3,10 @@
     .configureLogging(signalR.LogLevel.Information)
     .build();
 
-$(document).ready(function () {
+var UpdatingMessagesNow = false;
 
+$(document).ready(function () {
+    //SignalR
     //Отобразить сообщение
     hubConnection.on('Send', function (message, name, createdDate, dialogId, avatar) {
         if (DialogID === dialogId) {
@@ -21,6 +23,7 @@ $(document).ready(function () {
                 </div>`);
             $("#message").val("");
             $('#dialog').scrollTop($('#dialog')[0].scrollHeight);
+            $("#inputForm input").focus();
         }
         else {
             toastr.info(`Вам пришло новое сообщение от ${name}`);
@@ -44,4 +47,45 @@ $(document).ready(function () {
     });
 
     hubConnection.start();
+
+    $("#inputForm input").focus(); //фокус на форму при загрузки страницы
+
+    $("#inputForm input").keyup(function (e) { //отправка по нажатию на enter
+        var code = e.key;
+        if (code === "Enter") {
+            e.preventDefault();
+            $("#sendBtn").click();
+        }
+    });
+
+    $("#dialog").scroll(function () {
+        if ($("#dialog").scrollTop() <= 500 && UpdatingMessagesNow === false && TotalCount > Offset * 50) {
+            //console.log($("#dialog").scrollTop()); //for debug
+            UpdatingMessagesNow = true;
+            axios.get('/Dialog/GetMessagesJSON',
+                { params: { dialogId: DialogID, offset: Offset * 50 } })
+                .then(response => {
+                    response.data.messageList.forEach(element => {
+                        $("#dialog").prepend(
+                            `
+                            <div class="mt-3">
+			            	    <div class="d-flex">
+					                <b class="border-bottom w-100">${element.fullName}</b>
+				                </div>
+				                <div class="d-flex justify-content-between">
+					                <span>
+					        	       ${element.message}
+					                </span>
+					                <span id="date">${element.date}</span>
+				                </div>
+			                </div>
+                        `
+                        );
+                        //console.log(element.date + " " + element.message); //for debug
+                    });
+                    Offset++;
+                    UpdatingMessagesNow = false;
+                });
+        }
+    });
 });

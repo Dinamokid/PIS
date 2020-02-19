@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.WebEncoders;
 using NToastNotify;
 using PisMirShow.SignalR;
+using Newtonsoft.Json.Serialization;
 
 namespace PisMirShow
 {
@@ -53,14 +54,14 @@ namespace PisMirShow
             });
             services.AddSignalR();
 
-            services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
+            services.AddMvc()
+            .AddNToastNotifyToastr(new ToastrOptions()
             {
-	            ProgressBar = false,
-	            PositionClass = ToastPositions.TopRight
-            });
-
-            services.AddMvc();
-        }
+                ProgressBar = false,
+                PositionClass = ToastPositions.TopRight
+            })
+             .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+		}
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {

@@ -13,6 +13,6 @@ namespace PisMirShow.ViewModels.Dialogs
 		public string CurrentUserAvatar { get; set; }
 		public EntryStatus EntryStatus { get; set; }
 		public int DialogId { get; set; }
-		public int DialogUserId { get; set; }
+		public int? DialogUserId { get; set; }
 	}
 }

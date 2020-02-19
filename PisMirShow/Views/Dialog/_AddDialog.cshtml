@@ -1,12 +1,12 @@
 ﻿@using PisMirShow.ViewModels.Account
 @model List<UserViewModel>
 
-@{ 
+@{
 	int dialogCounter = 0;
 }
 
 <style>
-	#addDialogModal div:nth-child(1){
+	#addDialogModal div:nth-child(1) {
 		border-top: none !important;
 		padding-top: 0 !important;
 	}
@@ -20,7 +20,7 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="addDialogModalLabel">Новый диалог</h5>
+				<h5 class="modal-title pt-3" id="addDialogModalLabel">Новый диалог</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -31,8 +31,11 @@
 					{
 						<div class="mt-2 pt-3 pt-b border-top ">
 							<div class="d-flex">
-								<div class="col-1">
-									<input type="checkbox" name="userIds" value="@item.Id" />
+								<div class="d-flex justify-content-center align-items-center">
+									<div class="col-1 custom-control custom-checkbox pr-0 pl-5">
+										<input type="checkbox" class="custom-control-input" name="userIds" value="@item.Id" id="customCheck-@item.Id">
+										<label class="custom-control-label" for="customCheck-@item.Id"></label>
+									</div>
 								</div>
 								<div class="col-3">
 									<div class="m-auto" style="background-image: url('@item.Avatar'); background-size:cover; background-position:center; width: 60px; height: 60px; border-radius: 100%;"></div>

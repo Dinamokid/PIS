@@ -19,7 +19,7 @@ namespace PisMirShow.Controllers
 		public DialogController(PisDbContext dbContext, IHostingEnvironment env, IToastNotification toastNotification) : base(dbContext, env, toastNotification)
 		{
 		}
-		
+
 		[Route("Dialog/Index")]
 		[Route("Dialog/AllDialogs")]
 		[Route("Dialogs")]
@@ -40,6 +40,8 @@ namespace PisMirShow.Controllers
 		private List<DialogViewModel> GetDialogs(int offset)
 		{
 			var user = GetCurrentUser().GetUserSafe();
+			Console.Clear();
+			Console.WriteLine("START");
 			return DbContext.Dialogs.AsNoTracking()
 				.Where(d => d.Users.Any(t => t.UserId == user.Id))
 				.Include(d => d.Users)
@@ -50,14 +52,16 @@ namespace PisMirShow.Controllers
 				.Select(c => new
 				{
 					Dialog = c,
-					Message = c.Messages.OrderByDescending(p => p.CreatedDate).FirstOrDefault()
+					Message = c.Messages.OrderByDescending(p => p.CreatedDate).FirstOrDefault(),
+					RecipientUser = c.Users.FirstOrDefault(t => t.UserId != user.Id) ?? c.Users.First(),
 				})
+				.ToList()
 				.Where(m => m.Message != null)
 				.Select(d => new DialogViewModel
 				{
-					DialogName = d.Dialog.Users.First(t => t.UserId != user.Id).User.GetFullName(),
-					DialogPhotoUrl = d.Dialog.Users.First(t => t.UserId != user.Id).User.Avatar,
-					DialogUserId = d.Dialog.Users.First(t => t.UserId != user.Id).User.Id,
+					DialogName = d.Dialog.Name ?? d.RecipientUser.User.GetFullName(),
+					DialogPhotoUrl = d.Dialog.Avatar ?? d.RecipientUser.User.Avatar,
+					DialogUserId = d.Dialog.Name == null ? d.RecipientUser.User.Id : -1,
 					LastMessageAvatar = d.Message.Author.Avatar,
 					LastMessageDate = d.Dialog.LastUpdate.ToString("g"),
 					LastMessageText = d.Message.Text,
@@ -88,7 +92,7 @@ namespace PisMirShow.Controllers
 
 			var dialogId = AddDialogAndUsers(userIds);
 
-			return RedirectToAction($"Dialog", new { id = dialogId });
+			return RedirectToAction("Dialog", new { dialogId = dialogId });
 		}
 
 		[Route("Dialog/WithId/{dialogId}")]
@@ -106,7 +110,8 @@ namespace PisMirShow.Controllers
 
 			var user = GetCurrentUser().GetUserSafe();
 
-			if (!dialog.Users.Any(u => u.UserId == user.Id)) {
+			if (!dialog.Users.Any(u => u.UserId == user.Id))
+			{
 				return RedirectToAction("AllDialogs", "Dialog");
 			}
 
@@ -117,11 +122,13 @@ namespace PisMirShow.Controllers
 			return View(messages);
 		}
 
-		public JsonResult GetMessagesJSON(int dialogId, int offset = 0) {
+		public JsonResult GetMessagesJSON(int dialogId, int offset = 0)
+		{
 			return Json(GetMessages(dialogId, offset));
 		}
 
-		private List<Message> GetMessages(int dialogId, int offset) {
+		private List<Message> GetMessages(int dialogId, int offset)
+		{
 			return DbContext.Messages.Where(m => m.DialogId == dialogId)
 				.Include(m => m.Author)
 				.Include(m => m.Dialog)
@@ -135,29 +142,38 @@ namespace PisMirShow.Controllers
 
 		private void AddUsersInDialog(List<int> usersId, int dialogId)
 		{
-			var dialog = DbContext.Dialogs.Include(t=>t.Users).FirstOrDefault(d => d.Id == dialogId);
+			var dialog = DbContext.Dialogs.Include(t => t.Users).FirstOrDefault(d => d.Id == dialogId);
 
 			if (dialog != null)
 			{
-				foreach (var temp in usersId)
+				var users = DbContext.Users.AsNoTracking().Where(u => usersId.Any(t => t == u.Id)).ToList();
+				foreach (var temp in users)
 				{
-					if (!dialog.Users.Any(t => t.UserId == temp)) {
+					if (!dialog.Users.Any(t => t.UserId == temp.Id))
+					{
 						DbContext.UsersDialogs.Add(new UserDialog
 						{
 							DialogId = dialogId,
-							UserId = temp
+							UserId = temp.Id
 						});
 					}
 				}
+
+				if (users.Count() > 2){
+					dialog.Name = string.Join(", ", users.Select(t => t.FirstName));
+					dialog.Avatar = "/files/avatars/group.jpg";
+				}
+
 				DbContext.SaveChanges();
 			}
 		}
 
-		private int AddDialogAndUsers(List<int> usersId)
+		private int AddDialogAndUsers(List<int> usersIds)
 		{
-			if (usersId.Count > 2) {
+			if (usersIds.Count > 2)
+			{
 				var intersectionDialogs = DbContext.UsersDialogs
-					.Where(t => t.Dialog.DialogType == DialogType.dialog && t.UserId == usersId[0] || t.UserId == usersId[1])
+					.Where(t => t.Dialog.DialogType == DialogType.dialog && t.UserId == usersIds[0] || t.UserId == usersIds[1])
 					.GroupBy(t => t.Dialog)
 					.Select(group => new
 					{
@@ -174,19 +190,20 @@ namespace PisMirShow.Controllers
 			var dialog = new Dialog
 			{
 				EntryStatus = Enums.EntryStatus.Readed,
-				DialogType = usersId.Count > 2 ? DialogType.groupchat : DialogType.dialog,
+				DialogType = usersIds.Count > 2 ? DialogType.groupchat : DialogType.dialog,
 				LastUpdate = DateTime.UtcNow
 			};
 
 			DbContext.Dialogs.Add(dialog);
 			DbContext.SaveChanges();
 
-			AddUsersInDialog(usersId, dialog.Id);
+			AddUsersInDialog(usersIds, dialog.Id);
 
 			return dialog.Id;
 		}
 
-		private List<User> GetUsersByDialog(int dialogId) {
+		private List<User> GetUsersByDialog(int dialogId)
+		{
 			return DbContext.UsersDialogs.Where(t => t.DialogId == dialogId).Select(t => t.User).ToList();
 		}
 	}

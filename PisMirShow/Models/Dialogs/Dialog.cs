@@ -17,6 +17,8 @@ namespace PisMirShow.Models.Dialogs
 
 		public virtual List<Message> Messages { get; set; }
 
+		public string Avatar { get; set; }
+
 		public DateTime LastUpdate { get; set; }
 
 		public EntryStatus EntryStatus { get; set; }

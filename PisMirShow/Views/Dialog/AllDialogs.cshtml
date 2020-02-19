@@ -3,6 +3,7 @@
 @model User
 @{
 	ViewData["Title"] = "Диалоги";
+	var dialogProfileUrl = "";
 }
 
 <script>
@@ -14,9 +15,15 @@
 		<div id="chatroom" class="mb-2">
 			@foreach (var dialog in (List<DialogViewModel>)ViewBag.Dialogs)
 			{
+				dialogProfileUrl = "";
+				if (dialog.DialogUserId != -1)
+				{
+					dialogProfileUrl = Url.Action("Profile", "Home", new { id = dialog.DialogUserId });
+				}
+
 				<div class="mt-2 pb-3 border-bottom cursor-pointer" id="dialog_@dialog.DialogId">
 					<div class="d-flex">
-						<div class="col-1" onclick="location.href = '@Url.Action("Profile", "Home", new { id = dialog.DialogUserId })'">
+						<div class="col-1" @(string.IsNullOrEmpty(dialogProfileUrl) ? "" : $"onclick=`location.href = '{dialogProfileUrl}'`")>
 							<div style="background-image: url('@dialog.DialogPhotoUrl'); background-size:cover; background-position:center; width: 70px; height: 70px; border-radius: 100%;"></div>
 						</div>
 						<div class="col-9" onclick="location.href = '@Url.Action("Dialog", "Dialog", new { dialogId = dialog.DialogId })'">

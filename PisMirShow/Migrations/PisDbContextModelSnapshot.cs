@@ -78,6 +78,8 @@ namespace PisMirShow.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Avatar");
+
                     b.Property<int>("DialogType");
 
                     b.Property<int>("EntryStatus");

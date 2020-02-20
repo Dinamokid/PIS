@@ -29,7 +29,7 @@ namespace PisMirShow.Controllers
 		{
 			ViewBag.Dialogs = GetDialogs(offset: 0);
 			var user = GetCurrentUser().GetUserSafe();
-
+		
 			return View(user);
 		}
 
@@ -57,15 +57,15 @@ namespace PisMirShow.Controllers
 					RecipientUser = c.Users.FirstOrDefault(t => t.UserId != user.Id) ?? c.Users.First(),
 				})
 				.ToList()
-				.Where(m => m.Message != null)
+				//.Where(m => m.Message != null)
 				.Select(d => new DialogViewModel
 				{
 					DialogName = d.Dialog.Name ?? d.RecipientUser.User.GetFullName(),
 					DialogPhotoUrl = d.Dialog.Avatar ?? d.RecipientUser.User.Avatar,
 					DialogUserId = d.Dialog.Name == null ? d.RecipientUser.User.Id : -1,
-					LastMessageAvatar = d.Message.Author.Avatar,
+					LastMessageAvatar = d.Message?.Author?.Avatar,
 					LastMessageDate = d.Dialog.LastUpdate.ToString("g"),
-					LastMessageText = d.Message.Text,
+					LastMessageText = d.Message?.Text,
 					EntryStatus = d.Dialog.EntryStatus,
 					CurrentUserAvatar = user.Avatar,
 					DialogId = d.Dialog.Id,
@@ -89,8 +89,17 @@ namespace PisMirShow.Controllers
 		[HttpPost]
 		public IActionResult AddDialog(List<int> userIds)
 		{
-			userIds.Add(GetCurrentUser().Id);
+			if (!userIds.Any())
+			{
+				return RedirectToAction("AllDialogs");
+			}
 
+			var user = GetCurrentUser();
+			if (!userIds.Contains(user.Id))
+			{
+				userIds.Add(user.Id);
+			}
+				
 			var dialogId = AddDialogAndUsers(userIds);
 
 			return RedirectToAction("Dialog", new { dialogId = dialogId });
@@ -190,27 +199,36 @@ namespace PisMirShow.Controllers
 
 		private int AddDialogAndUsers(List<int> usersIds)
 		{
-			if (usersIds.Count > 2)
-			{
-				var intersectionDialogs = DbContext.UsersDialogs
-					.Where(t => t.Dialog.DialogType == DialogType.dialog && t.UserId == usersIds[0] || t.UserId == usersIds[1])
-					.GroupBy(t => t.Dialog)
-					.Select(group => new
-					{
-						Metric = group.Key,
-						Count = group.Count()
-					});
+			//TODO: немного поправить логику (создание групового диалога для двоих)
+			Dialog dialogIfExist = null;
+			var dialogType = GetDialogType(usersIds.Count);
 
-				if (!intersectionDialogs.Any(t => t.Count > 1))
-				{
-					RedirectToAction($"Dialog", new { id = intersectionDialogs.First(t => t.Count > 1).Metric.Id });
-				}
+			if (dialogType == DialogType.monolog)
+			{
+				dialogIfExist = DbContext.UsersDialogs.Include(t => t.Dialog).AsNoTracking()
+									.FirstOrDefault(t => t.Dialog.DialogType == DialogType.monolog && t.UserId == usersIds[0])?.Dialog;
+			}
+			else if (dialogType == DialogType.dialog)
+			{
+				dialogIfExist = DbContext.UsersDialogs.Include(t => t.Dialog).AsNoTracking()
+									.Where(t => t.Dialog.DialogType == DialogType.dialog && t.UserId == usersIds[0] || t.UserId == usersIds[1])
+									.GroupBy(t => t.Dialog)
+									.Select(group => new
+									{
+										Metric = group.Key,
+										Count = group.Count()
+									}).FirstOrDefault(t => t.Count > 1)?.Metric;
+			}
+
+			if (dialogIfExist != null)
+			{
+				return dialogIfExist.Id;
 			}
 
 			var dialog = new Dialog
 			{
 				EntryStatus = Enums.EntryStatus.Readed,
-				DialogType = usersIds.Count > 2 ? DialogType.groupchat : DialogType.dialog,
+				DialogType = dialogType,
 				LastUpdate = DateTime.UtcNow
 			};
 
@@ -225,6 +243,17 @@ namespace PisMirShow.Controllers
 		private List<User> GetUsersByDialog(int dialogId)
 		{
 			return DbContext.UsersDialogs.Where(t => t.DialogId == dialogId).Select(t => t.User).ToList();
+		}
+
+		private DialogType GetDialogType(int count) {
+			switch (count) { 
+				case 1:
+					return DialogType.monolog;
+				case 2:
+					return DialogType.dialog;
+				default:
+					return DialogType.groupchat;
+			}
 		}
 	}
 }

@@ -27,7 +27,8 @@ namespace PisMirShow.Models.Dialogs
 	}
 
 	public enum DialogType{
-		dialog,
-		groupchat
+		monolog = 1,
+		dialog = 2,
+		groupchat = 3
 	};
 }

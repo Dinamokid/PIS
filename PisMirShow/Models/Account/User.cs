@@ -56,6 +56,4 @@ namespace PisMirShow.Models.Account
             };
         }
     }
-
-
 }

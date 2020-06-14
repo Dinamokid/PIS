@@ -41,8 +41,6 @@ namespace PisMirShow.Controllers
 		private List<DialogViewModel> GetDialogs(int offset)
 		{
 			var user = GetCurrentUser().GetUserSafe();
-			Console.Clear();
-			Console.WriteLine("START");
 			return DbContext.Dialogs.AsNoTracking()
 				.Where(d => d.Users.Any(t => t.UserId == user.Id))
 				.Include(d => d.Users)
@@ -57,7 +55,6 @@ namespace PisMirShow.Controllers
 					RecipientUser = c.Users.FirstOrDefault(t => t.UserId != user.Id) ?? c.Users.First(),
 				})
 				.ToList()
-				//.Where(m => m.Message != null)
 				.Select(d => new DialogViewModel
 				{
 					DialogName = d.Dialog.Name ?? d.RecipientUser.User.GetFullName(),
@@ -199,7 +196,6 @@ namespace PisMirShow.Controllers
 
 		private int AddDialogAndUsers(List<int> usersIds)
 		{
-			//TODO: немного поправить логику (создание групового диалога для двоих)
 			Dialog dialogIfExist = null;
 			var dialogType = GetDialogType(usersIds.Count);
 

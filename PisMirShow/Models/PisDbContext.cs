@@ -29,6 +29,7 @@ namespace PisMirShow
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
+			modelBuilder.ForNpgsqlUseIdentityColumns();
 			//ManyToMany UserDialogs
 			modelBuilder.Entity<UserDialog>()
 				.HasKey(ud => new { ud.UserId, ud.DialogId });

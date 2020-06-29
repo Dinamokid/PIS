@@ -2,8 +2,8 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PisMirShow;
 
 namespace PisMirShow.Migrations
@@ -15,17 +15,19 @@ namespace PisMirShow.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
+                .HasAnnotation("ProductVersion", "3.1.5")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("PisMirShow.Models.Account.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -36,34 +38,51 @@ namespace PisMirShow.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("Avatar");
+                    b.Property<string>("Avatar")
+                        .HasColumnType("text");
 
-                    b.Property<string>("BirthdayDay");
+                    b.Property<byte[]>("AvatarBD")
+                        .HasColumnType("bytea");
 
-                    b.Property<string>("Department");
+                    b.Property<string>("BirthdayDay")
+                        .HasColumnType("text");
 
-                    b.Property<string>("Email");
+                    b.Property<string>("Department")
+                        .HasColumnType("text");
 
-                    b.Property<string>("FirstName");
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime?>("LastEnter");
+                    b.Property<string>("FirstName")
+                        .HasColumnType("text");
 
-                    b.Property<string>("LastName");
+                    b.Property<DateTime?>("LastEnter")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("Login");
+                    b.Property<string>("LastName")
+                        .HasColumnType("text");
 
-                    b.Property<string>("OfficePost");
+                    b.Property<string>("Login")
+                        .HasColumnType("text");
 
-                    b.Property<string>("Password");
+                    b.Property<string>("OfficePost")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("text");
 
                     b.Property<string>("Phone")
+                        .HasColumnType("character varying(12)")
                         .HasMaxLength(12);
 
-                    b.Property<DateTime>("RegisterTime");
+                    b.Property<DateTime>("RegisterTime")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<int?>("RoleId");
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -76,17 +95,23 @@ namespace PisMirShow.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("Avatar");
+                    b.Property<string>("Avatar")
+                        .HasColumnType("text");
 
-                    b.Property<int>("DialogType");
+                    b.Property<int>("DialogType")
+                        .HasColumnType("integer");
 
-                    b.Property<int>("EntryStatus");
+                    b.Property<int>("EntryStatus")
+                        .HasColumnType("integer");
 
-                    b.Property<DateTime>("LastUpdate");
+                    b.Property<DateTime>("LastUpdate")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -97,17 +122,23 @@ namespace PisMirShow.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("AuthorId");
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("DialogId");
+                    b.Property<int>("DialogId")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Text");
+                    b.Property<string>("Text")
+                        .HasColumnType("text");
 
-                    b.Property<bool>("isReaded");
+                    b.Property<bool>("isReaded")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -120,9 +151,11 @@ namespace PisMirShow.Migrations
 
             modelBuilder.Entity("PisMirShow.Models.Dialogs.UserDialog", b =>
                 {
-                    b.Property<int>("UserId");
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
 
-                    b.Property<int>("DialogId");
+                    b.Property<int>("DialogId")
+                        .HasColumnType("integer");
 
                     b.HasKey("UserId", "DialogId");
 
@@ -135,13 +168,17 @@ namespace PisMirShow.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("DirectoryType");
+                    b.Property<int>("DirectoryType")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Text");
+                    b.Property<string>("Text")
+                        .HasColumnType("text");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -152,27 +189,37 @@ namespace PisMirShow.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<bool>("Confirmed");
+                    b.Property<bool>("Confirmed")
+                        .HasColumnType("boolean");
 
-                    b.Property<DateTime?>("ConfirmedDateTime");
+                    b.Property<DateTime?>("ConfirmedDateTime")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<int?>("ConfirmedUserId");
+                    b.Property<int?>("ConfirmedUserId")
+                        .HasColumnType("integer");
 
-                    b.Property<int?>("CreatedUserId");
+                    b.Property<int?>("CreatedUserId")
+                        .HasColumnType("integer");
 
-                    b.Property<int>("DocType");
+                    b.Property<int>("DocType")
+                        .HasColumnType("integer");
 
                     b.Property<byte[]>("File")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("bytea");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
-                    b.Property<int?>("TaskId");
+                    b.Property<int?>("TaskId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Type")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -187,18 +234,23 @@ namespace PisMirShow.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int?>("TaskId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("integer");
 
                     b.Property<string>("Text")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int?>("UserId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -213,25 +265,35 @@ namespace PisMirShow.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<DateTime?>("DeadLine");
+                    b.Property<DateTime?>("DeadLine")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<DateTime?>("EndDate");
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("FilesId");
+                    b.Property<string>("FilesId")
+                        .HasColumnType("text");
 
-                    b.Property<int?>("FromUserId");
+                    b.Property<int?>("FromUserId")
+                        .HasColumnType("integer");
 
-                    b.Property<DateTime?>("StartDate");
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("Status");
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Text");
+                    b.Property<string>("Text")
+                        .HasColumnType("text");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
 
-                    b.Property<int?>("ToUserId");
+                    b.Property<int?>("ToUserId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -246,13 +308,17 @@ namespace PisMirShow.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("AuthorId");
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("Message");
+                    b.Property<string>("Message")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -273,12 +339,14 @@ namespace PisMirShow.Migrations
                     b.HasOne("PisMirShow.Models.Account.User", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("PisMirShow.Models.Dialogs.Dialog", "Dialog")
                         .WithMany("Messages")
                         .HasForeignKey("DialogId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PisMirShow.Models.Dialogs.UserDialog", b =>
@@ -286,12 +354,14 @@ namespace PisMirShow.Migrations
                     b.HasOne("PisMirShow.Models.Dialogs.Dialog", "Dialog")
                         .WithMany("Users")
                         .HasForeignKey("DialogId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("PisMirShow.Models.Account.User", "User")
                         .WithMany("Dialogs")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PisMirShow.Models.FileItem", b =>
@@ -310,12 +380,14 @@ namespace PisMirShow.Migrations
                     b.HasOne("PisMirShow.Models.TaskItem", "Task")
                         .WithMany("Comments")
                         .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("PisMirShow.Models.Account.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PisMirShow.Models.TaskItem", b =>
@@ -334,7 +406,8 @@ namespace PisMirShow.Migrations
                     b.HasOne("PisMirShow.Models.Account.User", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

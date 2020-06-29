@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.WebEncoders;
 using Newtonsoft.Json;
 using NToastNotify;
+using PisMirShow.Services;
 using PisMirShow.SignalR;
 
 namespace PisMirShow
@@ -32,11 +33,13 @@ namespace PisMirShow
 			services.AddRazorPages()
 				.AddRazorRuntimeCompilation();
 
-			string connection = Configuration.GetConnectionString("DefaultConnection");
-			services.AddDbContext<PisDbContext>(options =>
-				options
-					.UseSqlServer(connection)
-					);
+			services.AddEntityFrameworkNpgsql().AddDbContext<PisDbContext>(opt =>
+				opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+
+			//services.AddDbContext<PisDbContext>(options =>
+			//	options
+			//		.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+			//		);
 
 			services.Configure<WebEncoderOptions>(options =>
 			{
@@ -57,6 +60,8 @@ namespace PisMirShow
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 			services.AddSignalR();
+
+			services.AddSingleton<FileService>();
 
 			services.AddMvc() 
 				.AddNewtonsoftJson(options =>

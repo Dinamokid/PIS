@@ -206,7 +206,7 @@ namespace PisMirShow.Controllers
 			}
 			else if (dialogType == DialogType.dialog)
 			{
-				dialogIfExist = DbContext.UsersDialogs.Include(t => t.Dialog).AsNoTracking()
+				dialogIfExist = DbContext.UsersDialogs.Include(t => t.Dialog).ToList()
 									.Where(t => t.Dialog.DialogType == DialogType.dialog && t.UserId == usersIds[0] || t.UserId == usersIds[1])
 									.GroupBy(t => t.Dialog)
 									.Select(group => new

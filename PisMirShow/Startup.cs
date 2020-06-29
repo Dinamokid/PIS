@@ -1,4 +1,5 @@
 ﻿using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Text.Unicode;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -9,98 +10,101 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.WebEncoders;
+using Newtonsoft.Json;
 using NToastNotify;
 using PisMirShow.SignalR;
-using Newtonsoft.Json.Serialization;
 
 namespace PisMirShow
 {
-    public class Startup
-    {
+	public class Startup
+	{
 		public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+		{
+			Configuration = configuration;
+		}
 
-        public IConfiguration Configuration { get; }
+		public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+		// This method gets called by the runtime. Use this method to add services to the container.
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<PisDbContext>(options =>
-                options.UseLazyLoadingProxies()
-                    .UseSqlServer(connection)
-                    .ConfigureWarnings(builder => builder.Ignore(CoreEventId.DetachedLazyLoadingWarning)));
+		public void ConfigureServices(IServiceCollection services)
+		{
+			services.AddRazorPages()
+				.AddRazorRuntimeCompilation();
 
-            services.Configure<WebEncoderOptions>(options =>
-            {
-                options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All);
-            });
+			string connection = Configuration.GetConnectionString("DefaultConnection");
+			services.AddDbContext<PisDbContext>(options =>
+				options
+					.UseSqlServer(connection)
+					);
+
+			services.Configure<WebEncoderOptions>(options =>
+			{
+				options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All);
+			});
 
 			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options => 
-                {
+				.AddCookie(options =>
+				{
 					options.LoginPath = new PathString("/Account/Login");
-                    options.ReturnUrlParameter = "redirectUrl";
+					options.ReturnUrlParameter = "redirectUrl";
 					options.AccessDeniedPath = new PathString("/Home/Index");
 				});
 
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-            services.AddSignalR();
+			services.Configure<CookiePolicyOptions>(options =>
+			{
+				options.CheckConsentNeeded = context => true;
+				options.MinimumSameSitePolicy = SameSiteMode.None;
+			});
+			services.AddSignalR();
 
-            services.AddMvc()
-            .AddNToastNotifyToastr(new ToastrOptions()
-            {
-                ProgressBar = false,
-                PositionClass = ToastPositions.TopRight
-            })
-             .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+			services.AddMvc() 
+				.AddNewtonsoftJson(options =>
+				{
+					options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+				})
+				.AddNToastNotifyToastr(new ToastrOptions
+				{
+					ProgressBar = false,
+					PositionClass = ToastPositions.TopRight
+				});
 		}
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
-            }
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		{
+			if (env.IsDevelopment())
+			{
+				app.UseDeveloperExceptionPage();
+			}
+			else
+			{
+				app.UseExceptionHandler("/Home/Error");
+				app.UseHsts();
+			}
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseCookiePolicy();
-            app.UseAuthentication();
-            app.UseNToastNotify();
+			app.UseHttpsRedirection();
+			app.UseStaticFiles();
+			app.UseNToastNotify();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+			app.UseRouting();
 
-                routes.MapRoute(
-                    name: "Home",
-                    template: "{action=Index}/{id?}",
-                    defaults: new { controller = "Home" });
-            });
+			app.UseAuthentication();
+			app.UseAuthorization();
 
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<ChatHub>("/chat-hub");
-            });
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<Dialogs>("/dialog-hub");
-            });
-        }
-    }
+			app.UseEndpoints(endpoints =>
+			{
+				endpoints.MapControllerRoute(
+					"default",
+					"{controller=Home}/{action=Index}/{id?}");
+
+				endpoints.MapControllerRoute(
+					"Home",
+					"{action=Index}/{id?}",
+					new { controller = "Home" });
+
+				endpoints.MapHub<ChatHub>("/chat-hub");
+				endpoints.MapHub<Dialogs>("/dialog-hub");
+			});
+		}
+	}
 }

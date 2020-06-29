@@ -1,24 +1,23 @@
 ﻿@using PisMirShow.ViewModels.Files
-@model List<PisMirShow.ViewModels.Files.FilesViewModel>;
+@model List<FilesViewModel>
 @{
 	ViewData["Title"] = "Список файлов";
-	List<TaskItemViewModel> taskList = ViewBag.Tasks;
 }
 <section>
 	<div class="container">
 		@if (Model.Count == 0)
-        {
+		{
 			<div class="text-center">
 				<h1 style="margin-top: 25%">Здесь пока ничего нет... 😭</h1>
 				<h5>Прикрепите файлы к задачам</h5>
 			</div>
-        }
-        else
-        {
-		    <div id="app">
-			    <filelist :Model="data.data" :Extensions="extensions.data" :Tasks="tasks.data"></filelist>
-		    </div>
-        }
+		}
+		else
+		{
+			<div id="app">
+				<filelist :Model="data.data" :Extensions="extensions.data" :Tasks="tasks.data"></filelist>
+			</div>
+		}
 	</div>
 </section>
 
@@ -48,7 +47,7 @@
 								</div>
 								<div class="col-lg-3 mt-2 mt-lg-0">
 									<select class="browser-default custom-select" ref="ExtensionSelect" id="ExtensionSelect" @@change="extensionSelectChanged">
-										<option selected="selected" disabled="disabled">Выберите расширение</option>										
+										<option selected="selected" disabled="disabled">Выберите расширение</option>
 										<option v-for="item in Extensions" :value="item">{{item}}</option>
 									</select>
 								</div>
@@ -119,12 +118,11 @@
 				tasks: null
 			};
 		},
-		mounted() {
+		beforeMount() {
 			axios.get('/File/GetAvailableExtensionsJson')
 				.then(response => (this.extensions = response));
 			axios.get('/File/GetAvailableTasksJson')
 				.then(response => (this.tasks = response));
-
 			axios.get('/File/AllAvailableTaskFilesJson')
 				.then(response => (this.data = response));
 		}

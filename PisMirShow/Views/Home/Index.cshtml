@@ -34,7 +34,7 @@
 
 <script src="/signalr.min.js"></script>
 <script>
-    let hubUrl = 'https://localhost:5001/chat-hub';
+    let hubUrl = 'http://cft-service.herokuapp.com/chat-hub';
     const hubConnection = new signalR.HubConnectionBuilder()
         .withUrl(hubUrl)
         .configureLogging(signalR.LogLevel.Information)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -10,8 +11,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
-using PisMirShow.Models;
 using PisMirShow.Models.Account;
+using PisMirShow.Services;
 using PisMirShow.ViewModels;
 
 namespace PisMirShow.Controllers
@@ -74,19 +75,19 @@ namespace PisMirShow.Controllers
                 {
                     if (model.Password == model.ConfirmPassword){
                         // добавляем пользователя в бд
-                        DbContext.Users.Add(new User
+                        await DbContext.Users.AddAsync(new User
                         {
-                            Email = model.Email,
-                            Password = model.Password,
-                            RegisterTime = DateTime.UtcNow,
-                            BirthdayDay = model.BirthdayDay,
-                            FirstName = model.FirstName,
-                            LastName = model.LastName,
-                            Department = model.Department,
-                            Login = model.Login,
-                            OfficePost = model.OfficePost,
-                            RoleId = 1,
-                            Phone = model.Phone
+	                        Email = model.Email,
+	                        Password = model.Password,
+	                        RegisterTime = DateTime.UtcNow,
+	                        BirthdayDay = model.BirthdayDay,
+	                        FirstName = model.FirstName,
+	                        LastName = model.LastName,
+	                        Department = model.Department,
+	                        Login = model.Login,
+	                        OfficePost = model.OfficePost,
+	                        RoleId = 3,
+	                        Phone = model.Phone
                         });
                         await DbContext.SaveChangesAsync();
 
@@ -155,18 +156,40 @@ namespace PisMirShow.Controllers
         [HttpPost]
         public async Task<string> ChangeAvatar(IFormFile file)
         {
-            var user = GetCurrentUser();
+			var user = GetCurrentUser();
 
-            if (!string.IsNullOrEmpty(user.Avatar))
-            {
-                DeleteFile(user.Avatar);
-            }
+			//if (!string.IsNullOrEmpty(user.Avatar))
+			//{
+			//    DeleteFile(user.Avatar);
+			//}
 
-            user.Avatar = await AddFile(file, "avatars");
+			//user.Avatar = await AddFile(file, "avatars");
 
-            DbContext.SaveChanges();
+			//DbContext.SaveChanges();
 
-            return user.Avatar.Replace('\\', '/');
+			//return user.Avatar.Replace('\\', '/');
+
+			var avatar = FileService.UploadFileInBd(file);
+
+			user.AvatarBD = avatar;
+			user.Avatar = $"/Account/GetAvatar?id={user.Id}";
+			await DbContext.SaveChangesAsync();
+
+            return user.Avatar;
         }
-    }
+
+	    [HttpGet]
+		public ActionResult GetAvatar(int id)
+		{
+			var bytes = DbContext.Users.FirstOrDefault(t => t.Id == id)?.AvatarBD;
+
+			if (bytes != null)
+			{
+				byte[] image = bytes;
+				return new FileContentResult(image, "image/jpg");
+			}
+
+			return BadRequest();
+		}
+	}
 }

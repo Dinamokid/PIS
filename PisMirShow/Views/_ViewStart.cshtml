@@ -1,4 +1,11 @@
 ﻿@{
-    Layout = "_Layout";
-	ViewBag.Host = "http://cft-service.herokuapp.com";
+	Layout = "_Layout";
+	if (env.IsDevelopment())
+	{
+		ViewBag.Host = "https://localhost:5001";
+	}
+	else
+	{
+		ViewBag.Host = "http://cft-service.herokuapp.com";
+	}
 }

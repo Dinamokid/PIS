@@ -33,7 +33,9 @@ namespace PisMirShow.Controllers
 		[HttpGet]
 		public JsonResult AllAvailableTaskFilesJson()
 		{
-			return Json(AllAvailableTaskFiles());
+			var data = AllAvailableTaskFiles();
+
+			return Json(data);
 		}
 
 		private List<FilesViewModel> AllAvailableTaskFiles()
@@ -46,6 +48,15 @@ namespace PisMirShow.Controllers
 					TaskName = t.Title,
 					TaskId = t.Id
 				}).ToList();
+
+			foreach (var temp in result)
+			{
+				foreach (var item in temp.FileList)
+				{
+					item.Task = null;
+					item.CreatedUser = null;
+				}
+			}
 
 			return result;
 		}
@@ -163,8 +174,7 @@ namespace PisMirShow.Controllers
 				DbContext.Files.Add(file);
 				DbContext.SaveChanges();
 
-				var last = DbContext.Files.AsNoTracking().Last();
-				nameList.Add(new { last.Id, last.Name });
+				nameList.Add(new { file.Id, file.Name });
 			}
 
 			return Json(nameList);
@@ -188,7 +198,6 @@ namespace PisMirShow.Controllers
 			var temp = DbContext.Files.FirstOrDefault(f => f.Id == id);
 			if (temp != null)
 			{
-                //byte[] mas = temp.File;
                 byte[] mas = EncryptProvider.AESDecrypt(temp.File, "$eJbKuK1j43su0sFNGE*LxvmfBmPVtaF", "uhy7I!OECjWaV5nS");
                 string fileType = temp.Type;
 				string fileName = temp.Name;

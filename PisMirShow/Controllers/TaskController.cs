@@ -36,9 +36,10 @@ namespace PisMirShow.Controllers
 
         public IActionResult AddTask()
         {
-            DbContext.Tasks.Add(new TaskItem());
+	        var task = new TaskItem();
+            DbContext.Tasks.Add(task);
             DbContext.SaveChanges();
-            var model = DbContext.Tasks.Last();
+            var model = task;
 
             ViewBag.Users = DbContext.Users.AsNoTracking();
 

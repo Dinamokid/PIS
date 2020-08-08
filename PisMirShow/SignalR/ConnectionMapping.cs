@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace PisMirShow.SignalR
 {
@@ -40,8 +41,7 @@ namespace PisMirShow.SignalR
 			{
 				return connections.ToList();
 			}
-
-			return (IReadOnlyList<string>)Enumerable.Empty<string>();
+			return Array.Empty<string>();
 		}
 
 		public IReadOnlyList<string> GetConnectionsStrings(List<T> dialogUsers)

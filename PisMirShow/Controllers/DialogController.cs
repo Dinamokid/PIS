@@ -48,6 +48,7 @@ namespace PisMirShow.Controllers
 				.Include(d => d.Messages)
 					.ThenInclude(t => t.Author)
 				.OrderByDescending(d => d.LastUpdate)
+				.ToList()
 				.Select(c => new
 				{
 					Dialog = c,
@@ -206,7 +207,7 @@ namespace PisMirShow.Controllers
 			}
 			else if (dialogType == DialogType.dialog)
 			{
-				dialogIfExist = DbContext.UsersDialogs.Include(t => t.Dialog).AsNoTracking()
+				dialogIfExist = DbContext.UsersDialogs.Include(t => t.Dialog).ToList()
 									.Where(t => t.Dialog.DialogType == DialogType.dialog && t.UserId == usersIds[0] || t.UserId == usersIds[1])
 									.GroupBy(t => t.Dialog)
 									.Select(group => new

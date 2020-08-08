@@ -33,7 +33,7 @@ namespace PisMirShow
 			services.AddRazorPages()
 				.AddRazorRuntimeCompilation();
 
-			services.AddEntityFrameworkNpgsql().AddDbContext<PisDbContext>(opt =>
+			services.AddDbContext<PisDbContext>(opt =>
 				opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
 			//services.AddDbContext<PisDbContext>(options =>

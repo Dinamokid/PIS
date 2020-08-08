@@ -48,6 +48,7 @@ namespace PisMirShow.Controllers
 				.Include(d => d.Messages)
 					.ThenInclude(t => t.Author)
 				.OrderByDescending(d => d.LastUpdate)
+				.ToList()
 				.Select(c => new
 				{
 					Dialog = c,

@@ -3,6 +3,7 @@
   "name": "signalrapp",
   "private": true,
   "dependencies": {
-    "@aspnet/signalr": "3.0.0-preview3-19153-02"
+    "@aspnet/signalr": "3.0.0-preview3-19153-02",
+    "vue": "^2.6.11"
   }
 }

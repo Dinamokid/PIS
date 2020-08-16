@@ -6,7 +6,14 @@
 	<title>@(ViewData["Title"] == null ? "PWS" : ViewData["Title"] + " | PWS")</title>
 
 	<script src="/lib/jquery/dist/jquery.js"></script>
-	<script src="/lib/vue/vue.js"></script>
+
+	<environment names="Development">
+		<script src="/lib/vue/vue.js"></script>
+	</environment>
+	<environment names="Staging,Production">
+		<script src="/lib/vue/vue.min.js"></script>
+	</environment>
+
 	<script src="/signalr.min.js"></script>
 	<script src="/lib/axios/axios.min.js"></script>
 	<link rel="stylesheet" href="/lib/mdb/css/bootstrap.min.css" />

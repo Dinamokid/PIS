@@ -1,16 +1,28 @@
 [
-  {
-    "outputFileName": "wwwroot/js/SignalR/Dialog.min.js",
-    "inputFiles": [
-      "wwwroot/js/SignalR/Dialog.js",
-      "wwwroot/js/SignalR/Base.js"
-    ]
-  },
-  {
-    "outputFileName": "wwwroot/js/SignalR/AllDialogs.min.js",
-    "inputFiles": [
-        "wwwroot/js/SignalR/AllDialogs.js",
-        "wwwroot/js/SignalR/Base.js"
-    ]
-  }
+	{
+		"outputFileName": "wwwroot/js/SignalR/Dialog.min.js",
+		"inputFiles": [
+			"wwwroot/js/SignalR/Dialog.js",
+			"wwwroot/js/SignalR/Base.js"
+		]
+	},
+	{
+		"outputFileName": "wwwroot/js/SignalR/AllDialogs.min.js",
+		"inputFiles": [
+			"wwwroot/js/SignalR/AllDialogs.js",
+			"wwwroot/js/SignalR/Base.js"
+		]
+	},
+	{
+		"outputFileName": "wwwroot/lib/vue/vue.min.js",
+		"inputFiles": [
+			"node_modules/vue/dist/vue.min.js"
+		]
+	},
+	{
+		"outputFileName": "wwwroot/lib/vue/vue.js",
+		"inputFiles": [
+			"node_modules/vue/dist/vue.js"
+		]
+	}
 ]

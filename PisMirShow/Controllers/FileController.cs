@@ -44,7 +44,18 @@ namespace PisMirShow.Controllers
 			var result = DbContext.Tasks.Include(t => t.Files).Where(t => t.ToUserId == user.Id || t.FromUserId == user.Id).Where(t => t.Files.Count > 0)
 				.Select(t => new FilesViewModel
 				{
-					FileList = t.Files.ToList(),
+					FileList = t.Files.Select(t => new FileItem
+					{
+						Confirmed = t.Confirmed,
+						ConfirmedDateTime = t.ConfirmedDateTime,
+						ConfirmedUserId = t.ConfirmedUserId,
+						CreatedUserId = t.CreatedUserId,
+						DocType = t.DocType,
+						Id = t.Id,
+						Name = t.Name,
+						TaskId = t.TaskId,
+						Type = t.Type
+					}).ToList(),
 					TaskName = t.Title,
 					TaskId = t.Id
 				}).ToList();
@@ -82,7 +93,7 @@ namespace PisMirShow.Controllers
 		[HttpPost]
 		public IActionResult GetFileInfo(int id)
 		{
-			var file = DbContext.Files.FirstOrDefault(f => f.Id == id);
+			var file = DbContext.Files.AsNoTracking().Include(t=>t.CreatedUser).FirstOrDefault(f => f.Id == id);
 			if (file != null)
 			{
 				return Json(new
@@ -198,8 +209,8 @@ namespace PisMirShow.Controllers
 			var temp = DbContext.Files.FirstOrDefault(f => f.Id == id);
 			if (temp != null)
 			{
-                byte[] mas = EncryptProvider.AESDecrypt(temp.File, "$eJbKuK1j43su0sFNGE*LxvmfBmPVtaF", "uhy7I!OECjWaV5nS");
-                string fileType = temp.Type;
+				byte[] mas = EncryptProvider.AESDecrypt(temp.File, "$eJbKuK1j43su0sFNGE*LxvmfBmPVtaF", "uhy7I!OECjWaV5nS");
+				string fileType = temp.Type;
 				string fileName = temp.Name;
 				DocumentType TypeDoc = temp.DocType;
 				return File(mas, fileType, fileName);
@@ -226,7 +237,7 @@ namespace PisMirShow.Controllers
 			if (extension == null)
 			{
 				return Json(null);
-			} 
+			}
 
 			return Json(GetFilesByExtension(extension));
 		}
@@ -251,7 +262,7 @@ namespace PisMirShow.Controllers
 			if (task == null)
 			{
 				return Json(null);
-			} 
+			}
 
 			return Json(GetFilesByTask(task));
 		}
@@ -276,7 +287,7 @@ namespace PisMirShow.Controllers
 			if (name == null)
 			{
 				return Json(null);
-			} 
+			}
 
 			return Json(GetFilesByName(name));
 		}

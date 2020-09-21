@@ -34,11 +34,6 @@ namespace PisMirShow
 			services.AddDbContext<PisDbContext>(opt =>
 				opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
-			//services.AddDbContext<PisDbContext>(options =>
-			//	options
-			//		.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
-			//		);
-
 			services.Configure<WebEncoderOptions>(options =>
 			{
 				options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All);

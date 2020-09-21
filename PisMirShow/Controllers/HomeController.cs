@@ -16,7 +16,7 @@ namespace PisMirShow.Controllers
 	[Authorize]
 	public class HomeController : BaseController
 	{
-		public HomeController(PisDbContext dbContext, IHostingEnvironment env, IToastNotification toastNotification) : base(dbContext, env, toastNotification)
+		public HomeController(PisDbContext dbContext, IWebHostEnvironment env, IToastNotification toastNotification) : base(dbContext, env, toastNotification)
 		{
 		}
 

@@ -14,7 +14,7 @@ namespace PisMirShow.Controllers
     {
         public TaskController(
 	        PisDbContext dbContext, 
-	        IHostingEnvironment env, 
+	        IWebHostEnvironment env, 
 	        IToastNotification toastNotification) : base(dbContext,env,toastNotification)
         {
         }

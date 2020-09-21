@@ -18,7 +18,7 @@ namespace PisMirShow.Controllers
 	{
 		public FileController(
 			PisDbContext dbContext,
-			IHostingEnvironment env,
+			IWebHostEnvironment env,
 			IToastNotification toastNotification
 			) : base(dbContext, env, toastNotification)
 		{

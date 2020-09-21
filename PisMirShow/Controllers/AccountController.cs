@@ -19,12 +19,8 @@ namespace PisMirShow.Controllers
 {
     public class AccountController : BaseController
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
-
-        public AccountController(PisDbContext dbContext, IHostingEnvironment env, IToastNotification toastNotification, IHostingEnvironment hostingEnvironment) : base(dbContext, env, toastNotification)
+        public AccountController(PisDbContext dbContext, IWebHostEnvironment env, IToastNotification toastNotification) : base(dbContext, env, toastNotification)
         {
-            _hostingEnvironment = hostingEnvironment;
-
         }
 
         [HttpGet]
@@ -124,9 +120,9 @@ namespace PisMirShow.Controllers
         {
             if (deleteFilePath != string.Empty)
             {
-                if (System.IO.File.Exists(_hostingEnvironment.WebRootPath + deleteFilePath))
+                if (System.IO.File.Exists(HostingEnv.WebRootPath + deleteFilePath))
                 {
-                    FileInfo file = new FileInfo(_hostingEnvironment.WebRootPath + deleteFilePath);
+                    FileInfo file = new FileInfo(HostingEnv.WebRootPath + deleteFilePath);
                 }
             }
         }
@@ -136,11 +132,11 @@ namespace PisMirShow.Controllers
             if (uploadedFile != null)
             {
                 var fileName = $"\\files\\{directory}\\{DateTime.UtcNow.Ticks}{uploadedFile.FileName}";
-                string path = _hostingEnvironment.WebRootPath + $@"{fileName}";
+                string path = HostingEnv.WebRootPath + $@"{fileName}";
 
-                if (!Directory.Exists(_hostingEnvironment.WebRootPath + $@"\files\{directory}\"))
+                if (!Directory.Exists(HostingEnv.WebRootPath + $@"\files\{directory}\"))
                 {
-                    Directory.CreateDirectory(_hostingEnvironment.WebRootPath + $@"\files\{directory}\");
+                    Directory.CreateDirectory(HostingEnv.WebRootPath + $@"\files\{directory}\");
                 }
 
                 using (var fileStream = new FileStream(path, FileMode.Create))

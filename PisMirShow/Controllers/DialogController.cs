@@ -17,7 +17,7 @@ namespace PisMirShow.Controllers
 	[Authorize]
 	public class DialogController : BaseController
 	{
-		public DialogController(PisDbContext dbContext, IHostingEnvironment env, IToastNotification toastNotification) : base(dbContext, env, toastNotification)
+		public DialogController(PisDbContext dbContext, IWebHostEnvironment env, IToastNotification toastNotification) : base(dbContext, env, toastNotification)
 		{
 		}
 

@@ -13,10 +13,10 @@ namespace PisMirShow.Controllers
     public class BaseController : Controller
     {
         protected readonly PisDbContext DbContext;
-        protected readonly IHostingEnvironment HostingEnv;
+        protected readonly IWebHostEnvironment HostingEnv;
         protected readonly IToastNotification ToastNotification;
 
-        public BaseController(PisDbContext dbContext, IHostingEnvironment env, IToastNotification toastNotification)
+        public BaseController(PisDbContext dbContext, IWebHostEnvironment env, IToastNotification toastNotification)
         {
 			DbContext = dbContext;
             HostingEnv = env;
